@@ -1,5 +1,5 @@
-import { SetMetadata } from '@nestjs/common';
-import { Role } from '../enums/role.enum';
+import { applyDecorators, SetMetadata, UseGuards } from "@nestjs/common";
+import { PermissionsGuard } from "../../auth/guard/permissions.guard";
 
-export const ROLES_KEY = 'roles';
-export const Roles = (...roles: Role[]) => SetMetadata(ROLES_KEY, roles);
+export const Permissions = (...permissions: string[]) =>
+  applyDecorators(SetMetadata('permissions', permissions) , UseGuards(PermissionsGuard)) ;

@@ -14,6 +14,6 @@ export class SwaggerConfig {
 			.addSecurityRequirements("Authorization")
 			.build();
 		const document = SwaggerModule.createDocument(app, options);
-		SwaggerModule.setup("docs", app, document);
+		SwaggerModule.setup("api", app, document);
 	}
 }

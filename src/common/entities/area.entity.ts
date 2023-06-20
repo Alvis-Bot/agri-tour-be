@@ -1,10 +1,12 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Location } from "./location.entity";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { AreaLocation } from "./location.entity";
+import { Farm } from "./farm.entity";
+import { Land } from "./land.entity";
 
 
 
-@Entity('lands')
-export class Land {
+@Entity('areas')
+export class Area {
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -15,9 +17,13 @@ export class Land {
   @Column({ type : 'varchar' , nullable : true , length : 100})
   description: string;
 
-  @OneToMany(() => Location, location => location.land )
-  locations: Location[];
+  @OneToMany(() => AreaLocation, location => location.area )
+  locations: AreaLocation[];
 
-  // @Column()
-  // area: number;
+  @ManyToOne(() => Farm , farm => farm.areas)
+  @JoinColumn({ name: 'farm_id' })
+  farm: Farm;
+
+  @OneToMany(() => Land, land => land.area)
+  lands: Land[];
 }

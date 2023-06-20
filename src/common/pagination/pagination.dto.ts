@@ -12,8 +12,10 @@ export class Pagination {
 	@ApiPropertyOptional({
 		minimum: 1,
 		default: 1,
-		type: Number,
+		type: Number
 	})
+
+	// true / fale typeof boolean  string
 	@Transform(({ value }) => parseInt(value))
 	@IsInt()
 	@Min(1)

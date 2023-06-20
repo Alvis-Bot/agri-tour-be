@@ -4,7 +4,7 @@ import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { Point } from "typeorm";
 
 
-export class LandCreateDto {
+export class AreaCreateDto {
 
   @ApiProperty()
   @IsString()
