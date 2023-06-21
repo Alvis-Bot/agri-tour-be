@@ -4,7 +4,6 @@ import { AreaCreateDto } from "../../common/dto/area-create.dto";
 import { Area } from "../../common/entities/area.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { AreaLocation } from "../../common/entities/location.entity";
 import { ApiException } from "../../exception/api.exception";
 import { ErrorCode } from "../../exception/error.code";
 import { Service } from "../../common/enum/service";
@@ -14,7 +13,6 @@ import { IFarmService } from "../../farm/service/farm";
 export class AreaService implements IAreaService{
 
   constructor(@InjectRepository(Area) private areaRepository: Repository<Area>,
-              @InjectRepository(AreaLocation) private locationRepository: Repository<AreaLocation>,
               @Inject(Service.FARM_SERVICE) private farmService: IFarmService) {}
 
   async createArea(dto: AreaCreateDto, farmId: string): Promise<Area> {
@@ -23,18 +21,9 @@ export class AreaService implements IAreaService{
       throw new ApiException(ErrorCode.FARM_NOT_FOUND)
     }
 
-    const locations = dto.locations.map(async point => {
-      const locationEntity = this.locationRepository.create({
-           type: point.type,
-           coordinates : point.coordinates
-      });
-      return await this.locationRepository.save(locationEntity);
-    })
-
-
     const areaEntity = this.areaRepository.create({
       name: dto.name,
-      locations: await Promise.all(locations),
+      locations: dto.locations,
       description: dto.description,
       farm
     });
@@ -44,16 +33,12 @@ export class AreaService implements IAreaService{
    async getAreas(): Promise<Area[]> {
     return this.areaRepository.
         createQueryBuilder('land')
-      .leftJoinAndSelect('land.locations', 'location')
-      .select(['land.id', 'land.name', 'location.type', 'location.coordinates' , 'land.description'])
         .getMany();
   }
 
   async getAreaById(id: string): Promise<Area> {
     const area = await this.areaRepository.
         createQueryBuilder('land')
-      .leftJoinAndSelect('land.locations', 'location')
-      .select(['land.id', 'land.name', 'location.type', 'location.coordinates' , 'land.description'])
       .where('land.id = :id', { id })
         .getOne();
 

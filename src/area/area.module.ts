@@ -4,13 +4,12 @@ import { AreaService } from "./service/area.service";
 import { Service } from "../common/enum/service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Area } from "../common/entities/area.entity";
-import { AreaLocation } from "../common/entities/location.entity";
 import { FarmModule } from "../farm/farm.module";
 
 
 @Module({
   imports: [
-    FarmModule,TypeOrmModule.forFeature([Area , AreaLocation])],
+    FarmModule,TypeOrmModule.forFeature([Area])],
   controllers: [AreaController],
   providers: [{
     provide: Service.AREA_SERVICE,

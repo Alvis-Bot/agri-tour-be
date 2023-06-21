@@ -5,9 +5,10 @@ import { AreaCreateDto } from "../common/dto/area-create.dto";
 import { IAreaService } from "./service/area";
 import { Service } from "../common/enum/service";
 import { IS_UUID, ValidationTypes, Validator } from "class-validator";
-import { ApiBody } from "@nestjs/swagger";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
 
 @Controller(Router.AREA)
+@ApiTags("Area APIs  (area)")
 export class AreaController {
 
   constructor(@Inject(Service.AREA_SERVICE) private areaService: IAreaService) {

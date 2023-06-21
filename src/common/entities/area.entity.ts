@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { AreaLocation } from "./location.entity";
 import { Farm } from "./farm.entity";
 import { Land } from "./land.entity";
+import { Location } from "../interface";
 
 
 
@@ -17,8 +17,11 @@ export class Area {
   @Column({ type : 'varchar' , nullable : true , length : 100})
   description: string;
 
-  @OneToMany(() => AreaLocation, location => location.area )
-  locations: AreaLocation[];
+  // @OneToMany(() => AreaLocation, location => location.area )
+  // locations: AreaLocation[];
+
+  @Column({ type: 'jsonb', nullable: true })
+  locations: Location[];
 
   @ManyToOne(() => Farm , farm => farm.areas)
   @JoinColumn({ name: 'farm_id' })

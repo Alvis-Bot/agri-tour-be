@@ -3,7 +3,6 @@ import { ILandService } from "./land";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Area } from "../../common/entities/area.entity";
 import { Repository } from "typeorm";
-import { AreaLocation, LandLocation } from "../../common/entities/location.entity";
 import { Service } from "../../common/enum/service";
 import { IFarmService } from "../../farm/service/farm";
 import { Land } from "../../common/entities/land.entity";
@@ -16,7 +15,6 @@ import { IAreaService } from "../../area/service/area";
 @Injectable()
 export class LandService implements ILandService{
   constructor(@InjectRepository(Land) private landRepository: Repository<Land>,
-              @InjectRepository(LandLocation) private landLocationRepository: Repository<LandLocation> ,
               @Inject(Service.SOIL_TYPE_SERVICE) private soilTypeService: ISoilTypeService,
               @Inject(Service.AREA_SERVICE) private areaService: IAreaService,
               ) {}
@@ -26,21 +24,11 @@ export class LandService implements ILandService{
     if (!soilType) throw new ApiException(ErrorCode.AREA_NOT_FOUND)
     const area = await this.areaService.getAreaById(areaId)
     if (!area) throw new ApiException(ErrorCode.AREA_NOT_FOUND)
-    const locations = dto.locations.map(async point => {
-      const locationEntity = this.landLocationRepository.create({
-           type: point.type,
-           coordinates : point.coordinates
-      });
-      return await this.landLocationRepository.save(locationEntity);
-    })
-
-    console.log(locations)
-
     const areaEntity = this.landRepository.create({
       name: dto.name,
-      locations: await Promise.all(locations),
-      soilType: soilType,
-     area: area
+      soilType,
+      area,
+      locations: dto.locations
     });
     return this.landRepository.save(areaEntity);
   }

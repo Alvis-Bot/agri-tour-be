@@ -14,16 +14,18 @@ export class AreaCreateDto {
   @ApiProperty({
     example: [
       {
-        type: 'Point',
-        coordinates: [1, 1],
+        point: 1,
+        latitude: 1,
+        longitude: 1
       },
       {
-        type: 'Point',
-        coordinates: [2, 2],
+        point: 2,
+        latitude: 2,
+        longitude: 2
       }
     ]
   })
-  locations: Point[];
+  locations: Location[];
 
 
   @ApiPropertyOptional()
