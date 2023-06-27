@@ -27,6 +27,9 @@ export class Area {
   @JoinColumn({ name: 'farm_id' })
   farm: Farm;
 
+  @Column({ nullable: true , array : true , type : 'text'})
+  avatars : string[];
+
   @OneToMany(() => Land, land => land.area)
   lands: Land[];
 }

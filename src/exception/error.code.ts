@@ -29,6 +29,14 @@ export const ErrorCode = {
   FARM_NOT_FOUND: {
       code: HttpStatus.BAD_REQUEST,
       message: "Farm not found",
+  },
+  FILE_TYPE_NOT_MATCHING: {
+      code: HttpStatus.BAD_REQUEST,
+      message: "File type not matching",
+  },
+  SOIL_TYPE_NOT_FOUND: {
+      code: HttpStatus.BAD_REQUEST,
+      message: "Soil type not found",
   }
 
 

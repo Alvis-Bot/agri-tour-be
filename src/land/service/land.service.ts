@@ -19,11 +19,8 @@ export class LandService implements ILandService{
               @Inject(Service.AREA_SERVICE) private areaService: IAreaService,
               ) {}
 
-  async createLand(dto: LandCreateDto, areaId: string, soilTypeId: string): Promise<Land> {
-    const soilType = await this.soilTypeService.getSoilTypeById(soilTypeId)
-    if (!soilType) throw new ApiException(ErrorCode.AREA_NOT_FOUND)
-    const area = await this.areaService.getAreaById(areaId)
-    if (!area) throw new ApiException(ErrorCode.AREA_NOT_FOUND)
+  async createLand(dto: LandCreateDto, area: Area): Promise<Land> {
+    const soilType = await this.soilTypeService.getSoilTypeById(dto.soilTypeId);
     const areaEntity = this.landRepository.create({
       name: dto.name,
       soilType,
@@ -31,5 +28,38 @@ export class LandService implements ILandService{
       locations: dto.locations
     });
     return this.landRepository.save(areaEntity);
+  }
+
+  async getLands(): Promise<Land[]> {
+    return this.landRepository.
+        createQueryBuilder('land')
+        .leftJoinAndSelect('land.soilType', 'soilType')
+        // .leftJoinAndSelect('land.area', 'area')
+        .getMany();
+  }
+
+  async getLandsByAreaId(areaId: string): Promise<Land[]> {
+    const area = await this.areaService.getAreaById(areaId);
+    if (!area) {
+      throw new ApiException(ErrorCode.AREA_NOT_FOUND)
+    }
+    return this.landRepository.
+        createQueryBuilder('land')
+        .where('land.areaId = :areaId', { areaId })
+      .leftJoinAndSelect('land.soilType', 'soilType')
+        .getMany();
+  }
+
+  async getLandById(id: string): Promise<Land> {
+    const land = await this.landRepository.
+        createQueryBuilder('land')
+        .where('land.id = :id', { id })
+        .leftJoinAndSelect('land.soilType', 'soilType')
+        .getOne();
+
+    if (!land) {
+      throw new ApiException(ErrorCode.LAND_NOT_FOUND)
+    }
+    return land;
   }
 }

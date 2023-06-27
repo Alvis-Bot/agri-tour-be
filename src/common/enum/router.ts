@@ -9,4 +9,5 @@ export enum Router{
   LAND = "land",
   FARM = "farm",
   AREA = "area",
+  IMAGE = "image",
 }

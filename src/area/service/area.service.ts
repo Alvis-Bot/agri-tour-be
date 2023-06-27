@@ -48,4 +48,26 @@ export class AreaService implements IAreaService{
     return area;
   }
 
+  async uploadFile(file: Express.Multer.File[], areaId: string): Promise<Area> {
+    const area = await this.areaRepository.
+        createQueryBuilder('land')
+        .where('land.id = :id', { id: areaId })
+        .getOne();
+
+    if (!area) {
+      throw new ApiException(ErrorCode.AREA_NOT_FOUND)
+    }
+
+    area.avatars = file.map((image) => image.filename);
+    return this.areaRepository.save(area);
+  }
+
+  async getAreasByFarmId(farmId: string): Promise<Area[]> {
+     await this.farmService.getFarmById(farmId);
+    return this.areaRepository.
+        createQueryBuilder('land')
+        .where('land.farm_id = :farmId', { farmId })
+        .getMany()
+  }
+
 }

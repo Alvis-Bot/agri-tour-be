@@ -11,7 +11,7 @@ import { ApiTags } from "@nestjs/swagger";
 
 @Controller(Router.FARM)
 @UseGuards(JwtAuthGuard)
-@ApiTags(Router.FARM)
+@ApiTags('Farm APIs')
 export class FarmController {
   constructor (@Inject(Service.FARM_SERVICE) private readonly farmService: IFarmService) {
   }

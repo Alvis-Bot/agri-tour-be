@@ -28,6 +28,7 @@ export class AuthService implements IAuthService{
        username: user.username
      };
     return {
+      user: user,
       accessToken: this.jwtService.sign(payload),
     }
   }

@@ -33,6 +33,10 @@ export class AreaCreateDto {
   @IsOptional()
   description: string;
 
+  @ApiProperty({ type: "string", format: "binary" })
+  file: Express.Multer.File;
+
+
 
 
 }

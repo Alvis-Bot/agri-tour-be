@@ -3,8 +3,10 @@ import { ISoilTypeService } from "./service/soil-type";
 import { Service } from "../common/enum/service";
 import { Description } from "../common/decorator/description.decorator";
 import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
+import { ApiTags } from "@nestjs/swagger";
 
 @Controller('soil-type')
+@ApiTags("Soil Type APIs")
 @UseGuards(JwtAuthGuard)
 export class SoilTypeController {
 
@@ -22,4 +24,5 @@ export class SoilTypeController {
   async getSoilTypes() {
     return this.soilTypeService.getSoilTypes();
   }
+
 }
