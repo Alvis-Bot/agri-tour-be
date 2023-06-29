@@ -19,6 +19,9 @@ export class Land{
   @ManyToOne(() => Area, area => area.lands)
   area: Area;
 
+  @Column({ nullable: true , array : true , type : 'text'})
+  images: string[];
+
   @Column({ type: 'jsonb', nullable: true })
   locations: Location[];
 }

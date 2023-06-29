@@ -11,6 +11,8 @@ import { ISoilTypeService } from "../../soil-type/service/soil-type";
 import { ApiException } from "../../exception/api.exception";
 import { ErrorCode } from "../../exception/error.code";
 import { IAreaService } from "../../area/service/area";
+import { UploadDto } from "../../area/dto/upload.dto";
+import { UploadLandDto } from "../dto/upload-land.dto";
 
 @Injectable()
 export class LandService implements ILandService{
@@ -61,5 +63,11 @@ export class LandService implements ILandService{
       throw new ApiException(ErrorCode.LAND_NOT_FOUND)
     }
     return land;
+  }
+
+  async uploadFile(landId: string, dto: UploadLandDto, files: Express.Multer.File[]) {
+      const land = await this.getLandById(landId);
+      land.images = files.map(file => file.filename);
+      return this.landRepository.save(land);
   }
 }

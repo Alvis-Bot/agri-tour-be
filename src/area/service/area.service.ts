@@ -25,6 +25,7 @@ export class AreaService implements IAreaService{
       name: dto.name,
       locations: dto.locations,
       description: dto.description,
+      acreage: dto.acreage,
       farm
     });
     return this.areaRepository.save(areaEntity);

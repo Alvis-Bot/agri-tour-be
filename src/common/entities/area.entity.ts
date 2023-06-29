@@ -30,6 +30,10 @@ export class Area {
   @Column({ nullable: true , array : true , type : 'text'})
   avatars : string[];
 
+  @Column({ type : 'float' , nullable : true , default : 0})
+  acreage : number;
+
+
   @OneToMany(() => Land, land => land.area)
   lands: Land[];
 }
