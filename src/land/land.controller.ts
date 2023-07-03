@@ -21,7 +21,7 @@ import { UploadLandDto } from "./dto/upload-land.dto";
 
 @Controller(Router.LAND)
 @ApiTags('Land APIs')
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class LandController {
   constructor(@Inject(Service.LAND_SERVICE) private readonly landService: ILandService,
               @Inject(Service.AREA_SERVICE) private readonly areaService: IAreaService) {

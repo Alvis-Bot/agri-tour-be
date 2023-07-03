@@ -31,7 +31,7 @@ import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
 
 @Controller(Router.AREA)
 @ApiTags("Area APIs  (area)")
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class AreaController {
 
   constructor(@Inject(Service.AREA_SERVICE) private areaService: IAreaService) {

@@ -8,6 +8,7 @@ import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
 import { AuthUser } from "../common/decorator/user.decorator";
 import { User } from "../common/entities/user.entity";
 import { ApiTags } from "@nestjs/swagger";
+import { Public } from "../auth/public.meta";
 
 @Controller(Router.FARM)
 @UseGuards(JwtAuthGuard)
@@ -21,13 +22,14 @@ export class FarmController {
   async createFarm (@AuthUser() user: User ,@Body() dto: FarmCreateDto) {
     return this.farmService.createFarm(dto ,user);
   }
-
+  @Public()
   @Get()
   @Description("Lấy thông tin trang trại theo id")
   async getFarmById (@Body('id') id: string) {
     return this.farmService.getFarmById(id);
   }
 
+  @Public()
   @Get('all')
   @Description("Lấy danh sách trang trại")
   async getFarms () {

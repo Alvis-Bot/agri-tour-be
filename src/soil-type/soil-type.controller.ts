@@ -7,7 +7,7 @@ import { ApiTags } from "@nestjs/swagger";
 
 @Controller('soil-type')
 @ApiTags("Soil Type APIs")
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class SoilTypeController {
 
   constructor(@Inject(Service.SOIL_TYPE_SERVICE) private readonly soilTypeService: ISoilTypeService) {

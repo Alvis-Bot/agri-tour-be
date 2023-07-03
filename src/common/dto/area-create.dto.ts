@@ -37,10 +37,5 @@ export class AreaCreateDto {
   @ApiProperty()
   acreage: number;
 
-  @ApiProperty({ type: "string", format: "binary" })
-  file: Express.Multer.File;
-
-
-
 
 }
