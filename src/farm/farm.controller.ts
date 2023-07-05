@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Inject, Post, Query, UseGuards } from "@nestjs/common";
 import { Router } from "../common/enum/router";
 import { Service } from "../common/enum/service";
 import { IFarmService } from "./service/farm";
@@ -9,6 +9,7 @@ import { AuthUser } from "../common/decorator/user.decorator";
 import { User } from "../common/entities/user.entity";
 import { ApiTags } from "@nestjs/swagger";
 import { Public } from "../auth/public.meta";
+import { QueryAllDto } from "./dto/query-all.dto";
 
 @Controller(Router.FARM)
 @UseGuards(JwtAuthGuard)
@@ -27,6 +28,13 @@ export class FarmController {
   @Description("Lấy thông tin trang trại theo id")
   async getFarmById (@Body('id') id: string) {
     return this.farmService.getFarmById(id);
+  }
+
+  @Public()
+  @Get('area-land')
+  @Description("Lấy toàn bộ thông tin nông trại")
+  async getFarmFetchLandAndArea(@Query() dto: QueryAllDto) {
+    return this.farmService.getFarmFetchLandAndArea(dto)
   }
 
   @Public()

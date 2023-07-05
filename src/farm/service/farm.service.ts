@@ -7,6 +7,7 @@ import { User } from "../../common/entities/user.entity";
 import { Repository } from "typeorm";
 import { ApiException } from "../../exception/api.exception";
 import { ErrorCode } from "../../exception/error.code";
+import { QueryAllDto } from "../dto/query-all.dto";
 
 @Injectable()
 export class FarmService implements IFarmService{
@@ -34,6 +35,20 @@ export class FarmService implements IFarmService{
 
   async getFarms(): Promise<Farm[]> {
     return this.farmRepository.find();
+  }
+
+  async getFarmFetchLandAndArea(dto: QueryAllDto): Promise<Farm[]> {
+    return this.farmRepository
+      .createQueryBuilder("farm")
+      .leftJoinAndSelect("farm.areas", "area")
+      .leftJoinAndSelect("area.lands", "land")
+      // nếu ko có farmId thì trả về tất cả farm
+      .where(dto.farmId ? "farm.id = :farmId" : "1=1", { farmId: dto.farmId })
+      // nếu ko có areaId thì trả về tất cả area
+      .andWhere(dto.areaId ? "area.id = :areaId" : "1=1", { areaId: dto.areaId })
+      // nếu ko có landId thì trả về tất cả land
+      .andWhere(dto.landId ? "land.id = :landId" : "1=1", { landId: dto.landId })
+      .getMany();
   }
 
 }

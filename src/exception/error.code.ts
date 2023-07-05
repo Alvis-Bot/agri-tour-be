@@ -3,40 +3,40 @@ import { HttpStatus } from "@nestjs/common";
 export const ErrorCode = {
 	// system error
   USER_ALREADY_EXIST: {
-    message: "User already exist",
+    message: 'USER_ALREADY_EXIST',
     code: HttpStatus.BAD_REQUEST
   },
   PERMISSION_EXIST: {
-    message: 'Permission already exist',
+    message: 'PERMISSION_EXIST',
     code: HttpStatus.BAD_REQUEST
   },
   GROUP_NOT_FOUND: {
-      message: "Group not found",
+      message: "GROUP_NOT_FOUND",
     code: HttpStatus.BAD_REQUEST
   },
   USER_NOT_FOUND: {
-      message: "User not found",
+    message: "USER_NOT_FOUND",
     code: HttpStatus.BAD_REQUEST
   },
   LAND_NOT_FOUND: {
       code: HttpStatus.BAD_REQUEST,
-      message: "Land not found",
+      message: "LAND_NOT_FOUND",
   },
   AREA_NOT_FOUND: {
       code: HttpStatus.BAD_REQUEST,
-      message: "Area not found",
+      message: 'AREA_NOT_FOUND',
   },
   FARM_NOT_FOUND: {
       code: HttpStatus.BAD_REQUEST,
-      message: "Farm not found",
+      message: "FARM_NOT_FOUND",
   },
   FILE_TYPE_NOT_MATCHING: {
       code: HttpStatus.BAD_REQUEST,
-      message: "File type not matching",
+      message: "FILE_TYPE_NOT_MATCHING",
   },
   SOIL_TYPE_NOT_FOUND: {
       code: HttpStatus.BAD_REQUEST,
-      message: "Soil type not found",
+      message: "SOIL_TYPE_NOT_FOUND",
   }
 
 
