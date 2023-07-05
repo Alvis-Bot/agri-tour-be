@@ -12,7 +12,7 @@ export class Land{
   @Column()
   name: string;
 
-  @OneToOne(() => SoilType)
+  @ManyToOne(() => SoilType, soilType => soilType.lands)
   @JoinColumn()
   soilType: SoilType;
 
