@@ -17,7 +17,7 @@ export class FarmService implements IFarmService{
   async createFarm(dto: FarmCreateDto, user: User): Promise<Farm> {
     const farmEntity = this.farmRepository.create({
       ...dto,
-      user
+      user,
     });
     return this.farmRepository.save(farmEntity);
   }

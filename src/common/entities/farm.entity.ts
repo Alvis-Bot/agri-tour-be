@@ -25,7 +25,7 @@ export class Farm {
   name: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  locations: Location[];
+  location: Location;
 
   @ManyToOne(() => User , user => user.farms)
   @JoinColumn({ name: 'user_id' })
