@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGene
 import { SoilType } from "./soil-type.entity";
 import { Area } from "./area.entity";
 import { Location } from "../interface";
-
+//vùng canh tác
 @Entity('lands')
 export class Land{
 

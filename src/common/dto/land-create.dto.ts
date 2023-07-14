@@ -5,7 +5,7 @@ import { IsNotEmpty, IsString, IsUUID } from "class-validator";
 import { Type } from "class-transformer";
 
 
-export class LandCreateDto{
+export class LandCreateDto {
 
 
   @ApiProperty()
@@ -36,4 +36,5 @@ export class LandCreateDto{
   @IsNotEmpty()
   locations: Location[];
 
+  images: string[];
 }

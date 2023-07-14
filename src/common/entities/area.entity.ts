@@ -33,7 +33,8 @@ export class Area {
   @Column({ type : 'float' , nullable : true , default : 0})
   acreage : number;
 
-
+  //vùng
   @OneToMany(() => Land, land => land.area)
   lands: Land[];
+  
 }

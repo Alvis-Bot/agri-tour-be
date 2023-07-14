@@ -14,6 +14,7 @@ import { FarmModule } from './farm/farm.module';
 import { AreaModule } from './area/area.module';
 import { LandModule } from './land/land.module';
 import { SoilTypeModule } from './soil-type/soil-type.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -51,5 +52,6 @@ import { SoilTypeModule } from './soil-type/soil-type.module';
     LandModule,
     SoilTypeModule,
   ],
+  controllers:[AppController]
 })
 export class AppModule {}

@@ -5,6 +5,7 @@ import { UploadDto } from "../../area/dto/upload.dto";
 import { UploadLandDto } from "../dto/upload-land.dto";
 
 export interface ILandService {
+  createLandCustom(areaId:string,dto:LandCreateDto): Promise<Land>;
 
   createLand(dto: LandCreateDto, area: Area): Promise<Land>;
 
