@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Logger, Patch, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Inject, Logger, Patch, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { Router } from "../common/enum/router";
 import { ILandService } from "./service/land";
 import { Service } from "../common/enum/service";
@@ -95,6 +95,10 @@ export class LandController {
     // Access the file(s) if they exist
     const images = files?.images;
     const filesPath = images?.map(file => `uploads/lands/${file.filename}`);
+    if(!filesPath)
+    {
+      throw new BadRequestException('Images file is required');
+    }
     const locations: Location[] = JSON.parse(createLandDto.locations as unknown as string);
 
     console.log(filesPath)
