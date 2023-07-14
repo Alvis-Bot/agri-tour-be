@@ -4,7 +4,7 @@ import { ILandService } from "./service/land";
 import { Service } from "../common/enum/service";
 import { LandCreateDto } from "../common/dto/land-create.dto";
 import { Land } from "../common/entities/land.entity";
-import { ApiBody, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
 import { Description } from "../common/decorator/description.decorator";
 import { IAreaService } from "../area/service/area";
@@ -28,7 +28,9 @@ export class LandController {
   }
 
   @Post('create')
+  @ApiConsumes('multipart/form-data', 'application/json')
   @Description("Tạo mới vùng canh tác")
+
   @ApiBody({
     schema: {
       type: 'object',
@@ -96,12 +98,11 @@ export class LandController {
     const locations: Location[] = JSON.parse(createLandDto.locations as unknown as string);
 
     console.log(filesPath)
-    return this.landService.createLandCustom(areaId,{
+    return this.landService.createLandCustom(areaId, {
       ...createLandDto,
       images: filesPath,
       locations
     });
-
   }
   // @Post()
   // @Description('Tạo vùng trồng')

@@ -15,7 +15,7 @@ export class LandCreateDto {
 
 
   @ApiProperty()
-  @IsUUID()
+  // @IsUUID()
   @IsNotEmpty()
   soilTypeId: string;
 
