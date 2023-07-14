@@ -94,11 +94,11 @@ export class LandController {
   ) {
     // Access the file(s) if they exist
     const images = files?.images;
-    const filesPath = images?.map(file => `uploads/lands/${file.filename}`);
-    if(!filesPath)
-    {
+    if (!images) {
       throw new BadRequestException('Images file is required');
     }
+    const filesPath = images?.map(file => `uploads/lands/${file.filename}`);
+
     const locations: Location[] = JSON.parse(createLandDto.locations as unknown as string);
 
     console.log(filesPath)
