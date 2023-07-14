@@ -34,6 +34,9 @@ async function bootstrap() {
       `Listening at http://localhost:${configService.get<number>("PORT")}`,
     );
     Logger.log(
+      `Document Listening at http://localhost:${configService.get<number>("PORT")}/api`,
+    );
+    Logger.log(
       "Running in environment " + configService.get<string>("NODE_ENV"),
     );
   });
