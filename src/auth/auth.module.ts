@@ -14,20 +14,20 @@ import { Permission } from "../common/entities/permission.entity";
 import { User } from "../common/entities/user.entity";
 
 @Module({
-  imports: [UserModule ,PassportModule,
-    TypeOrmModule.forFeature([Permission , User]),
+  imports: [UserModule, PassportModule,
+    TypeOrmModule.forFeature([Permission, User]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-          secret: configService.get<string>('JWT_SECRET'),
-          signOptions: { expiresIn: '1y' },
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '1h' },
       }),
       inject: [ConfigService],
-  }),],
+    }),],
   providers: [{
     provide: Service.AUTH_SERVICE,
     useClass: AuthService
-  } ,LocalStrategy, JwtStrategy],
+  }, LocalStrategy, JwtStrategy],
   controllers: [AuthController],
 })
-export class AuthModule {}
+export class AuthModule { }
