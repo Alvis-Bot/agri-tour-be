@@ -26,12 +26,16 @@ export class AuthService implements IAuthService {
   async login(user: User) {
     const accessToken = await this.generateAccessToken(user);
     const refreshToken = await this.generateRefreshToken(user);
+
+    const { refreshToken: userRefreshToken, ...userWithoutRefreshToken } = user;
+
     return {
-      user: user,
+      user: userWithoutRefreshToken,
       accessToken,
       refreshToken
-    }
+    };
   }
+
   async generateAccessToken(user: User): Promise<string> {
     const payload: IJwtPayload = {
       id: user.id,
