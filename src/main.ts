@@ -16,7 +16,7 @@ async function bootstrap() {
   app.setGlobalPrefix("api", { exclude: [""] });
   CorsConfig.enableCors(app);
   SwaggerConfig.init(app);
-  app.useGlobalFilters(new HttpExceptionFilter());
+  // app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

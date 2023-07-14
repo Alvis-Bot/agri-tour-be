@@ -16,7 +16,7 @@ import { Exclude } from "class-transformer";
 import { Farm } from "./farm.entity";
 
 @Entity('users')
-export class User extends  AuditEntity{
+export class User extends AuditEntity {
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -24,22 +24,22 @@ export class User extends  AuditEntity{
   @Column()
   fullName: string;
 
-  @Column({unique: true})
+  @Column({ unique: true })
   username: string;
 
   @Column()
   @Exclude()
   password: string;
 
-  @Column({default: false})
+  @Column({ default: false })
   isLocked: boolean;
 
 
   @ManyToOne(() => Group, group => group.users)
-  @JoinColumn({name: 'group_id'})
-  group : Group;
+  @JoinColumn({ name: 'group_id' })
+  group: Group;
 
-  @OneToMany(() => Farm , farm => farm.user)
+  @OneToMany(() => Farm, farm => farm.user)
   farms: Farm[];
 
 
@@ -47,4 +47,13 @@ export class User extends  AuditEntity{
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
+  async comparePassword(password: string): Promise<boolean> {
+    return await bcrypt.compare(password, this.password);
+  }
+  async hashUpdatedPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, 10);
+  }
+
+  @Column({ nullable: true })
+  refreshToken: string;
 }

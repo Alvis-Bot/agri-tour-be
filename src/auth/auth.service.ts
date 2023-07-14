@@ -8,6 +8,7 @@ import { ErrorCode } from "../exception/error.code";
 import { IAuthService } from "./auth";
 import { Service } from "../common/enum/service";
 import { IUserService } from "../user/service/user";
+import { UpdateUserDto } from "src/common/dto/update-user.dto";
 
 export interface IJwtPayload {
   id: string;
@@ -17,22 +18,44 @@ export interface IJwtPayload {
 
 
 @Injectable()
-export class AuthService implements IAuthService{
+export class AuthService implements IAuthService {
 
   constructor(@Inject(Service.USER_SERVICE) private userService: IUserService,
-              private jwtService: JwtService) {
+    private jwtService: JwtService) {
   }
-   async login(user : User) {
-     const payload : IJwtPayload = {
-       id: user.id,
-       username: user.username
-     };
+  async login(user: User) {
+    const accessToken = await this.generateAccessToken(user);
+    const refreshToken = await this.generateRefreshToken(user);
     return {
       user: user,
-      accessToken: this.jwtService.sign(payload),
+      accessToken,
+      
     }
   }
+  async generateAccessToken(user: User): Promise<string> {
+    const payload: IJwtPayload = {
+      id: user.id,
+      username: user.username
+    };
+    const options = { expiresIn: '1h' }; // Customize the token expiration as per your needs
+    return this.jwtService.signAsync(payload, options);
+  }
 
+  async generateRefreshToken(user: User): Promise<string> {
+    const payload: IJwtPayload = {
+      id: user.id,
+      username: user.username
+    };
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      expiresIn: '1y',
+    });
+
+    await this.userService.updateUserCustom(payload.id, {
+      ...user,
+      refreshToken,
+    })
+    return refreshToken;
+  }
   async validateJwt(payload: IJwtPayload): Promise<User> {
     return await this.userService.getUserById(payload.id);
   }

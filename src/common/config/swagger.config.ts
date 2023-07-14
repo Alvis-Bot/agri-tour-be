@@ -4,9 +4,9 @@ import { INestApplication } from "@nestjs/common";
 export class SwaggerConfig {
 	static init(app: INestApplication) {
 		const options = new DocumentBuilder()
-			.setTitle("Web BO API")
-			.setDescription("Web BO API description")
-			.setVersion("1.0")
+			.setTitle("Web  API")
+			.setDescription("Web  API description")
+			.setVersion("3.0")
 			.addBearerAuth(
 				{ type: "http", scheme: "bearer", bearerFormat: "JWT" },
 				"Authorization",

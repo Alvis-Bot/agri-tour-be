@@ -14,8 +14,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
 	catch(exception: HttpException, host: ArgumentsHost) {
 		const ctx = host.switchToHttp();
 		const response = ctx.getResponse<Response>();
-		const status = exception.getStatus();
-
+		var status = exception.getStatus();
+		if (!status || typeof status !== 'number') {
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		  }
 		if (exception instanceof ApiException) {
 			this.logger.error(exception.getStatus());
 			return response.status(exception.getStatus()).json({

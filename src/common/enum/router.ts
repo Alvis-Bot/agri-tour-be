@@ -1,6 +1,6 @@
 
 
-export enum Router{
+export enum Router {
   USER = "user",
   AUTH = "auth",
   MANAGER = "manager",
