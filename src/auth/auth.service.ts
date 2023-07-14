@@ -29,7 +29,7 @@ export class AuthService implements IAuthService {
     return {
       user: user,
       accessToken,
-      
+      refreshToken
     }
   }
   async generateAccessToken(user: User): Promise<string> {
