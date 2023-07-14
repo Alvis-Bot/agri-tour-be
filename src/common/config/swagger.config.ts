@@ -11,7 +11,7 @@ export class SwaggerConfig {
 				{ type: "http", scheme: "bearer", bearerFormat: "JWT" },
 				"Authorization",
 			)
-			.addSecurityRequirements("Authorization")
+			// .addSecurityRequirements("Authorization")
 			.build();
 		const document = SwaggerModule.createDocument(app, options);
 		SwaggerModule.setup("api", app, document);

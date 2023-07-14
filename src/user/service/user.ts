@@ -9,6 +9,4 @@ export interface IUserService {
   existsUsername(username: string): Promise<boolean>;
   updateUser(myUser: User);
   getUsers(pagination: Pagination);
-
-
 }

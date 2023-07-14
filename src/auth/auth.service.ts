@@ -17,16 +17,16 @@ export interface IJwtPayload {
 
 
 @Injectable()
-export class AuthService implements IAuthService{
+export class AuthService implements IAuthService {
 
   constructor(@Inject(Service.USER_SERVICE) private userService: IUserService,
-              private jwtService: JwtService) {
+    private jwtService: JwtService) {
   }
-   async login(user : User) {
-     const payload : IJwtPayload = {
-       id: user.id,
-       username: user.username
-     };
+  async login(user: User) {
+    const payload: IJwtPayload = {
+      id: user.id,
+      username: user.username
+    };
     return {
       user: user,
       accessToken: this.jwtService.sign(payload),
