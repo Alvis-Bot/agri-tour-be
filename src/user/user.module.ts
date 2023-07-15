@@ -8,7 +8,7 @@ import { Permission } from "../common/entities/permission.entity";
 import { Farm } from "../common/entities/farm.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User , Permission , Farm])],
+  imports: [TypeOrmModule.forFeature([User, Permission, Farm])],
   providers: [{
     provide: Service.USER_SERVICE,
     useClass: UserService
@@ -16,4 +16,4 @@ import { Farm } from "../common/entities/farm.entity";
   controllers: [UserController],
   exports: [Service.USER_SERVICE]
 })
-export class UserModule {}
+export class UserModule { }

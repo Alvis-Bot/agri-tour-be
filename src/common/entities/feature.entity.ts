@@ -19,5 +19,4 @@ export class Feature {
   @Column({ default: false })
   isLocked: boolean;
 
-
 }

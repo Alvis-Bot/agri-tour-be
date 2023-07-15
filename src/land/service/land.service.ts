@@ -21,33 +21,37 @@ export class LandService implements ILandService {
     @Inject(Service.AREA_SERVICE) private areaService: IAreaService,
   ) { }
   async createLandCustom(areaId: string, dto: LandCreateDto): Promise<Land> {
-    try{
-    const area = await this.areaService.getAreaById(areaId);
-    if (!area) {
-      throw new NotFoundException("Khu vực này không tồn tại !")
-    }
-    const land = await this.landRepository.findOne({
-      where: {
-        name: dto.name
+    try {
+      console.log(dto.locations)
+      const area = await this.areaService.getAreaById(areaId);
+      if (!area) {
+        throw new NotFoundException("Khu vực này không tồn tại !")
       }
-    })
-    if (area && land) {
-      throw new ConflictException("Đã tồn tại vùng canh tác này");
+      const land = await this.landRepository.findOne({
+        where: {
+          name: dto.name
+        }
+      })
+      if (area && land) {
+        throw new ConflictException("Đã tồn tại vùng canh tác này");
+      }
+      const creating = this.landRepository.create({
+        ...dto,
+        area
+      });
+      return await this.landRepository.save(creating);
     }
-    const creating = this.landRepository.create(dto);
-    return await this.landRepository.save(creating);
-  }
-  catch (error) {
+    catch (error) {
 
-    console.log("Create failed ! File deleting...");
-   
-    dto.images.map(image => {
-      fs.unlinkSync(`public/${image}`);
-    })
-    console.log("Deleted!");
+      console.log("Create failed ! File deleting...");
 
-    throw new BadRequestException(error.message)
-  }
+      dto.images.map(image => {
+        fs.unlinkSync(`public/${image}`);
+      })
+      console.log("Deleted!");
+
+      throw new BadRequestException(error.message)
+    }
   }
 
   async createLand(dto: LandCreateDto, area: Area): Promise<Land> {

@@ -31,11 +31,15 @@ export class UserService implements IUserService {
   }
 
   async getUserById(id: string): Promise<User> {
-    return this.usersRepository.
+    const user = this.usersRepository.
       createQueryBuilder('user')
       .where('user.id = :id', { id })
       .andWhere('user.isLocked = :isLocked', { isLocked: false })
       .getOne();
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+    return user;
   }
 
   async getUserByUserName(username: string): Promise<User> {

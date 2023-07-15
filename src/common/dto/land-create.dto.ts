@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Point } from "typeorm";
-import { Location } from "../interface";
+import { Location as ILocation } from "../interface";
 import { IsNotEmpty, IsString, IsUUID } from "class-validator";
 import { Type } from "class-transformer";
 
@@ -8,33 +8,35 @@ import { Type } from "class-transformer";
 export class LandCreateDto {
 
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 'Land example',
+  })
   @IsString()
   @IsNotEmpty()
   name: string;
 
-
-  @ApiProperty()
+  @ApiProperty({
+    example: 'ádalsdddjajaja-1aksdkajsd-djakskdaksdl',
+  })
   // @IsUUID()
   @IsNotEmpty()
   soilTypeId: string;
 
   @ApiProperty({
-    example: [
-      {
-        point: 1,
-        latitude: 1,
-        longitude: 1
+    type: 'array',
+    items: {
+      type: 'object',
+      properties: {
+        point: { type: 'number', example: 12.3 },
+        latitude: { type: 'number', example: 24.5 },
+        longitude: { type: 'number', example: 14.5 },
       },
-      {
-        point: 2,
-        latitude: 2,
-        longitude: 2
-      }
-    ]
+    },
   })
-  @IsNotEmpty()
-  locations: Location[];
 
+  @IsNotEmpty()
+  locations: ILocation[];
+
+  @ApiProperty({ type: 'array', items: { type: 'string', format: 'binary' } })
   images: string[];
 }

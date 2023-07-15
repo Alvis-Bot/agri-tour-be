@@ -32,10 +32,17 @@ export class Group extends AuditEntity {
   isDeleted: boolean;
 
 
-  @ManyToMany(() => User, user => user.groups)
+  @ManyToMany(() => User, user => user.groups, {
+    cascade: true
+  })
   users: User[];
 
-  @ManyToMany(() => Role, role => role.groups)
+  @ManyToMany(() => Role, role => role.groups, {
+    cascade: true
+  })
+  @JoinTable({
+    name:'group_roles'
+  })
   roles: Role[];
   // @OneToMany(() => Permission , permission => permission.groups)
   // permissions: Permission[];

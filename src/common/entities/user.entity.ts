@@ -41,7 +41,9 @@ export class User extends AuditEntity {
   // @JoinColumn({ name: 'group_id' })
   // group: Group;
   @ManyToMany(() => Group, group => group.users)
-  @JoinTable()
+  @JoinTable({
+    name:'user_groups'
+  })
   groups: Group[];
   @OneToMany(() => Farm, farm => farm.user)
   farms: Farm[];

@@ -15,9 +15,10 @@ export class Land{
   @ManyToOne(() => SoilType, soilType => soilType.lands)
   @JoinColumn()
   soilType: SoilType;
-
-  @ManyToOne(() => Area, area => area.lands)
+  
+  @ManyToOne(() => Area, area => area.lands,{onDelete:'SET NULL',onUpdate:'CASCADE'})
   area: Area;
+  
 
   @Column({ nullable: true , array : true , type : 'text'})
   images: string[];

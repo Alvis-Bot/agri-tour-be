@@ -2,8 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { AbilityService } from './ability.service';
 import { CreateAbilityDto } from '../common/dto/create-ability.dto';
 import { UpdateAbilityDto } from 'src/common/dto/update-ability.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('ability')
+@ApiTags("Ability API")
 export class AbilityController {
   constructor(private readonly abilityService: AbilityService) {}
 

@@ -11,13 +11,18 @@ import { FeatureService } from "../feature/service/feature.service";
 import { Service } from "../common/enum/service";
 import { IFeatureService } from "../feature/service/feature";
 import { Permission } from "../common/entities/permission.entity";
+import { User } from "src/common/entities/user.entity";
+import { UserService } from "src/user/service/user.service";
 
 @Injectable()
 export class GroupService {
 
-  constructor(@InjectRepository(Group) private groupRepository: Repository<Group>,
+  constructor(
+    @InjectRepository(Group) private groupRepository: Repository<Group>,
     @InjectRepository(Permission) private permissionRepository: Repository<Permission>,
+    @InjectRepository(User) private userRepository: Repository<User>,
     private readonly permissionService: PermissionService,
+    private readonly userService: UserService,
     @Inject(Service.FEATURE_SERVICE) private readonly featureService: IFeatureService) { }
 
   async createGroup(groupData: Partial<Group>): Promise<Group> {
@@ -60,6 +65,39 @@ export class GroupService {
     return {
       message: 'Group deleted successfully'
     }
+  }
+  async addUserGroup(userId: string, groupId: string): Promise<Group> {
+    const group = await this.groupRepository.findOne({
+      where: {
+        id: groupId
+      },
+      relations: ['users']
+    });
+    const user = await this.userService.getUserById(userId);
+
+    if (!group || !user) {
+      throw new NotFoundException("group or user is not found")
+      // Throw an error or handle the case where group or user is not found
+    }
+
+    group.users.push(user);
+
+    return this.groupRepository.save(group);
+  }
+  async getUsersInGroup(groupId: string): Promise<User[]> {
+    const group = await this.groupRepository.findOne({
+      where: {
+        id: groupId
+      },
+      relations: ['users']
+    });
+
+    if (!group) {
+      // Throw an error or handle the case where group is not found
+      throw new NotFoundException("Group not found")
+    }
+
+    return group.users;
   }
   // async createGroup(dto: CreateGroupDto) : Promise<Group>{
   //   const permissions = await this.permissionService.getPermissions();

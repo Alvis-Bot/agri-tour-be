@@ -17,7 +17,7 @@ import * as path from 'path';
 import { ApiException } from "../exception/api.exception";
 import { ErrorCode } from "../exception/error.code";
 
-import { Location } from '../common/interface'
+import { Location as ILocation } from '../common/interface'
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 @Controller(Router.LAND)
 @ApiTags('Land APIs')
@@ -30,33 +30,6 @@ export class LandController {
   @Post('create')
   @ApiConsumes('multipart/form-data', 'application/json')
   @Description("Tạo mới vùng canh tác")
-
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        name: {
-          type: 'string',
-          example: 'string'
-        },
-        soilTypeId: {
-          type: 'string',
-          example: 'string'
-        },
-        locations: {
-          type: 'string',
-          example: '[{"point":1,"latitude":1,"longitude":1},{"point":2,"latitude":2,"longitude":2},{"point":3,"latitude":3,"longitude":3}]',
-        },
-        images: {
-          type: 'array',
-          items: {
-            type: 'string',
-            format: 'binary',
-          },
-        },
-      },
-    },
-  })
 
 
   @UseInterceptors(FileFieldsInterceptor([
@@ -98,14 +71,22 @@ export class LandController {
       throw new BadRequestException('Images file is required');
     }
     const filesPath = images?.map(file => `uploads/lands/${file.filename}`);
+    let locations = null;
+    let flag = false;
+    let newLocation = null;
+    const regex = /\[|\]/;
+    if (regex.test(createLandDto.locations.toString())) {
+      locations = createLandDto.locations;
+      flag = true;
+      newLocation = JSON.parse(locations);
+    } else {
+      locations = JSON.parse(`[${createLandDto.locations}]`);
+    }
 
-    const locations: Location[] = JSON.parse(createLandDto.locations as unknown as string);
-
-    console.log(filesPath)
     return this.landService.createLandCustom(areaId, {
       ...createLandDto,
       images: filesPath,
-      locations
+      locations: flag === true ? newLocation : locations
     });
   }
   // @Post()
