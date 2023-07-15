@@ -3,6 +3,8 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -35,10 +37,12 @@ export class User extends AuditEntity {
   isLocked: boolean;
 
 
-  @ManyToOne(() => Group, group => group.users)
-  @JoinColumn({ name: 'group_id' })
-  group: Group;
-
+  // @ManyToOne(() => Group, group => group.users)
+  // @JoinColumn({ name: 'group_id' })
+  // group: Group;
+  @ManyToMany(() => Group, group => group.users)
+  @JoinTable()
+  groups: Group[];
   @OneToMany(() => Farm, farm => farm.user)
   farms: Farm[];
 

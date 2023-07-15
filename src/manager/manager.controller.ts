@@ -9,11 +9,11 @@ export class ManagerController {
 
   constructor(private readonly managerService: ManagerService) {}
 
-  @Patch('/add-group-for-user')
-  @Description("Cập nhật nhóm quyền cho người dùng")
-  async addGroupForUser(@Query('userId') userId: string, @Query('groupId') groupId: string) {
-    return await this.managerService.addGroupForUser(userId, groupId);
-  }
+  // @Patch('/add-group-for-user')
+  // @Description("Cập nhật nhóm quyền cho người dùng")
+  // async addGroupForUser(@Query('userId') userId: string, @Query('groupId') groupId: string) {
+  //   return await this.managerService.addGroupForUser(userId, groupId);
+  // }
 
 
 
