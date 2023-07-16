@@ -5,7 +5,7 @@ import { QueryAllDto } from "../dto/query-all.dto";
 
 
 export interface IFarmService {
-  createFarm(dto: FarmCreateDto, user: User): Promise<Farm>;
+  createFarm(dto: FarmCreateDto): Promise<Farm>;
 
   getFarmById(id: string): Promise<Farm>;
 

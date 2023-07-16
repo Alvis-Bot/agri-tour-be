@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { IFarmService } from "./farm";
 import { FarmCreateDto } from "../../common/dto/farm-create.dto";
 import { Farm } from "../../common/entities/farm.entity";
@@ -8,20 +8,53 @@ import { Repository } from "typeorm";
 import { ApiException } from "../../exception/api.exception";
 import { ErrorCode } from "../../exception/error.code";
 import { QueryAllDto } from "../dto/query-all.dto";
-
+import * as fs from "fs";
 @Injectable()
-export class FarmService implements IFarmService{
+export class FarmService implements IFarmService {
 
-  constructor(@InjectRepository(Farm) private farmRepository: Repository<Farm>) {}
+  constructor(@InjectRepository(Farm) private farmRepository: Repository<Farm>,
+    @InjectRepository(User) private userRepository: Repository<User>
+  ) { }
 
-  async createFarm(dto: FarmCreateDto, user: User): Promise<Farm> {
-    const farmEntity = this.farmRepository.create({
-      ...dto,
-      user,
-    });
-    return this.farmRepository.save(farmEntity);
+  async createFarm(dto: FarmCreateDto): Promise<Farm | any> {
+
+    const user = await this.userRepository.findOne({
+      where: { id: dto.userId },
+      select: ['id', 'fullName', 'username'],
+    })
+    if (!user) {
+      throw new NotFoundException();
+    }
+    const farm = await this.getFarmByName(dto.name);
+    if (farm) {
+      throw new ConflictException("Farm already exists")
+    }
+    try {
+
+      const farmEntity = this.farmRepository.create({
+        ...dto,
+        user
+      });
+      return await this.farmRepository.save(farmEntity);
+
+    }
+    catch (error) {
+
+      console.log("Create failed ! File deleting...");
+      fs.unlinkSync(`public/${dto.image}`);
+      console.log("Deleted!");
+
+      throw new BadRequestException(error.message)
+    }
+
   }
+  async getFarmByName(name: string): Promise<Farm> {
+    const farm = await this.farmRepository.findOne({
+      where: { name },
+    })
 
+    return farm;
+  }
   async getFarmById(id: string): Promise<Farm> {
     const farm = await this.farmRepository
       .createQueryBuilder("farm")

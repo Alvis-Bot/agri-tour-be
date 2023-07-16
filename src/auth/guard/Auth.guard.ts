@@ -9,15 +9,15 @@ export class AuthGuard implements CanActivate {
     constructor(private jwtService: JwtService,private reflector: Reflector) { }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [
-            context.getHandler(),
-            context.getClass(),
-          ]);
-          if (isPublic) {
-            // 💡 See this condition
-            return true;
-          }
-      
+        // const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [
+        //     context.getHandler(),
+        //     context.getClass(),
+        //   ]);
+        //   if (isPublic) {
+        //     // 💡 See this condition
+        //     return true;
+        //   }
+   
         const request = context.switchToHttp().getRequest();
         const token = this.extractTokenFromHeader(request);
         if (!token) {
@@ -31,7 +31,8 @@ export class AuthGuard implements CanActivate {
             request.uid = decodedToken.id;
             request.user = decodedToken;
             return true;
-        } catch (error) {
+        } catch (error) {   
+            console.log(error)
             return false;
         }
     }

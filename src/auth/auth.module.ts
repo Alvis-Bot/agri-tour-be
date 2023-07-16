@@ -12,22 +12,17 @@ import { Service } from "../common/enum/service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Permission } from "../common/entities/permission.entity";
 import { User } from "../common/entities/user.entity";
+import { JwtConfigModule } from './jwt/jwt.module';
 
 @Module({
   imports: [UserModule, PassportModule,
     TypeOrmModule.forFeature([Permission, User]),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '1h' },
-      }),
-      inject: [ConfigService],
-    }),],
+  JwtConfigModule],
   providers: [{
     provide: Service.AUTH_SERVICE,
     useClass: AuthService
   }, LocalStrategy, JwtStrategy],
   controllers: [AuthController],
+  exports:[AuthModule]
 })
 export class AuthModule { }

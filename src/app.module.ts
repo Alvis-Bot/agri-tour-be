@@ -17,12 +17,14 @@ import { SoilTypeModule } from './soil-type/soil-type.module';
 import { AppController } from './app.controller';
 import { RoleModule } from './role/role.module';
 import { AbilityModule } from './ability/ability.module';
+import { JwtConfigModule } from './auth/jwt/jwt.module';
+
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      validationSchema,
+      // validationSchema,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -55,6 +57,7 @@ import { AbilityModule } from './ability/ability.module';
     SoilTypeModule,
     RoleModule,
     AbilityModule,
+    JwtConfigModule
   ],
   controllers:[AppController]
 })

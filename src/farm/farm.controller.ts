@@ -1,10 +1,10 @@
-import { BadRequestException, Body, Controller, Get, Inject, Post, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Inject, Post, Query, Req, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { Router } from "../common/enum/router";
 import { Service } from "../common/enum/service";
 import { IFarmService } from "./service/farm";
 import { Description } from "../common/decorator/description.decorator";
 import { FarmCreateDto } from "../common/dto/farm-create.dto";
-import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
+
 import { AuthUser } from "../common/decorator/user.decorator";
 import { User } from "../common/entities/user.entity";
 import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
@@ -14,38 +14,32 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import * as path from "path";
 import * as fs from "fs";
+import { Farm } from "src/common/entities/farm.entity";
+import { AuthGuard } from "src/auth/guard/Auth.guard";
 @Controller(Router.FARM)
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
+
 @ApiTags('Farm APIs')
 export class FarmController {
   constructor(@Inject(Service.FARM_SERVICE) private readonly farmService: IFarmService) {
   }
 
-  @Post('upload')
-
-  @ApiConsumes('multipart/form-data','application/json')
-  // @ApiBody({
-  //   schema: {
-  //     type: 'object',
-  //     properties: {
-  //       image: {
-  //         type: 'string',
-  //         format: 'binary',
-  //       },
-
-  //     },
-  //   },
-  // })
-
-  @UseInterceptors(FileInterceptor('file', {
+  @Post('concac')
+  @UseGuards(AuthGuard)
+  async Concac(@Req() req) {
+    return req.user;
+  }
+  @Post('create-farm')
+  @Description("Tạo mới một trang trại")
+  @ApiConsumes('multipart/form-data', 'application/json')
+  @UseInterceptors(FileInterceptor('image', {
     storage: diskStorage({
       destination: 'public/uploads/farms',
       filename: (req, file, callback) => {
-        const uid = req.query.uid;
 
-        let name = `${uid}-unknown`;
+        let name = `${Date.now()}-unknown`;
         if (file.originalname && typeof file.originalname === 'string') {
-          name = `${uid}-${path.parse(file.originalname).name}`;
+          name = `${Date.now()}-${path.parse(file.originalname).name}`;
         }
         const extension = path.parse(file.originalname || '').ext;
         const filePath = path.join(`public/uploads/farms`, `${name}${extension}`);
@@ -62,19 +56,20 @@ export class FarmController {
     }),
   }))
 
-  async uploadFile(@UploadedFile() file: Express.Multer.File, @Body() createfarmDto: FarmCreateDto): Promise<string | any> {
-    try {
+  @UseGuards(AuthGuard)
+  async createFarm(@UploadedFile() file: Express.Multer.File, @Body() createfarmDto: FarmCreateDto, @Req() req): Promise<Farm | any> {
 
-      const filePath = `uploads/farms/${file.filename}`;
-      return { message: 'File uploaded successfully', file: filePath };
-    } catch (error) {
-      throw new BadRequestException(error.message, error)
+    const filePath = `uploads/farms/${file.filename}`;
+    if (!filePath) {
+      throw new BadRequestException('File is required');
     }
-  }
-  @Post()
-  @Description("Tạo mới một trang trại")
-  async createFarm(@AuthUser() user: User, @Body() dto: FarmCreateDto) {
-    return this.farmService.createFarm(dto, user);
+
+     return this.farmService.createFarm({
+      ...createfarmDto,
+      image: filePath,
+      userId:req.user.id
+     });
+   // fs.unlinkSync(`public/${filePath}`)
   }
 
   @Get()

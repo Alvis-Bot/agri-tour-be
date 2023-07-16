@@ -1,10 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Location } from "../interface";
+import { Location as ILocation } from "../interface";
+import { User } from "../entities/user.entity";
 
 
 export class FarmCreateDto {
 
-    @ApiProperty()
+    @ApiProperty({
+        example: 'Trang trại vinamilk'
+    })
     name: string;
     @ApiProperty({ example: 'Business Model' })
     business_model: string;
@@ -30,9 +33,10 @@ export class FarmCreateDto {
             latitude: 1,
             longitude: 1
         },
-
     })
-    location: Location
+    location: ILocation
     @ApiProperty({ type: 'string', format: 'binary' })
     image: string;
+
+    userId:string;
 }

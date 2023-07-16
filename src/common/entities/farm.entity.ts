@@ -1,12 +1,9 @@
 import {
   Column,
   Entity,
-  Geometry,
-  Index,
   JoinColumn,
   ManyToOne,
-  MultiPoint, OneToMany,
-  Point,
+  OneToMany,
   PrimaryGeneratedColumn
 } from "typeorm";
 import { User } from "./user.entity";

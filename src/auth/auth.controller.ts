@@ -43,7 +43,7 @@ export class AuthController {
   }
 
   // @Permissions(Permission.UPDATE_USERS)
-  @UseGuards(JwtAuthGuard)
+ 
   @Get('users')
   getUsers(@Query() pagination: Pagination) {
     return this.userService.getUsers(pagination);
