@@ -51,13 +51,15 @@ export class AuthController {
   @Description("Gia hạn mã token")
   @Post('accessToken/get-time')
   @UseGuards(AuthGuard)
-  async refreshToken(@Req() req) {
+  async accessToken(@Req() req) {
     const { user } = req;
 
     // Generate a new access token
-    const refreshToken = this.authService.generateAccessToken(user);
+    const accessToken = await this.authService.generateAccessToken(user);
 
-    return { refreshToken };
+    return {
+      accessToken
+    };
   }
   // @Description("Tạo refresh token")
   // @Post('accessToken/get-time')

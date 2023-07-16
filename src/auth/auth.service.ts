@@ -51,7 +51,7 @@ export class AuthService implements IAuthService {
       username: user.username
     };
     const refreshToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '1y',
+      expiresIn: '7d',
     });
 
     await this.userService.updateUserCustom(payload.id, {
