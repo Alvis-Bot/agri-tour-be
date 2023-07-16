@@ -23,6 +23,7 @@ import { BusinessTypeModule } from './business_type/business_type.module';
 import { ProvincesModule } from './provinces/provinces.module';
 import { DistrictModule } from './district/district.module';
 import { WardsModule } from './wards/wards.module';
+import { CategoriesModule } from './categories/categories.module';
 
 
 @Module({
@@ -68,6 +69,7 @@ import { WardsModule } from './wards/wards.module';
     ProvincesModule,
     DistrictModule,
     WardsModule,
+    CategoriesModule,
   ],
   controllers:[AppController]
 })
