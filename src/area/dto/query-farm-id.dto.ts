@@ -4,7 +4,7 @@ import { ApiProperty } from "@nestjs/swagger";
 export class QueryFarmIdDto{
 
 
-    @IsUUID()
+    // @IsUUID()    
     @IsNotEmpty()
     @ApiProperty()
     farmId: string;

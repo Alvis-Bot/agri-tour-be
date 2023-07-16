@@ -17,9 +17,7 @@ export class Area {
   @Column({ type: 'varchar', nullable: true, length: 100 })
   description: string;
 
-  // @OneToMany(() => AreaLocation, location => location.area )
-  // locations: AreaLocation[];
-
+  
   @Column({ type: 'jsonb', nullable: true })
   locations: Location[];
 

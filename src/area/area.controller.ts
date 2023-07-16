@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -9,6 +10,7 @@ import {
   Res,
   UploadedFile,
   UploadedFiles, UseGuards,
+  UseInterceptors,
   ValidationPipe
 } from "@nestjs/common";
 import { Router } from "../common/enum/router";
@@ -17,17 +19,18 @@ import { AreaCreateDto } from "../common/dto/area-create.dto";
 import { IAreaService } from "./service/area";
 import { Service } from "../common/enum/service";
 import { IS_UUID, ValidationTypes, Validator } from "class-validator";
-import { ApiBody, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { QueryFarmIdDto } from "./dto/query-farm-id.dto";
 import { ApiFile, ApiFiles } from "./api-file.decorator";
 import { QueryAreaIdDto } from "./dto/query-area-id.dto";
-import { extname } from "path";
+import * as path from "path";
 import { ApiException } from "../exception/api.exception";
 import { ErrorCode } from "../exception/error.code";
 import { diskStorage } from "multer";
 import { UploadDto } from "./dto/upload.dto";
 import { response } from "express";
 import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
+import { FileFieldsInterceptor } from "@nestjs/platform-express";
 
 @Controller(Router.AREA)
 @ApiTags("Area APIs  (area)")
@@ -39,25 +42,21 @@ export class AreaController {
 
   @Post()
   @Description("Tạo mới một khu đất")
-  async createArea(
-    @Body() dto : AreaCreateDto ,
-    @Query() { farmId }: QueryFarmIdDto){
-    return this.areaService.createArea(dto ,farmId);
-  }
-
-
-
-  @Post('upload')
-  @Description("Upload file")
-  @ApiFiles('avatars', true, 20, {
+  @ApiConsumes('multipart/form-data', 'application/json')
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'avatars', maxCount: 5 },
+  ], {
     storage: diskStorage({
-      destination: './uploads',
-      filename: (req, file, cb) => {
-        const randomName = Array(32)
-          .fill(null)
-          .map(() => Math.round(Math.random() * 16).toString(16))
-          .join('');
-        return cb(null, `${randomName}${extname(file.originalname)}`);
+      destination: 'public/uploads/areas',
+      filename: (req, file, callback) => {
+        let name = `${Date.now()}-unknown`;
+        if (file.originalname && typeof file.originalname === 'string') {
+          name = `${Date.now()}-${path.parse(file.originalname).name}`;
+        }
+        const extension = path.parse(file.originalname || '').ext;
+        const fileName = `${name}${extension}`;
+        console.log("Uploading...");
+        callback(null, fileName);
       },
     }),
     fileFilter: (req: any, file: any, cb: any) => {
@@ -70,28 +69,57 @@ export class AreaController {
         cb(new ApiException(ErrorCode.FILE_TYPE_NOT_MATCHING), false);
       }
     },
-  })
-  async uploadFile( @Query() { areaId }: QueryAreaIdDto,
-                    @Body() dto: UploadDto,
-                    @UploadedFiles() files: Express.Multer.File[],){
-    return this.areaService.uploadFile(files ,areaId);
   }
+  ))
+  async createArea(
+    @Body() dto: AreaCreateDto,
+    @Query() { farmId }: QueryFarmIdDto,
+    @UploadedFiles() files?: {
+      avatars?: Express.Multer.File[]
+    }
+  ): Promise<AreaCreateDto | any> {
+    // Access the file(s) if they exist
+    const images = files?.avatars;
+    if (!images) {
+      throw new BadRequestException('Images file is required');
+    }
+    const filesPath = images?.map(file => `uploads/areas/${file.filename}`);
+    let locations = null;
+    let flag = false;
+    let newLocation = null;
+    const regex = /\[|\]/;
+    if (regex.test(dto.locations.toString())) {
+      locations = dto.locations;
+      flag = true;
+      newLocation = JSON.parse(locations);
+    } else {
+      locations = JSON.parse(`[${dto.locations}]`);
+    }
+
+    return await this.areaService.createArea({
+      ...dto,
+      avatars: filesPath,
+      locations: flag === true ? newLocation : locations
+    }, farmId)
+  }
+
+
 
   @Get('all')
   @Description("Lấy danh sách khu vực")
-  async getAreas(){
+  async getAreas() {
     return this.areaService.getAreas();
   }
 
   @Get('farm')
   @Description("Lấy danh sách khu vực theo id farm")
-  async getAreasByFarmId(@Query() { farmId }: QueryFarmIdDto){
+  async getAreasByFarmId(@Query() { farmId }: QueryFarmIdDto) {
     return this.areaService.getAreasByFarmId(farmId);
   }
 
   @Get()
   @Description("Lấy thông tin khu vực theo id")
-  async getAreaById(@Query('id') id: string){
+  async getAreaById(@Query('id') id: string) {
     return this.areaService.getAreaById(id);
   }
 

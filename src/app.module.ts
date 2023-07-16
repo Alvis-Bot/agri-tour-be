@@ -18,6 +18,11 @@ import { AppController } from './app.controller';
 import { RoleModule } from './role/role.module';
 import { AbilityModule } from './ability/ability.module';
 import { JwtConfigModule } from './auth/jwt/jwt.module';
+import { BusinessModelModule } from './business_model/business_model.module';
+import { BusinessTypeModule } from './business_type/business_type.module';
+import { ProvincesModule } from './provinces/provinces.module';
+import { DistrictModule } from './district/district.module';
+import { WardsModule } from './wards/wards.module';
 
 
 @Module({
@@ -57,7 +62,12 @@ import { JwtConfigModule } from './auth/jwt/jwt.module';
     SoilTypeModule,
     RoleModule,
     AbilityModule,
-    JwtConfigModule
+    JwtConfigModule,
+    BusinessModelModule,
+    BusinessTypeModule,
+    ProvincesModule,
+    DistrictModule,
+    WardsModule,
   ],
   controllers:[AppController]
 })

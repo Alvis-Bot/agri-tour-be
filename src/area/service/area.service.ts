@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { BadRequestException, ConflictException, Inject, Injectable } from "@nestjs/common";
 import { IAreaService } from "./area";
 import { AreaCreateDto } from "../../common/dto/area-create.dto";
 import { Area } from "../../common/entities/area.entity";
@@ -8,52 +8,69 @@ import { ApiException } from "../../exception/api.exception";
 import { ErrorCode } from "../../exception/error.code";
 import { Service } from "../../common/enum/service";
 import { IFarmService } from "../../farm/service/farm";
-
+import * as fs from "fs";
 @Injectable()
-export class AreaService implements IAreaService{
+export class AreaService implements IAreaService {
 
   constructor(@InjectRepository(Area) private areaRepository: Repository<Area>,
-              @Inject(Service.FARM_SERVICE) private farmService: IFarmService) {}
+    @Inject(Service.FARM_SERVICE) private farmService: IFarmService) { }
 
   async createArea(dto: AreaCreateDto, farmId: string): Promise<Area> {
-    const farm = await this.farmService.getFarmById(farmId);
-    if (!farm) {
-      throw new ApiException(ErrorCode.FARM_NOT_FOUND)
+    try {
+      console.log(dto.avatars)
+      const farm = await this.farmService.getFarmById(farmId);
+      if (!farm) {
+        throw new ApiException(ErrorCode.FARM_NOT_FOUND)
+      }
+      const area = await this.areaRepository.findOne({
+        where: {
+          name: dto.name
+        }
+      })
+      if (area) {
+        throw new ConflictException("Đã tồn tại vùng canh tác này");
+      }
+      const areaEntity = this.areaRepository.create({
+        ...dto,
+        farm
+      });
+      return await this.areaRepository.save(areaEntity);
+       
     }
+    catch (error) {
+      console.log("Create failed ! File deleting...");
 
-    const areaEntity = this.areaRepository.create({
-      name: dto.name,
-      locations: dto.locations,
-      description: dto.description,
-      acreage: dto.acreage,
-      farm
-    });
-    return this.areaRepository.save(areaEntity);
+      dto.avatars.map(image => {
+        fs.unlinkSync(`public/${image}`);
+      })
+      console.log("Deleted!");
+
+      throw new BadRequestException(error.message)
+    }
   }
 
-   async getAreas(): Promise<Area[]> {
+  async getAreas(): Promise<Area[]> {
     return this.areaRepository.
-        createQueryBuilder('land')
-        .getMany();
+      createQueryBuilder('land')
+      .getMany();
   }
 
   async getAreaById(id: string): Promise<Area> {
     const area = await this.areaRepository.
-        createQueryBuilder('land')
+      createQueryBuilder('land')
       .where('land.id = :id', { id })
-        .getOne();
+      .getOne();
 
     if (!area) {
       throw new ApiException(ErrorCode.AREA_NOT_FOUND)
     }
     return area;
   }
-
   async uploadFile(file: Express.Multer.File[], areaId: string): Promise<Area> {
     const area = await this.areaRepository.
-        createQueryBuilder('land')
-        .where('land.id = :id', { id: areaId })
-        .getOne();
+      createQueryBuilder('land')
+      .where('land.id = :id', { id: areaId })
+      .getOne();
 
     if (!area) {
       throw new ApiException(ErrorCode.AREA_NOT_FOUND)
@@ -64,11 +81,11 @@ export class AreaService implements IAreaService{
   }
 
   async getAreasByFarmId(farmId: string): Promise<Area[]> {
-     await this.farmService.getFarmById(farmId);
+    await this.farmService.getFarmById(farmId);
     return this.areaRepository.
-        createQueryBuilder('land')
-        .where('land.farm_id = :farmId', { farmId })
-        .getMany()
+      createQueryBuilder('land')
+      .where('land.farm_id = :farmId', { farmId })
+      .getMany()
   }
 
 }

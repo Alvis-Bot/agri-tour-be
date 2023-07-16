@@ -16,6 +16,8 @@ import * as path from "path";
 import * as fs from "fs";
 import { Farm } from "src/common/entities/farm.entity";
 import { AuthGuard } from "src/auth/guard/Auth.guard";
+import { ApiException } from "src/exception/api.exception";
+import { ErrorCode } from "src/exception/error.code";
 @Controller(Router.FARM)
 // @UseGuards(JwtAuthGuard)
 
@@ -24,11 +26,6 @@ export class FarmController {
   constructor(@Inject(Service.FARM_SERVICE) private readonly farmService: IFarmService) {
   }
 
-  @Post('concac')
-  @UseGuards(AuthGuard)
-  async Concac(@Req() req) {
-    return req.user;
-  }
   @Post('create-farm')
   @Description("Tạo mới một trang trại")
   @ApiConsumes('multipart/form-data', 'application/json')
@@ -53,7 +50,18 @@ export class FarmController {
         callback(null, `${name}${extension}`);
 
       },
+      
     }),
+    fileFilter: (req: any, file: any, cb: any) => {
+      console.log(file);
+      if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
+        // Allow storage of file
+        cb(null, true);
+      } else {
+        // Reject file
+        cb(new ApiException(ErrorCode.FILE_TYPE_NOT_MATCHING), false);
+      }
+    },
   }))
 
   @UseGuards(AuthGuard)

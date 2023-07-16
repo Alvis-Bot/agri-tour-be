@@ -1,41 +1,49 @@
-import { Location } from "../interface";
+import { Location as ILocation } from "../interface";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
-import { Point } from "typeorm";
+
 
 
 export class AreaCreateDto {
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 'Name for area create'
+  })
   @IsString()
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({
-    example: [
-      {
-        point: 1,
-        latitude: 1,
-        longitude: 1
-      },
-      {
-        point: 2,
-        latitude: 2,
-        longitude: 2
-      }
-    ]
+
+  @ApiPropertyOptional({
+    example: 'Description for area create'
   })
-  locations: Location[];
-
-
-  @ApiPropertyOptional()
   @IsString()
   @IsOptional()
   description: string;
 
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 15
+  })
   acreage: number;
 
+  @ApiProperty({
+    type: 'array',
+    items: {
+      type: 'object',
+      properties: {
+        point: { type: 'number', example: 12.3 },
+        latitude: { type: 'number', example: 24.5 },
+        longitude: { type: 'number', example: 14.5 },
+      },
+    },
+  })
 
+  @IsNotEmpty()
+  locations: ILocation[];
+
+  @ApiProperty({ type: 'array', items: { type: 'string', format: 'binary' } })
+  avatars: string[];
+
+ 
 }
