@@ -24,6 +24,9 @@ import { ProvincesModule } from './provinces/provinces.module';
 import { DistrictModule } from './district/district.module';
 import { WardsModule } from './wards/wards.module';
 import { CategoriesModule } from './categories/categories.module';
+import { FarmingCalenderModule } from './farming_calender/farming_calender.module';
+import { ProductModule } from './product/product.module';
+import { CategoryDetailsModule } from './category-details/category-details.module';
 
 
 @Module({
@@ -70,6 +73,9 @@ import { CategoriesModule } from './categories/categories.module';
     DistrictModule,
     WardsModule,
     CategoriesModule,
+    FarmingCalenderModule,
+    ProductModule,
+    CategoryDetailsModule,
   ],
   controllers:[AppController]
 })

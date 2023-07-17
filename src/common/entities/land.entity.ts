@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGene
 import { SoilType } from "./soil-type.entity";
 import { Area } from "./area.entity";
 import { Location } from "../interface";
+import { FarmingCalender } from "./farming_calender.entity";
 //vùng canh tác
 @Entity('lands')
 export class Land{
@@ -25,4 +26,7 @@ export class Land{
 
   @Column({ type: 'jsonb', nullable: true })
   locations: Location[];
+
+  @OneToMany(()=>FarmingCalender,farmingCalender=>farmingCalender.land,{cascade: true,onDelete:'CASCADE'})
+  farmingCalender: FarmingCalender;
 }

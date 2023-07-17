@@ -8,8 +8,6 @@ import { ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { UserCreateDto } from "../common/dto/user-create.dto";
 import { AuthUser } from "../common/decorator/user.decorator";
 import { User } from "../common/entities/user.entity";
-
-import { JwtAuthGuard } from "./guard/jwt-auth.guard";
 import { Pagination } from "../common/pagination/pagination.dto";
 import { IUserService } from "../user/service/user";
 import { AuthGuard } from "./guard/Auth.guard";
@@ -43,7 +41,7 @@ export class AuthController {
   }
 
   // @Permissions(Permission.UPDATE_USERS)
- 
+
   @Get('users')
   getUsers(@Query() pagination: Pagination) {
     return this.userService.getUsers(pagination);
@@ -54,22 +52,13 @@ export class AuthController {
   async accessToken(@Req() req) {
     const { user } = req;
 
-    // Generate a new access token
+    // Generate a new token
     const accessToken = await this.authService.generateAccessToken(user);
-
+    const refreshToken = await this.authService.generateRefreshToken(user);
     return {
-      accessToken
+      accessToken,
+      refreshToken
     };
   }
-  // @Description("Tạo refresh token")
-  // @Post('accessToken/get-time')
-  // @UseGuards(AuthGuard)
-  // async refreshToken(@Req() req) {
-  //   const { user } = req;
-
-  //   // Generate a new access token
-  //   const refreshToken = this.authService.generateAccessToken(user);
-
-  //   return { refreshToken };
-  // }
+  
 }
