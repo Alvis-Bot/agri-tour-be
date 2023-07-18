@@ -65,7 +65,7 @@ export class LandController {
       images?: Express.Multer.File[]
     }
   ) {
-    console.log(createLandDto.locations.toString());
+   
     // Access the file(s) if they exist
     const images = files?.images;
     if (!images) {
