@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFarmingCalenderDto } from '../common/dto/create-farming_calender.dto';
 import { UpdateFarmingCalenderDto } from 'src/common/dto/update-farming_calender.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,7 +12,12 @@ export class FarmingCalenderService {
     @InjectRepository(FarmingCalender)
     private readonly farmingCalenderRepository: Repository<FarmingCalender>,
   ) { }
-  async createFarmingCalender(data: CreateFarmingCalenderDto): Promise<FarmingCalender|any> {
+  async createFarmingCalender(data: CreateFarmingCalenderDto): Promise<FarmingCalender | any> {
+    try { 
+      return data;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
     // const farmingCalender = this.farmingCalenderRepository.create(data);
     // return await this.farmingCalenderRepository.save(farmingCalender);
   }
@@ -33,8 +38,8 @@ export class FarmingCalenderService {
     return farming_calender;
   }
 
-  async updateFarmingCalender(id: string, data: UpdateFarmingCalenderDto): Promise<FarmingCalender|any> {
-    
+  async updateFarmingCalender(id: string, data: UpdateFarmingCalenderDto): Promise<FarmingCalender | any> {
+
     //  await this.getFarmingCalenderById(id);
     //  await this.farmingCalenderRepository.update(id, data);
   }

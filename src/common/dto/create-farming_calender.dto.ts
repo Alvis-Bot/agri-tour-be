@@ -51,8 +51,8 @@ export class CreateFarmingCalenderDto {
     categoryDetailId: string;
 
 
-    land: string;
+    landId: string;
 
 
-    user: string;
+    userId: string;
 }

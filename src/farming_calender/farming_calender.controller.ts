@@ -1,16 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Query, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Query, Delete, UseGuards, Req } from '@nestjs/common';
 import { FarmingCalenderService } from './farming_calender.service';
 import { CreateFarmingCalenderDto } from '../common/dto/create-farming_calender.dto';
 import { UpdateFarmingCalenderDto } from 'src/common/dto/update-farming_calender.dto';
 import { FarmingCalender } from 'src/common/entities/farming_calender.entity';
+import { AuthGuard } from 'src/auth/guard/Auth.guard';
 
 @Controller('farming-calender')
 export class FarmingCalenderController {
   constructor(private readonly farmingCalenderService: FarmingCalenderService) { }
 
+  @UseGuards(AuthGuard)
   @Post('create')
-  async createFarmingCalender(@Query('landId') landId: string, @Query('cateDetailsId') cateDetailId: string, @Body() data: CreateFarmingCalenderDto):Promise<CreateFarmingCalenderDto>{
-    return await this.farmingCalenderService.createFarmingCalender(data);
+  async createFarmingCalender(@Req() req, @Query('landId') landId: string, @Query('cateDetailsId') categoryDetailId: string, @Body() data: CreateFarmingCalenderDto): Promise<CreateFarmingCalenderDto> {
+    return await this.farmingCalenderService.createFarmingCalender({
+      ...data,
+      landId,
+      categoryDetailId,
+      userId: req.uid
+    });
   }
   @Get('gets')
   async getAllFarmingCalenders() {

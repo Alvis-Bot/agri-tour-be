@@ -1,6 +1,5 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Land } from "./land.entity";
-import { Product } from "./product.entity";
 import { CategoryDetails } from "src/category-details/entities/category-detail.entity";
 import { User } from "./user.entity";
 

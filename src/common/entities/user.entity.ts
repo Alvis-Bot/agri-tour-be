@@ -43,13 +43,13 @@ export class User extends AuditEntity {
   // group: Group;
   @ManyToMany(() => Group, group => group.users)
   @JoinTable({
-    name:'user_groups'
+    name: 'user_groups'
   })
   groups: Group[];
   @OneToMany(() => Farm, farm => farm.user)
   farms: Farm[];
 
-  @OneToMany(()=>FarmingCalender,farmingCalender=>farmingCalender.user,{onDelete:'CASCADE',onUpdate:'CASCADE'})
+  @OneToMany(() => FarmingCalender, farmingCalender => farmingCalender.user, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   farmingCalenders: FarmingCalender[];
 
   @BeforeInsert()
