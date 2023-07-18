@@ -61,7 +61,7 @@ export class FarmController {
 
   @UseGuards(AuthGuard)
   async createFarm(@UploadedFile() file: Express.Multer.File, @Body() createfarmDto: FarmCreateDto, @Req() req): Promise<Farm | any> {
-
+    console.log("FILE........", file);
     const filePath = `uploads/farms/${file?.filename}`;
     if (!filePath) {
       throw new BadRequestException('File is required');
