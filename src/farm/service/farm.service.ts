@@ -18,7 +18,6 @@ export class FarmService implements IFarmService {
 
   async createFarm(dto: FarmCreateDto): Promise<Farm | any> {
     try {
-      const location = JSON.parse(dto.location as unknown as string)
       const user = await this.userRepository.findOne({
         where: { id: dto.userId },
         select: ['id', 'fullName', 'username'],
@@ -34,7 +33,7 @@ export class FarmService implements IFarmService {
 
       const farmEntity = this.farmRepository.create({
         ...dto,
-        location,
+        
         user
       });
       return await this.farmRepository.save(farmEntity);

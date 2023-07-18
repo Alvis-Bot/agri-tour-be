@@ -43,12 +43,12 @@ export class FarmController {
 
         console.log("Uploading...");
         callback(null, `${name}${extension}`);
-
+        console.log("Uploading...", file);
       },
 
     }),
     fileFilter: (req: any, file: any, cb: any) => {
-      console.log(file);
+
       if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
         // Allow storage of file
         cb(null, true);
@@ -60,19 +60,24 @@ export class FarmController {
   }))
 
   @UseGuards(AuthGuard)
-  async createFarm(@UploadedFile() file: Express.Multer.File, @Body() createfarmDto: FarmCreateDto, @Req() req): Promise<Farm | any> {
-    console.log("FILE........", file);
-    const filePath = `uploads/farms/${file?.filename}`;
-    if (!filePath) {
-      throw new BadRequestException('File is required');
-    }
+  async createFarm(@UploadedFile() image: Express.Multer.File, @Body() createfarmDto: FarmCreateDto, @Req() req): Promise<Farm | any> {
+    try {
 
-    return this.farmService.createFarm({
-      ...createfarmDto,
-      image: filePath,
-      userId: req.user.id
-    });
-    // fs.unlinkSync(`public/${filePath}`)
+      const filePath = `uploads/farms/${image?.filename}`;
+      if (!filePath) {
+        throw new BadRequestException('File is required');
+      }
+      console.log(filePath);
+
+      return await this.farmService.createFarm({
+        ...createfarmDto,
+        image: filePath,
+        userId: req.user.id
+      });
+
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   @Get()
