@@ -28,7 +28,7 @@ export class FarmController {
 
   @Post('create-farm')
   @Description("Tạo mới một trang trại")
-  @ApiConsumes('multipart/form-data', 'application/json')
+  @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('image', {
     storage: diskStorage({
       destination: 'public/uploads/farms',
@@ -39,18 +39,13 @@ export class FarmController {
           name = `${Date.now()}-${path.parse(file.originalname).name}`;
         }
         const extension = path.parse(file.originalname || '').ext;
-        const filePath = path.join(`public/uploads/farms`, `${name}${extension}`);
-        if (fs.existsSync(filePath)) {
-          console.log("file already exists! deleting...")
-          fs.unlinkSync(filePath);
-          console.log("Deleted!");
-        }
+
 
         console.log("Uploading...");
         callback(null, `${name}${extension}`);
 
       },
-      
+
     }),
     fileFilter: (req: any, file: any, cb: any) => {
       console.log(file);
@@ -67,17 +62,17 @@ export class FarmController {
   @UseGuards(AuthGuard)
   async createFarm(@UploadedFile() file: Express.Multer.File, @Body() createfarmDto: FarmCreateDto, @Req() req): Promise<Farm | any> {
 
-    const filePath = `uploads/farms/${file.filename}`;
+    const filePath = `uploads/farms/${file?.filename}`;
     if (!filePath) {
       throw new BadRequestException('File is required');
     }
 
-     return this.farmService.createFarm({
+    return this.farmService.createFarm({
       ...createfarmDto,
       image: filePath,
-      userId:req.user.id
-     });
-   // fs.unlinkSync(`public/${filePath}`)
+      userId: req.user.id
+    });
+    // fs.unlinkSync(`public/${filePath}`)
   }
 
   @Get()

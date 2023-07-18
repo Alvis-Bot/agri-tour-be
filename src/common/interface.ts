@@ -7,7 +7,7 @@ export interface AuthenticatedRequest extends Request {
 }
 
 export interface Location {
-  point : number;
+  point?: number;
   latitude: number;
   longitude: number;
 }
