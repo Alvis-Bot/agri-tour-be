@@ -85,22 +85,23 @@ export class AreaController {
       throw new BadRequestException('Images file is required');
     }
     const filesPath = images?.map(file => `uploads/areas/${file.filename}`);
-    let locations = null;
-    let flag = false;
-    let newLocation = null;
-    const regex = /\[|\]/;
-    if (regex.test(dto.locations.toString())) {
-      locations = dto.locations;
-      flag = true;
-      newLocation = JSON.parse(locations);
-    } else {
-      locations = JSON.parse(`[${dto.locations}]`);
-    }
+    // let locations = null;
+    // let flag = false;
+    // let newLocation = null;
+    // const regex = /\[|\]/;
+    // if (regex.test(dto.locations.toString())) {
+    //   locations = dto.locations;
+    //   flag = true;
+    //   newLocation = JSON.parse(locations);
+    // } else {
+    //   locations = JSON.parse(`[${dto.locations}]`);
+    // }
 
     return await this.areaService.createArea({
       ...dto,
       avatars: filesPath,
-      locations: flag === true ? newLocation : locations
+      // locations: flag === true ? newLocation : locations
+      locations: dto.locations
     }, farmId)
   }
 
