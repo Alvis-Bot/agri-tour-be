@@ -16,6 +16,7 @@ import { Permission } from "./permission.entity";
 import { Group } from "./group.entity";
 import { Exclude } from "class-transformer";
 import { Farm } from "./farm.entity";
+import { FarmingCalender } from "./farming_calender.entity";
 
 @Entity('users')
 export class User extends AuditEntity {
@@ -48,7 +49,8 @@ export class User extends AuditEntity {
   @OneToMany(() => Farm, farm => farm.user)
   farms: Farm[];
 
-
+  @ManyToOne(()=>FarmingCalender,farmingCalender=>farmingCalender.users,{onDelete:'CASCADE',onUpdate:'CASCADE'})
+  farmingCalender: FarmingCalender;
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);

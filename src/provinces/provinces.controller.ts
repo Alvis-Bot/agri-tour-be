@@ -12,10 +12,10 @@ export class ProvincesController {
   constructor(private readonly provincesService: ProvincesService) {}
 
   
-  @Post('init-province')
-  async initDistrict():Promise<any>{
-    return await this.provincesService.create();
-  }
+  // @Post('init-province')
+  // async initDistrict():Promise<any>{
+  //   return await this.provincesService.create();
+  // }
   // @Post()
   // create(@Body() createProvinceDto: CreateProvinceDto) {
   //   return this.provincesService.create(createProvinceDto);

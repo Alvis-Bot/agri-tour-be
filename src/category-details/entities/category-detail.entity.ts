@@ -20,4 +20,5 @@ export class CategoryDetails {
     // Mối quan hệ Many-to-One với Category
     @ManyToOne(() => Category, category => category.details,{onDelete:'SET NULL',onUpdate:'CASCADE'})
     category: Category;
+
 }

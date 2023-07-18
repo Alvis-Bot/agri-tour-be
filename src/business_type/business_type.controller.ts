@@ -7,28 +7,28 @@ import { UpdateBusinessTypeDto } from './dto/update-business_type.dto';
 export class BusinessTypeController {
   constructor(private readonly businessTypeService: BusinessTypeService) {}
 
-  @Post()
-  create(@Body() createBusinessTypeDto: CreateBusinessTypeDto) {
-    return this.businessTypeService.create(createBusinessTypeDto);
-  }
+  // @Post()
+  // create(@Body() createBusinessTypeDto: CreateBusinessTypeDto) {
+  //   return this.businessTypeService.create(createBusinessTypeDto);
+  // }
 
-  @Get()
-  findAll() {
-    return this.businessTypeService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.businessTypeService.findAll();
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.businessTypeService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.businessTypeService.findOne(+id);
+  // }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBusinessTypeDto: UpdateBusinessTypeDto) {
-    return this.businessTypeService.update(+id, updateBusinessTypeDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateBusinessTypeDto: UpdateBusinessTypeDto) {
+  //   return this.businessTypeService.update(+id, updateBusinessTypeDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.businessTypeService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.businessTypeService.remove(+id);
+  // }
 }

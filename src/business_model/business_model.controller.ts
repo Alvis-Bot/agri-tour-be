@@ -7,28 +7,28 @@ import { UpdateBusinessModelDto } from './dto/update-business_model.dto';
 export class BusinessModelController {
   constructor(private readonly businessModelService: BusinessModelService) {}
 
-  @Post()
-  create(@Body() createBusinessModelDto: CreateBusinessModelDto) {
-    return this.businessModelService.create(createBusinessModelDto);
-  }
+  // @Post()
+  // create(@Body() createBusinessModelDto: CreateBusinessModelDto) {
+  //   return this.businessModelService.create(createBusinessModelDto);
+  // }
 
-  @Get()
-  findAll() {
-    return this.businessModelService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.businessModelService.findAll();
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.businessModelService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.businessModelService.findOne(+id);
+  // }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBusinessModelDto: UpdateBusinessModelDto) {
-    return this.businessModelService.update(+id, updateBusinessModelDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateBusinessModelDto: UpdateBusinessModelDto) {
+  //   return this.businessModelService.update(+id, updateBusinessModelDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.businessModelService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.businessModelService.remove(+id);
+  // }
 }
