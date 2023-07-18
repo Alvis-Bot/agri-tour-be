@@ -87,8 +87,15 @@ export class AreaController {
     const filesPath = images?.map(file => `uploads/areas/${file.filename}`);
     var locations = null;
     const regex = /\[|\]/;
+
     if (regex.test(dto.locations.toString())) {
-      locations = dto.locations;
+      if (typeof dto.locations === 'string') {
+        locations = JSON.parse(dto.locations);
+      }
+      else {
+        locations = dto.locations;
+      }
+
     } else {
       //   console.log("chạy vào đây location còn lại đây (trường hợp swagger)");
       locations = JSON.parse(`[${dto.locations}]`);

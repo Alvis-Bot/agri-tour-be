@@ -75,7 +75,13 @@ export class LandController {
     var locations = null;
     const regex = /\[|\]/;
     if (regex.test(createLandDto.locations.toString())) {
-      locations = createLandDto.locations;
+      if (typeof createLandDto.locations === 'string') {
+        locations = JSON.parse(createLandDto.locations);
+      }
+      else {
+        locations = createLandDto.locations;
+
+      }
     } else {
       //   console.log("chạy vào đây location còn lại đây (trường hợp swagger)");
       locations = JSON.parse(`[${createLandDto.locations}]`);
