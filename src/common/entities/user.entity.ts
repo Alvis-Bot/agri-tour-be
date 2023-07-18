@@ -49,8 +49,9 @@ export class User extends AuditEntity {
   @OneToMany(() => Farm, farm => farm.user)
   farms: Farm[];
 
-  @ManyToOne(()=>FarmingCalender,farmingCalender=>farmingCalender.users,{onDelete:'CASCADE',onUpdate:'CASCADE'})
-  farmingCalender: FarmingCalender;
+  @OneToMany(()=>FarmingCalender,farmingCalender=>farmingCalender.user,{onDelete:'CASCADE',onUpdate:'CASCADE'})
+  farmingCalenders: FarmingCalender[];
+
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);

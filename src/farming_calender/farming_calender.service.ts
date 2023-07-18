@@ -1,27 +1,45 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFarmingCalenderDto } from '../common/dto/create-farming_calender.dto';
 import { UpdateFarmingCalenderDto } from 'src/common/dto/update-farming_calender.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FarmingCalender } from 'src/common/entities/farming_calender.entity';
+import { Repository } from 'typeorm';
 
 
 @Injectable()
 export class FarmingCalenderService {
-  create(createFarmingCalenderDto: CreateFarmingCalenderDto) {
-    return 'This action adds a new farmingCalender';
+  constructor(
+    @InjectRepository(FarmingCalender)
+    private readonly farmingCalenderRepository: Repository<FarmingCalender>,
+  ) { }
+  async createFarmingCalender(data: CreateFarmingCalenderDto): Promise<FarmingCalender|any> {
+    // const farmingCalender = this.farmingCalenderRepository.create(data);
+    // return await this.farmingCalenderRepository.save(farmingCalender);
   }
 
-  findAll() {
-    return `This action returns all farmingCalender`;
+  async getAllFarmingCalenders(): Promise<FarmingCalender[]> {
+    return await this.farmingCalenderRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} farmingCalender`;
+  async getFarmingCalenderById(id: string): Promise<FarmingCalender> {
+    const farming_calender = await this.farmingCalenderRepository.findOne({
+      where: {
+        id
+      }
+    });
+    if (!farming_calender) {
+      throw new NotFoundException("Không tìm thấy lịch canh tác này !");
+    }
+    return farming_calender;
   }
 
-  update(id: number, updateFarmingCalenderDto: UpdateFarmingCalenderDto) {
-    return `This action updates a #${id} farmingCalender`;
+  async updateFarmingCalender(id: string, data: UpdateFarmingCalenderDto): Promise<FarmingCalender|any> {
+    
+    //  await this.getFarmingCalenderById(id);
+    //  await this.farmingCalenderRepository.update(id, data);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} farmingCalender`;
+  async deleteFarmingCalender(id: string): Promise<void> {
+    await this.farmingCalenderRepository.delete(id);
   }
 }

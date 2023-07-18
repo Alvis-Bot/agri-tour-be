@@ -30,12 +30,12 @@ export class FarmingCalender {
     @Column()
     unit: string;
 
-    @OneToMany(() => CategoryDetails, categoryDetails => categoryDetails.name)
-    categoryDetails: CategoryDetails[];
+    @ManyToOne(() => CategoryDetails, categoryDetails => categoryDetails.name)
+    categoryDetail: CategoryDetails;
 
-    @OneToMany(() => Land, land => land.farmingCalender, { onDelete: 'SET NULL' })
-    lands: Land[];
+    @ManyToOne(() => Land, land => land.farmingCalenders, { onDelete: 'SET NULL' })
+    land: Land;
 
-    @OneToMany(()=>User,user=>user.farmingCalender, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
-    users:User[];
+    @ManyToOne(() => User, user => user.farmingCalenders, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
+    user: User;
 }
