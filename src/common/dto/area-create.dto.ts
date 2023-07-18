@@ -32,7 +32,7 @@ export class AreaCreateDto {
     items: {
       type: 'object',
       properties: {
-        point: { type: 'number', example: 12.3 },
+        point: { type: 'number', example: 12 },
         latitude: { type: 'number', example: 24.5 },
         longitude: { type: 'number', example: 14.5 },
       },
