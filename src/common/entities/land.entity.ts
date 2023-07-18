@@ -27,6 +27,6 @@ export class Land{
   @Column({ type: 'jsonb', nullable: true })
   locations: Location[];
 
-  @ManyToOne(()=>FarmingCalender,farmingCalender=>farmingCalender.land,{cascade: true,onDelete:'CASCADE'})
+  @ManyToOne(()=>FarmingCalender,farmingCalender=>farmingCalender.lands,{cascade: true,onDelete:'CASCADE'})
   farmingCalender: FarmingCalender;
 }
