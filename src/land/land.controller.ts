@@ -65,30 +65,25 @@ export class LandController {
       images?: Express.Multer.File[]
     }
   ) {
-   
+
     // Access the file(s) if they exist
     const images = files?.images;
     if (!images) {
       throw new BadRequestException('Images file is required');
     }
     const filesPath = images?.map(file => `uploads/lands/${file.filename}`);
-    // let locations = null;
-    // let flag = false;
-    // let newLocation = null;
-    // const regex = /\[|\]/;
-    // if (regex.test(createLandDto.locations.toString())) {
-    //   locations = createLandDto.locations;
-    //   flag = true;
-    //   newLocation = JSON.parse(locations);
-    // } else {
-    //   locations = JSON.parse(`[${createLandDto.locations}]`);
-    // }
-
+    var locations = null;
+    const regex = /\[|\]/;
+    if (regex.test(createLandDto.locations.toString())) {
+      locations = createLandDto.locations;
+    } else {
+      //   console.log("chạy vào đây location còn lại đây (trường hợp swagger)");
+      locations = JSON.parse(`[${createLandDto.locations}]`);
+    }
     return this.landService.createLandCustom(areaId, {
       ...createLandDto,
       images: filesPath,
-      //locations: flag === true ? newLocation : locations
-      locations:createLandDto.locations
+      locations
     });
   }
   // @Post()
