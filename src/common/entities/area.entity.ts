@@ -2,11 +2,12 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 import { Farm } from "./farm.entity";
 import { Land } from "./land.entity";
 import { Location } from "../interface";
+import { AuditEntity } from "./audit.entity";
 
 
 
 @Entity('areas')
-export class Area {
+export class Area  extends AuditEntity{
 
   @PrimaryGeneratedColumn('uuid')
   id: string;

@@ -2,9 +2,10 @@ import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "t
 import { Group } from "./group.entity";
 import { Permission } from "./permission.entity";
 import { Ability } from "./ability.entity";
+import { AuditEntity } from "./audit.entity";
 
 @Entity()
-export class Role {
+export class Role  extends AuditEntity{
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

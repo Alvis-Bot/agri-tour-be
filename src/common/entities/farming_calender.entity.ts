@@ -2,9 +2,10 @@ import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "ty
 import { Land } from "./land.entity";
 import { CategoryDetails } from "src/category-details/entities/category-detail.entity";
 import { User } from "./user.entity";
+import { AuditEntity } from "./audit.entity";
 
 @Entity()
-export class FarmingCalender {
+export class FarmingCalender  extends AuditEntity{
     @PrimaryGeneratedColumn('uuid')
     id: string;
 

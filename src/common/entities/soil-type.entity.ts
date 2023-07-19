@@ -1,8 +1,9 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { AuditEntity } from "./audit.entity";
 
 
 @Entity('soil_types')
-export class SoilType{
+export class SoilType  extends AuditEntity{
    @PrimaryGeneratedColumn('uuid')
     id: string;
 

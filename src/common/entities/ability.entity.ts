@@ -1,9 +1,10 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "./role.entity";
 import { Permission } from "./permission.entity";
+import { AuditEntity } from "./audit.entity";
 
 @Entity()
-export class Ability {
+export class Ability extends AuditEntity{
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

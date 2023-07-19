@@ -3,9 +3,10 @@ import { SoilType } from "./soil-type.entity";
 import { Area } from "./area.entity";
 import { Location } from "../interface";
 import { FarmingCalender } from "./farming_calender.entity";
+import { AuditEntity } from "./audit.entity";
 //vùng canh tác
 @Entity('lands')
-export class Land {
+export class Land  extends AuditEntity{
 
   @PrimaryGeneratedColumn('uuid')
   id: string;

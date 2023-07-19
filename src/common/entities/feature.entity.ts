@@ -1,8 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { AuditEntity } from "./audit.entity";
 
 
 @Entity('features')
-export class Feature {
+export class Feature  extends AuditEntity{
 
   @PrimaryGeneratedColumn('uuid')
   id: string;

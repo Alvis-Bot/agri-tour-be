@@ -9,11 +9,12 @@ import {
 import { User } from "./user.entity";
 import { Area } from "./area.entity";
 import { Location } from "../interface";
+import { AuditEntity } from "./audit.entity";
 
 
 
 @Entity('farms')
-export class Farm {
+export class Farm  extends AuditEntity{
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
