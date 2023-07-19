@@ -52,9 +52,10 @@ export class AreaService implements IAreaService {
   }
 
   async getAreas(): Promise<Area[]> {
-    return this.areaRepository.
-      createQueryBuilder('land')
-      .getMany();
+    return this.areaRepository.find({
+      relations: ['farm'],
+      loadRelationIds: true
+    });
   }
 
   async getAreaById(id: string): Promise<Area> {
