@@ -59,6 +59,7 @@ export class AreaService implements IAreaService {
         'area.name',
         'area.locations',
         'area.description',
+        'area.avatars',
         'area.acreage',
         'farm.id',
         'farm.name',
