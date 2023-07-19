@@ -103,7 +103,7 @@ export class AreaController {
     //   locations = JSON.parse(`[${dto.locations}]`);
     //   console.log("swagger add");
     // }
-    console.log(dto.locations, "sau khi parse", JSON.parse(dto.locations as unknown as string));
+    console.log(dto.locations, "log body gửi lên :))");
     return await this.areaService.createArea({
       ...dto,
       avatars: filesPath,
