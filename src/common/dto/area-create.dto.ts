@@ -44,6 +44,4 @@ export class AreaCreateDto {
 
   @ApiProperty({ type: 'array', items: { type: 'string', format: 'binary' } })
   avatars: string[];
-
-
 }

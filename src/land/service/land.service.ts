@@ -2,7 +2,7 @@ import { BadRequestException, ConflictException, Inject, Injectable, NotFoundExc
 import { ILandService } from "./land";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Area } from "../../common/entities/area.entity";
-import { Repository } from "typeorm";
+import { Int32, Repository } from "typeorm";
 import { Service } from "../../common/enum/service";
 import { IFarmService } from "../../farm/service/farm";
 import { Land } from "../../common/entities/land.entity";
@@ -14,6 +14,8 @@ import { IAreaService } from "../../area/service/area";
 import { UploadDto } from "../../area/dto/upload.dto";
 import { UploadLandDto } from "../dto/upload-land.dto";
 import * as fs from "fs";
+import { isInt } from "class-validator";
+import { Location as ILocation } from "src/common/interface";
 @Injectable()
 export class LandService implements ILandService {
   constructor(@InjectRepository(Land) private landRepository: Repository<Land>,
@@ -22,7 +24,13 @@ export class LandService implements ILandService {
   ) { }
   async createLandCustom(areaId: string, dto: LandCreateDto): Promise<Land> {
     try {
-      console.log(dto.locations)
+      if (dto.locations.length > 0) {
+        dto.locations.map((loc: ILocation) => {
+          if (!Number.isInteger(loc.point)) {
+            throw new BadRequestException(`Invalid location point ${loc.point} needs to be an integer`);
+          }
+        })
+      }
       const area = await this.areaService.getAreaById(areaId);
       if (!area) {
         throw new NotFoundException("Khu vực này không tồn tại !")
@@ -50,7 +58,9 @@ export class LandService implements ILandService {
       })
       console.log("Deleted!");
 
-      throw new BadRequestException(error.message)
+      throw new BadRequestException({
+        message: [error.message]
+      });
     }
   }
 

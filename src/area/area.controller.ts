@@ -78,7 +78,7 @@ export class AreaController {
       avatars?: Express.Multer.File[]
     }
   ): Promise<AreaCreateDto | any> {
-    console.log(dto.locations);
+
     // Access the file(s) if they exist
     const images = files?.avatars;
     if (!images) {

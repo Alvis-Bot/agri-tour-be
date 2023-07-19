@@ -76,7 +76,9 @@ export class FarmController {
       });
 
     } catch (error) {
-      throw new BadRequestException(error);
+      throw new BadRequestException({
+        message: [error.message]
+      });
     }
   }
 

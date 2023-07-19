@@ -35,7 +35,7 @@ export class AreaService implements IAreaService {
         farm
       });
       return await this.areaRepository.save(areaEntity);
-       
+
     }
     catch (error) {
       console.log("Create failed ! File deleting...");
@@ -45,7 +45,9 @@ export class AreaService implements IAreaService {
       })
       console.log("Deleted!");
 
-      throw new BadRequestException(error.message)
+      throw new BadRequestException({
+        message: [error.message],
+      })
     }
   }
 

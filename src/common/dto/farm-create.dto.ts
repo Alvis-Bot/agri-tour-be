@@ -29,14 +29,13 @@ export class FarmCreateDto {
     @ApiProperty({
         example:
         {
-            point: 1,
-            latitude: 1,
-            longitude: 1
+            latitude: 123.333,
+            longitude: 144.444
         },
     })
     location: ILocation
     @ApiProperty({ type: 'string', format: 'binary' })
     image: string;
 
-    userId:string;
+    userId: string;
 }
