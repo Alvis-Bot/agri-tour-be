@@ -85,29 +85,29 @@ export class AreaController {
       throw new BadRequestException('Images file is required');
     }
     const filesPath = images?.map(file => `uploads/areas/${file.filename}`);
-    var locations = null;
-    const regex = /\[|\]/;
+    // var locations = null;
+    // const regex = /\[|\]/;
 
-    if (regex.test(dto.locations.toString())) {
-      if (typeof dto.locations === 'string') {
-        locations = JSON.parse(dto.locations);
-        console.log("postman add");
-      }
-      else {
-        locations = dto.locations;
-        console.log("app and web add");
-      }
+    // if (regex.test(dto.locations.toString())) {
+    //   if (typeof dto.locations === 'string') {
+    //     locations = JSON.parse(dto.locations);
+    //     console.log("postman add");
+    //   }
+    //   else {
+    //     locations = dto.locations;
+    //     console.log("app and web add");
+    //   }
 
-    } else {
-      //   console.log("chạy vào đây location còn lại đây (trường hợp swagger)");
-      locations = JSON.parse(`[${dto.locations}]`);
-      console.log("swagger add");
-    }
+    // } else {
+    //   //   console.log("chạy vào đây location còn lại đây (trường hợp swagger)");
+    //   locations = JSON.parse(`[${dto.locations}]`);
+    //   console.log("swagger add");
+    // }
 
     return await this.areaService.createArea({
       ...dto,
       avatars: filesPath,
-      locations
+      locations: dto.locations
     }, farmId)
   }
 
