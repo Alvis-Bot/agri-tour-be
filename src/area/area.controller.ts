@@ -91,14 +91,17 @@ export class AreaController {
     if (regex.test(dto.locations.toString())) {
       if (typeof dto.locations === 'string') {
         locations = JSON.parse(dto.locations);
+        console.log("postman add");
       }
       else {
         locations = dto.locations;
+        console.log("app and web add");
       }
 
     } else {
       //   console.log("chạy vào đây location còn lại đây (trường hợp swagger)");
       locations = JSON.parse(`[${dto.locations}]`);
+      console.log("swagger add");
     }
 
     return await this.areaService.createArea({
