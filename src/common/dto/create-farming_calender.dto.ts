@@ -49,8 +49,8 @@ export class CreateFarmingCalenderDto {
 
 
 
-    landId: string;
+    landId?: string;
 
 
-    userId: string;
+    userId?: string;
 }

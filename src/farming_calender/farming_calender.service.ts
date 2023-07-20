@@ -23,19 +23,22 @@ export class FarmingCalenderService {
       const land = await this.landRepository.findOne({
         where: {
           id: data.landId
-        }
+        }, select: ['id']
       })
       if (!land) throw new NotFoundException('Vùng đất không tồn tại!');
-      const user = await this.userRepository.findOne({ where: { id: data.userId } });
+      const user = await this.userRepository.findOne({ where: { id: data.userId }, select: ['id'] });
       if (!user) throw new NotFoundException('User không tồn tại hoặc bị khoá!');
-      const creating = await this.farmingCalenderRepository.create({
+
+      const creating = this.farmingCalenderRepository.create({
         ...data,
         user,
         land
       })
       return await this.farmingCalenderRepository.save(creating);
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new BadRequestException({
+        message: [error.message]
+      });
     }
     // const farmingCalender = this.farmingCalenderRepository.create(data);
     // return await this.farmingCalenderRepository.save(farmingCalender);
@@ -59,11 +62,29 @@ export class FarmingCalenderService {
 
   async updateFarmingCalender(id: string, data: UpdateFarmingCalenderDto): Promise<FarmingCalender | any> {
 
-    //  await this.getFarmingCalenderById(id);
-    //  await this.farmingCalenderRepository.update(id, data);
+    try {
+      const farming_calender = await this.getFarmingCalenderById(id);
+      const merged = this.farmingCalenderRepository.merge(farming_calender, data)
+      return await this.farmingCalenderRepository.save(merged);
+    } catch (error) {
+      throw new BadRequestException({
+        message: [error.message]
+      });
+    }
   }
 
-  async deleteFarmingCalender(id: string): Promise<void> {
-    await this.farmingCalenderRepository.delete(id);
+  async deleteFarmingCalender(id: string): Promise<void | object> {
+    try {
+      await this.farmingCalenderRepository.delete(id);
+
+      return {
+        message: ['Delete farming Calender successfully !']
+      }
+    } catch (error) {
+      throw new BadRequestException({
+        message: [error.message]
+      })
+
+    }
   }
 }
