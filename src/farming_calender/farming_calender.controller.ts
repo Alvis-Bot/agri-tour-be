@@ -11,11 +11,10 @@ export class FarmingCalenderController {
 
   @UseGuards(AuthGuard)
   @Post('create')
-  async createFarmingCalender(@Req() req, @Query('landId') landId: string, @Query('cateDetailsId') categoryDetailId: string, @Body() data: CreateFarmingCalenderDto): Promise<CreateFarmingCalenderDto> {
+  async createFarmingCalender(@Req() req, @Query('landId') landId: string, @Body() data: CreateFarmingCalenderDto): Promise<CreateFarmingCalenderDto> {
     return await this.farmingCalenderService.createFarmingCalender({
       ...data,
       landId,
-      categoryDetailId,
       userId: req.uid
     });
   }

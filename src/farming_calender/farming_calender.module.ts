@@ -5,11 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { FarmingCalender } from 'src/common/entities/farming_calender.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtConfigModule } from 'src/auth/jwt/jwt.module';
+import { Land } from 'src/common/entities/land.entity';
+import { User } from 'src/common/entities/user.entity';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([FarmingCalender]),JwtConfigModule],
+  imports: [TypeOrmModule.forFeature([FarmingCalender, Land, User]), JwtConfigModule],
   controllers: [FarmingCalenderController],
   providers: [FarmingCalenderService],
-  exports:[FarmingCalenderService]
+  exports: [FarmingCalenderService]
 })
-export class FarmingCalenderModule {}
+export class FarmingCalenderModule { }

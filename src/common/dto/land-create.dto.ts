@@ -23,18 +23,15 @@ export class LandCreateDto {
   soilTypeId: string;
 
   @ApiProperty({
-    example: [
-      {
-        point: 1,
-        latitude: 2,
-        longitude: 3
+    type: 'array',
+    items: {
+      type: 'object',
+      properties: {
+        point: { type: 'number', example: 12 },
+        latitude: { type: 'number', example: 24.5 },
+        longitude: { type: 'number', example: 14.5 },
       },
-      {
-        point: 1,
-        latitude: 11,
-        longitude: 1
-      },
-    ]
+    },
   })
 
   @IsNotEmpty()

@@ -48,8 +48,6 @@ export class CreateFarmingCalenderDto {
     unit: string;
 
 
-    categoryDetailId: string;
-
 
     landId: string;
 

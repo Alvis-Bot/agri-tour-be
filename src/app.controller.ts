@@ -10,7 +10,7 @@ export class AppController {
     getHello() {
         return {
             statusCode: 200,
-            message: "Hello everyone"
+            message: "ĐẶNG VĂN HUY LỎ"
         }
 
     }

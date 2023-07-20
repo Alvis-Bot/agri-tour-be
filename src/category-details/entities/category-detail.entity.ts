@@ -1,5 +1,5 @@
 import { Category } from 'src/categories/entities/category.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany } from 'typeorm';
 
 @Entity()
 export class CategoryDetails {
@@ -15,10 +15,11 @@ export class CategoryDetails {
     @Column({ nullable: true })
     id_parent: string;
 
-    @Column({ nullable: true ,default:true})
+    @Column({ nullable: true, default: true })
     active: boolean;
     // Mối quan hệ Many-to-One với Category
-    @ManyToOne(() => Category, category => category.details,{onDelete:'SET NULL',onUpdate:'CASCADE'})
+    @ManyToOne(() => Category, category => category.details, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
     category: Category;
 
+    
 }
