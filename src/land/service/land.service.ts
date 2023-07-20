@@ -78,10 +78,20 @@ export class LandService implements ILandService {
   }
 
   async getLands(): Promise<Land[]> {
-    return await this.landRepository.
-      createQueryBuilder('land')
-      .leftJoinAndSelect('land.soilType', 'soilType')
-      .leftJoinAndSelect('land.area', 'area')
+    return await this.landRepository
+      .createQueryBuilder('land')
+      .select([
+        'land.id',
+        'land.name',
+        'land.locations',
+        'land.images',
+        'area.id',
+        'area.name',
+        'soilType.id',
+        'soilType.name'
+      ])
+      .leftJoin('land.soilType', 'soilType')
+      .leftJoin('land.area', 'area')
       .getMany();
   }
 
