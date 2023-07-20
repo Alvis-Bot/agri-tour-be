@@ -6,7 +6,7 @@ import { FarmingCalender } from "./farming_calender.entity";
 import { AuditEntity } from "./audit.entity";
 //vùng canh tác
 @Entity('lands')
-export class Land  extends AuditEntity{
+export class Land extends AuditEntity {
 
   @PrimaryGeneratedColumn('uuid')
   id: string;

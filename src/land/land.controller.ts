@@ -105,7 +105,7 @@ export class LandController {
   @Get('all')
   @Description('Lấy tất cả vùng trồng')
   async getLands(): Promise<Land[]> {
-    return this.landService.getLands();
+    return await this.landService.getLands();
   }
 
   @Get('area')

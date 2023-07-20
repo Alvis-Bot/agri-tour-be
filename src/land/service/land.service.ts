@@ -22,15 +22,12 @@ export class LandService implements ILandService {
     @Inject(Service.SOIL_TYPE_SERVICE) private soilTypeService: ISoilTypeService,
     @Inject(Service.AREA_SERVICE) private areaService: IAreaService,
   ) { }
+  uploadFile(landId: string, dto: UploadLandDto, files: Express.Multer.File[]): Promise<any> {
+    throw new Error("Method not implemented.");
+  }
   async createLandCustom(areaId: string, dto: LandCreateDto): Promise<Land> {
     try {
-      if (dto.locations.length > 0) {
-        dto.locations.map((loc: ILocation) => {
-          if (!Number.isInteger(loc.point)) {
-            throw new BadRequestException(`Invalid location point ${loc.point} needs to be an integer`);
-          }
-        })
-      }
+
       const area = await this.areaService.getAreaById(areaId);
       if (!area) {
         throw new NotFoundException("Khu vực này không tồn tại !")
@@ -40,12 +37,17 @@ export class LandService implements ILandService {
           name: dto.name
         }
       })
+      const soilType = await this.soilTypeService.getSoilTypeById(dto.soilTypeId);
+      if (!soilType) {
+        throw new NotFoundException("Không tìm thấy loại đất ! Soil Type Not Found")
+      }
       if (area && land) {
         throw new ConflictException("Đã tồn tại vùng canh tác này");
       }
       const creating = this.landRepository.create({
         ...dto,
-        area
+        area,
+        soilType
       });
       return await this.landRepository.save(creating);
     }
@@ -76,10 +78,10 @@ export class LandService implements ILandService {
   }
 
   async getLands(): Promise<Land[]> {
-    return this.landRepository.
+    return await this.landRepository.
       createQueryBuilder('land')
       .leftJoinAndSelect('land.soilType', 'soilType')
-      // .leftJoinAndSelect('land.area', 'area')
+      .leftJoinAndSelect('land.area', 'area')
       .getMany();
   }
 
@@ -108,9 +110,9 @@ export class LandService implements ILandService {
     return land;
   }
 
-  async uploadFile(landId: string, dto: UploadLandDto, files: Express.Multer.File[]) {
-    const land = await this.getLandById(landId);
-    land.images = files.map(file => file.filename);
-    return this.landRepository.save(land);
-  }
+  // async uploadFile(landId: string, dto: UploadLandDto, files: Express.Multer.File[]) {
+  //   const land = await this.getLandById(landId);
+  //   land.images = files.map(file => file.filename);
+  //   return this.landRepository.save(land);
+  // }
 }
