@@ -107,13 +107,14 @@ export class LandService implements ILandService {
       .getMany();
   }
 
+
+
   async getLandById(id: string): Promise<Land> {
     const land = await this.landRepository.
       createQueryBuilder('land')
       .where('land.id = :id', { id })
       .leftJoinAndSelect('land.soilType', 'soilType')
       .getOne();
-
     if (!land) {
       throw new ApiException(ErrorCode.LAND_NOT_FOUND)
     }

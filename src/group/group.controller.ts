@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Patch, Post, Query, Req } from "@nestjs/common";
 import { Router } from "../common/enum/router";
 import { CreateGroupDto } from "../common/dto/create-group.dto";
-import { Description } from "../common/decorator/description.decorator";
+import { Note } from "../common/decorator/description.decorator";
 import { GroupService } from "./group.service";
 import { ApiTags } from "@nestjs/swagger";
 import { UpdateGroupDto } from "../common/dto/update-group.dto";
@@ -58,7 +58,7 @@ export class GroupController {
     return await this.groupService.getAllGroups();
   }
   @Get('get-users-group')
-  @Description("Get all users in groups (admin only)")
+  @Note("Get all users in groups (admin only)")
   async getUsersInGroup(@Query('groupId') groupdid: string): Promise<User[]> {
     return await this.groupService.getUsersInGroup(groupdid);
   }

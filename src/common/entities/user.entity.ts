@@ -56,13 +56,7 @@ export class User extends AuditEntity {
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
-  async comparePassword(password: string): Promise<boolean> {
-    return await bcrypt.compare(password, this.password);
-  }
-  async hashUpdatedPassword(password: string): Promise<string> {
-    return await bcrypt.hash(password, 10);
-  }
 
-  @Column({ nullable: true })
-  refreshToken: string;
+  // @Column({ nullable: true })
+  // refreshToken: string;
 }

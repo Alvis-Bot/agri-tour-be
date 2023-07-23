@@ -14,7 +14,7 @@ import {
   ValidationPipe
 } from "@nestjs/common";
 import { Router } from "../common/enum/router";
-import { Description } from "../common/decorator/description.decorator";
+import { Note } from "../common/decorator/description.decorator";
 import { AreaCreateDto } from "../common/dto/area-create.dto";
 import { IAreaService } from "./service/area";
 import { Service } from "../common/enum/service";
@@ -41,7 +41,7 @@ export class AreaController {
   }
 
   @Post()
-  @Description("Tạo mới một khu đất")
+  @Note("Tạo mới một khu đất")
   @ApiConsumes('multipart/form-data', 'application/json')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'avatars', maxCount: 5 },
@@ -114,19 +114,19 @@ export class AreaController {
 
 
   @Get('all')
-  @Description("Lấy danh sách khu vực")
+  @Note("Lấy danh sách khu vực")
   async getAreas() {
     return this.areaService.getAreas();
   }
 
   @Get('farm')
-  @Description("Lấy danh sách khu vực theo id farm")
+  @Note("Lấy danh sách khu vực theo id farm")
   async getAreasByFarmId(@Query() { farmId }: QueryFarmIdDto) {
     return this.areaService.getAreasByFarmId(farmId);
   }
 
   @Get()
-  @Description("Lấy thông tin khu vực theo id")
+  @Note("Lấy thông tin khu vực theo id")
   async getAreaById(@Query('id') id: string) {
     return this.areaService.getAreaById(id);
   }

@@ -2,7 +2,7 @@ import { BadRequestException, Body, Controller, Get, Inject, Post, Query, Req, U
 import { Router } from "../common/enum/router";
 import { Service } from "../common/enum/service";
 import { IFarmService } from "./service/farm";
-import { Description } from "../common/decorator/description.decorator";
+import { Note } from "../common/decorator/description.decorator";
 import { FarmCreateDto } from "../common/dto/farm-create.dto";
 
 import { AuthUser } from "../common/decorator/user.decorator";
@@ -27,7 +27,7 @@ export class FarmController {
   }
 
   @Post('create-farm')
-  @Description("Tạo mới một trang trại")
+  @Note("Tạo mới một trang trại")
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('image', {
     storage: diskStorage({
@@ -83,21 +83,21 @@ export class FarmController {
   }
 
   @Get()
-  @Description("Lấy thông tin trang trại theo id")
+  @Note("Lấy thông tin trang trại theo id")
   async getFarmById(@Query('id') id: string) {
     return this.farmService.getFarmById(id);
   }
 
 
   @Get('area-land')
-  @Description("Lấy toàn bộ thông tin nông trại")
+  @Note("Lấy toàn bộ thông tin nông trại")
   async getFarmFetchLandAndArea(@Query() dto: QueryAllDto) {
     return this.farmService.getFarmFetchLandAndArea(dto)
   }
 
 
   @Get('all')
-  @Description("Lấy danh sách trang trại")
+  @Note("Lấy danh sách trang trại")
   async getFarms() {
     return this.farmService.getFarms();
   }

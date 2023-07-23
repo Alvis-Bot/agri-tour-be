@@ -6,6 +6,7 @@ import { CorsConfig } from "./common/config/cors.config";
 import { SwaggerConfig } from "./common/config/swagger.config";
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import { HttpExceptionFilter } from "./exception/http-exception.filter";
 
 async function bootstrap() {
   // Initialize the transactional context
@@ -20,12 +21,15 @@ async function bootstrap() {
   app.setGlobalPrefix("api", { exclude: [""] });
   CorsConfig.enableCors(app);
   SwaggerConfig.init(app);
-  // app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
     }),
   );
+
+  // exxception global
+
 
   // app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
   // cấu hình Serialization global nestjs class-transforms để ẩn các dữ liệu nhảy cảm truớc khi gửi về cho khách

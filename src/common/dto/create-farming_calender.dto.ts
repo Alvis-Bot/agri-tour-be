@@ -4,12 +4,13 @@ import { Land } from "../entities/land.entity";
 import { User } from "../entities/user.entity";
 
 export class CreateFarmingCalenderDto {
+
+
     @ApiProperty({
         example: 'Tomato',
         description: 'The name of the product.',
     })
-
-    product_name: string;
+    numberOfVaries: string;
 
     @ApiProperty({
         example: 5,
@@ -46,11 +47,4 @@ export class CreateFarmingCalenderDto {
         description: 'The unit of measurement for the output.',
     })
     unit: string;
-
-
-
-    landId?: string;
-
-
-    userId?: string;
 }

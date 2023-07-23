@@ -2,12 +2,11 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 import { Farm } from "./farm.entity";
 import { Land } from "./land.entity";
 import { Location } from "../interface";
-import { AuditEntity } from "./audit.entity";
 
 
 
 @Entity('areas')
-export class Area  extends AuditEntity{
+export class Area {
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -15,25 +14,26 @@ export class Area  extends AuditEntity{
   @Column()
   name: string;
 
-  @Column({ type: 'varchar', nullable: true, length: 100 })
+  @Column({ type : 'varchar' , nullable : true , length : 100})
   description: string;
 
-  
+  // @OneToMany(() => AreaLocation, location => location.area )
+  // locations: AreaLocation[];
+
   @Column({ type: 'jsonb', nullable: true })
   locations: Location[];
 
-  @ManyToOne(() => Farm, farm => farm.areas)
+  @ManyToOne(() => Farm , farm => farm.areas)
   @JoinColumn({ name: 'farm_id' })
   farm: Farm;
 
-  @Column({ nullable: true, array: true, type: 'text' })
-  avatars: string[];
+  @Column({ nullable: true , array : true , type : 'text'})
+  avatars : string[];
 
-  @Column({ type: 'float', nullable: true, default: 0 })
-  acreage: number;
+  @Column({ type : 'float' , nullable : true , default : 0})
+  acreage : number;
 
-  //vùng
-  @OneToMany(() => Land, land => land.area, { cascade: true, onDelete: 'CASCADE' })
+
+  @OneToMany(() => Land, land => land.area)
   lands: Land[];
-
 }

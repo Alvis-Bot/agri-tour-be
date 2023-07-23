@@ -4,7 +4,7 @@ import { CategoryService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CategoryDetails } from 'src/category-details/entities/category-detail.entity';
-import { Description } from 'src/common/decorator/description.decorator';
+import { Note } from 'src/common/decorator/description.decorator';
 
 @ApiTags("Categories Table Tree")
 @Controller('categories')
@@ -31,7 +31,7 @@ export class CategoryController {
   }
   
   @Get('getsByCategory')
-  @Description("Lấy dữ liệu danh mục theo id")
+  @Note("Lấy dữ liệu danh mục theo id")
   @ApiResponse({ status: 200, description: 'Returns all category details from category', type: CategoryDetails, isArray: true })
   async findAllByCateid(@Query('cate_id') cate_id: string): Promise<Category[]> {
     return await this.categoryService.getAllCategoryDetailsByCateId(cate_id);
@@ -42,14 +42,14 @@ export class CategoryController {
   }
 
   @Get('getCategoryByName')
-  @Description("Tìm  danh mục theo tên")
+  @Note("Tìm  danh mục theo tên")
 
   async findOneByName(@Query('name') name: string): Promise<Category> {
     return await this.categoryService.searchCategoryByName(name);
   }
   
   @Get('getsCategoryByName')
-  @Description("Tìm nhiều danh mục theo tên")
+  @Note("Tìm nhiều danh mục theo tên")
   @ApiResponse({ status: 200, description: 'Returns all category details from category', type: CategoryDetails, isArray: true })
   async findAllByName(@Query('name') name: string): Promise<Category[]> {
     return await this.categoryService.searchCategoriesByName(name);

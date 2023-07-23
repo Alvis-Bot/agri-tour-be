@@ -39,9 +39,9 @@ export class Farm  extends AuditEntity{
 
   @Column({nullable:true})
   address: string;
-
-  @Column({ type: 'jsonb', nullable: true })
-  location: Location;
+  //
+  // @Column({ type: 'jsonb', nullable: true })
+  // location: Location;
 
   @ManyToOne(() => User, user => user.farms)
   @JoinColumn({ name: 'user_id' })

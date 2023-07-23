@@ -43,7 +43,8 @@ import { CategoryDetailsModule } from './category-details/category-details.modul
           entities: [__dirname + "/**/*.entity{.ts,.js}"],
           synchronize: true,
           logging: false,
-          autoLoadEntities: true,
+          options: { encrypt: false },
+          autoLoadEntities: false,
         };
       },
     }),

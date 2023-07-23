@@ -7,7 +7,7 @@ import { Router } from "../common/enum/router";
 import { CreatePermissionDto } from "../common/dto/create-permission..dto";
 import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
 import { Permissions } from "../common/decorator/permissions.decorator";
-import { Description } from "../common/decorator/description.decorator";
+import { Note } from "../common/decorator/description.decorator";
 
 
 

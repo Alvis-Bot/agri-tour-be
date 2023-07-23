@@ -4,6 +4,10 @@ import { CreateFarmingCalenderDto } from '../common/dto/create-farming_calender.
 import { UpdateFarmingCalenderDto } from 'src/common/dto/update-farming_calender.dto';
 import { FarmingCalender } from 'src/common/entities/farming_calender.entity';
 import { AuthGuard } from 'src/auth/guard/Auth.guard';
+import { User } from "../common/entities/user.entity";
+import { AuthUser } from "../common/decorator/user.decorator";
+import { QueryLandId } from "./dto/query.dto";
+import { Land } from "../common/entities/land.entity";
 
 @Controller('farming-calender')
 export class FarmingCalenderController {
@@ -11,12 +15,12 @@ export class FarmingCalenderController {
 
   @UseGuards(AuthGuard)
   @Post('create')
-  async createFarmingCalender(@Req() req, @Query('landId') landId: string, @Body() data: CreateFarmingCalenderDto): Promise<CreateFarmingCalenderDto> {
-    return await this.farmingCalenderService.createFarmingCalender({
-      ...data,
-      landId,
-      userId: req.uid
-    });
+  async createFarmingCalender(
+    @Req() req,
+    @AuthUser() user : User,
+    @Query() { landId }: QueryLandId,
+    @Body() dto: CreateFarmingCalenderDto): Promise<FarmingCalender> {
+    return await this.farmingCalenderService.createFarmingCalender(landId ,dto , user);
   }
   @Get('gets')
   async getAllFarmingCalenders() {

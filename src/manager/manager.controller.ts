@@ -2,7 +2,7 @@ import { Body, Controller, Inject, Patch, Post, Query } from "@nestjs/common";
 import { Router } from "../common/enum/router";
 import { ManagerService } from "./manager.service";
 import { UserService } from "../user/service/user.service";
-import { Description } from "../common/decorator/description.decorator";
+import { Note } from "../common/decorator/description.decorator";
 
 @Controller(Router.MANAGER)
 export class ManagerController {

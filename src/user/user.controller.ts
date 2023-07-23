@@ -9,7 +9,7 @@ import { IUserService } from "./service/user";
 import { AuthUser } from "../common/decorator/user.decorator";
 import { User } from "../common/entities/user.entity";
 import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
-import { Description } from "../common/decorator/description.decorator";
+import { Note } from "../common/decorator/description.decorator";
 
 @Controller(Router.USER)
 @ApiTags("User APIs  (user)")
@@ -19,7 +19,7 @@ export class UserController {
   constructor(@Inject(Service.USER_SERVICE) private readonly userService: IUserService) {}
 
   @Get('my')
-  @Description('Lấy thông tin người dùng')
+  @Note('Lấy thông tin người dùng')
   async getAccount(@AuthUser() user : User) {
     return user;
   }
