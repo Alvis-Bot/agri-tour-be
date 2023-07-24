@@ -69,11 +69,25 @@ export class FarmController {
         throw new BadRequestException('File is required');
       }
       console.log(filePath);
+      var location = null;
+      const regex = /\{|\}/;
 
+      if (regex.test(createfarmDto.location.toString())) {
+        if (typeof createfarmDto.location === 'string') {
+          location = JSON.parse(createfarmDto.location);
+          console.log("postman and swagger add");
+        }
+        else {
+          location = createfarmDto.location;
+          console.log("app and web add");
+        }
+
+      }
       return await this.farmService.createFarm({
         ...createfarmDto,
         image: filePath,
-        user
+        user,
+        location
       });
 
     } catch (error) {

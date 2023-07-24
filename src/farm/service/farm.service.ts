@@ -13,12 +13,11 @@ import * as fs from "fs";
 export class FarmService implements IFarmService {
 
   constructor(@InjectRepository(Farm) private farmRepository: Repository<Farm>,
-    @InjectRepository(User) private userRepository: Repository<User>
   ) { }
 
   async createFarm(dto: FarmCreateDto): Promise<Farm | any> {
     try {
-      const location = JSON.parse(dto.location as unknown as string) as any;
+
       const user = dto.user;
       const farm = await this.getFarmByName(dto.name);
       if (farm) {
@@ -29,7 +28,6 @@ export class FarmService implements IFarmService {
       const farmEntity = this.farmRepository.create({
         ...dto,
         user,
-        location
       });
       return await this.farmRepository.save(farmEntity);
 
