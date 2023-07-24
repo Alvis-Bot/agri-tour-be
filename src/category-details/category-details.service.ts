@@ -42,7 +42,7 @@ export class CategoryDetailsService {
       }
     });
   }
-  
+
 
   async findOne(id: string): Promise<CategoryDetails> {
     const categoryDetails = await this.categoryDetailsRepository.findOne({

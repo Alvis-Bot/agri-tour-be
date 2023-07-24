@@ -8,7 +8,7 @@ import {
 } from "typeorm";
 import { User } from "./user.entity";
 import { Area } from "./area.entity";
-import { Location } from "../interface";
+import { Location as ILocation } from "../interface";
 import { AuditEntity } from "./audit.entity";
 
 
@@ -39,9 +39,9 @@ export class Farm  extends AuditEntity{
 
   @Column({nullable:true})
   address: string;
-  //
-  // @Column({ type: 'jsonb', nullable: true })
-  // location: Location;
+  
+  @Column({ type: 'jsonb', nullable: true })
+  location: ILocation;
 
   @ManyToOne(() => User, user => user.farms)
   @JoinColumn({ name: 'user_id' })
