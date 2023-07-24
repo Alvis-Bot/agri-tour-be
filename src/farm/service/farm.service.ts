@@ -18,14 +18,8 @@ export class FarmService implements IFarmService {
 
   async createFarm(dto: FarmCreateDto): Promise<Farm | any> {
     try {
-      const location = JSON.parse(dto.location as unknown as string) as any ;
-      const user = await this.userRepository.findOne({
-        where: { id: dto.userId },
-        select: ['id', 'fullName', 'username'],
-      })
-      if (!user) {
-        throw new NotFoundException();
-      }
+      const location = JSON.parse(dto.location as unknown as string) as any;
+      const user = dto.user;
       const farm = await this.getFarmByName(dto.name);
       if (farm) {
         throw new ConflictException("Farm already exists")
@@ -34,7 +28,8 @@ export class FarmService implements IFarmService {
 
       const farmEntity = this.farmRepository.create({
         ...dto,
-        user
+        user,
+        location
       });
       return await this.farmRepository.save(farmEntity);
 

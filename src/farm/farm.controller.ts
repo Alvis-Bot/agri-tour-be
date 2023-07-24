@@ -18,8 +18,9 @@ import { Farm } from "src/common/entities/farm.entity";
 import { AuthGuard } from "src/auth/guard/Auth.guard";
 import { ApiException } from "src/exception/api.exception";
 import { ErrorCode } from "src/exception/error.code";
+import { JwtAuthGuard } from "src/auth/guard/jwt-auth.guard";
 @Controller(Router.FARM)
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 
 @ApiTags('Farm APIs')
 export class FarmController {
@@ -59,8 +60,8 @@ export class FarmController {
     },
   }))
 
-  @UseGuards(AuthGuard)
-  async createFarm(@UploadedFile() image: Express.Multer.File, @Body() createfarmDto: FarmCreateDto, @Req() req): Promise<Farm | any> {
+
+  async createFarm(@UploadedFile() image: Express.Multer.File, @Body() createfarmDto: FarmCreateDto, @AuthUser() user): Promise<Farm | any> {
     try {
 
       const filePath = `uploads/farms/${image?.filename}`;
@@ -72,7 +73,7 @@ export class FarmController {
       return await this.farmService.createFarm({
         ...createfarmDto,
         image: filePath,
-        userId: req.user.id
+        user
       });
 
     } catch (error) {

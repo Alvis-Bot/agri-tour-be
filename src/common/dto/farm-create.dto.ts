@@ -36,6 +36,5 @@ export class FarmCreateDto {
     location: ILocation
     @ApiProperty({ type: 'string', format: 'binary' })
     image: string;
-
-    userId: string;
+    user:User;
 }
