@@ -11,10 +11,10 @@ export class ImageController {
 
   constructor (@Inject(Service.IMAGE_SERVICE) private readonly imageService: IImageService) {}
 
-  @Get()
-  @Note("Lấy ảnh theo tên ảnh")
-  async getImgById(@Res() response ,@Query('name') name: string){
-    response.sendFile(name, { root: 'uploads' });
-  }
+  // @Get()
+  // @Note("Lấy ảnh theo tên ảnh")
+  // async getImgById(@Res() response ,@Query('name') name: string){
+  //   response.sendFile(name, { root: 'uploads' });
+  // }
 
 }

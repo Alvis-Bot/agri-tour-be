@@ -31,8 +31,8 @@ export class JwtRefreshStrategy extends PassportStrategy(
 		});
 	}
 
-	async validate(request: Request , payload: IJwtPayload): Promise<IJwtPayload> {
-		console.log("JwtRefreshStrategy.validate" ,payload);
+	async validate(request: Request, payload: IJwtPayload): Promise<IJwtPayload> {
+		console.log("JwtRefreshStrategy.validate", payload);
 		try {
 			await this.jwtService.verify(
 				request.headers["authorization"].split(" ")[1],
@@ -51,6 +51,6 @@ export class JwtRefreshStrategy extends PassportStrategy(
 			}
 		}
 		await this.authService.validateUserRefreshToken(payload.id, request.body.refreshToken);
-		return  await this.authService.validateJwt(payload);
+		return await this.authService.validateJwt(payload);
 	}
 }

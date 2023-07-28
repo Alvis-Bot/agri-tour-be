@@ -8,8 +8,10 @@ import { User } from "../common/entities/user.entity";
 import { AuthUser } from "../common/decorator/user.decorator";
 import { QueryLandId } from "./dto/query.dto";
 import { Land } from "../common/entities/land.entity";
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('farming-calender')
+@ApiTags('API Lịch canh tác')
 export class FarmingCalenderController {
   constructor(private readonly farmingCalenderService: FarmingCalenderService) { }
 
@@ -17,10 +19,10 @@ export class FarmingCalenderController {
   @Post('create')
   async createFarmingCalender(
     @Req() req,
-    @AuthUser() user : User,
+    @AuthUser() user: User,
     @Query() { landId }: QueryLandId,
     @Body() dto: CreateFarmingCalenderDto): Promise<FarmingCalender> {
-    return await this.farmingCalenderService.createFarmingCalender(landId ,dto , user);
+    return await this.farmingCalenderService.createFarmingCalender(landId, dto, user);
   }
   @Get('gets')
   async getAllFarmingCalenders() {

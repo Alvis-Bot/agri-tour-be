@@ -1,29 +1,68 @@
-import { Controller, Get, Post, Body, Patch, Query, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Query, Delete, Put, BadRequestException, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { CategoryDetailsService } from './category-details.service';
 
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CategoryDetails } from './entities/category-detail.entity';
 import { CreateCategoryDetailDto } from './dto/create-category-detail.dto';
 import { UpdateCategoryDetailDto } from './dto/update-category-detail.dto';
-
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import * as path from 'path';
+import * as fs from 'fs';
+import { ImportDataCategoryDto } from './dto/import_category.dto';
+import { CategoryDetailsEnum } from 'src/common/enum/cate_details';
+import { Pagination } from 'src/common/pagination/pagination.dto';
 @Controller('category-details')
 @ApiTags('Category-details')
 export class CategoryDetailsController {
   constructor(private readonly categoryDetailsService: CategoryDetailsService) { }
 
+  @Post('upload')
+  @ApiConsumes('multipart/form-data')
+
+  @UseInterceptors(FileInterceptor('file', {
+    storage: diskStorage({
+      destination: 'uploads',
+      filename: (req, file, callback) => {
+        const name = file.originalname;
+
+        const filePath = path.join('uploads', `${name}`);
+
+        console.log("Uploading...");
+        callback(null, `${name}`);
+
+      },
+    }),
+  }))
+  async uploadExcelFile(@Body() dto: ImportDataCategoryDto, @UploadedFile() file: Express.Multer.File) {
+    if (!file) {
+      throw new BadRequestException('Uploaded file failed')
+    }
+    const filePath = file?.path;
+    console.log(filePath)
+    return await this.categoryDetailsService.readDataFromExcel({
+      ...dto,
+      file: filePath,
+    });
+  }
+
+
 
   @Post('create')
   @ApiResponse({ status: 201, description: 'Creates a new category detail', type: CategoryDetails })
-  async create(@Query('cate_id') cateId: string, @Body() createCategoryDetailsDto: CreateCategoryDetailDto): Promise<CategoryDetails> {
-    return this.categoryDetailsService.create(createCategoryDetailsDto, cateId);
+  async create(@Query('type') type: string, @Body() createCategoryDetailsDto: CreateCategoryDetailDto): Promise<CategoryDetails> {
+    return this.categoryDetailsService.create({ ...createCategoryDetailsDto, type });
   }
 
   @Get('gets')
   @ApiResponse({ status: 200, description: 'Returns all category details', type: CategoryDetails, isArray: true })
-  async findAll(): Promise<CategoryDetails[]> {
-    return await this.categoryDetailsService.findAll();
+  async findAll(@Query() pagination: Pagination): Promise<CategoryDetails[]> {
+    return await this.categoryDetailsService.findAll(pagination);
   }
-
+  @Get('get-by-parent-id')
+  async getCategoryDetailsByParentId(@Query('id_parent') idParent: string): Promise<CategoryDetails[]> {
+    return this.categoryDetailsService.getCategoryDetailsByParentId(idParent);
+  }
 
   @Get('get')
   @ApiResponse({ status: 200, description: 'Returns a category detail by ID', type: CategoryDetails })
@@ -45,4 +84,6 @@ export class CategoryDetailsController {
   async remove(@Query('id') id: string): Promise<void | Object> {
     return await this.categoryDetailsService.remove(id);
   }
+
+
 }

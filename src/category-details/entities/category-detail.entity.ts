@@ -1,9 +1,11 @@
 import { Category } from 'src/categories/entities/category.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class CategoryDetails {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
+    key: string;
+    @Column()
     id: string;
 
     @Column()
@@ -21,5 +23,5 @@ export class CategoryDetails {
     @ManyToOne(() => Category, category => category.details, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
     category: Category;
 
-    
+
 }

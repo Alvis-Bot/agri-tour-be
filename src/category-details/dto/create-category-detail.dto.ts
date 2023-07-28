@@ -9,9 +9,9 @@ export class CreateCategoryDetailDto {
 
     @ApiPropertyOptional({
         required: false,
-        example:'Id category details'
+        example: 'Id category details'
     })
     parentId: string;
 
-    cate_id: string;
+    type: string;
 }
