@@ -9,19 +9,21 @@ import { AuthUser } from "../common/decorator/user.decorator";
 import { QueryLandId } from "./dto/query.dto";
 import { Land } from "../common/entities/land.entity";
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 
 @Controller('farming-calender')
 @ApiTags('API Lịch canh tác')
+@UseGuards(JwtAuthGuard)
 export class FarmingCalenderController {
   constructor(private readonly farmingCalenderService: FarmingCalenderService) { }
 
-  @UseGuards(AuthGuard)
+
   @Post('create')
   async createFarmingCalender(
-    @Req() req,
     @AuthUser() user: User,
     @Query() { landId }: QueryLandId,
-    @Body() dto: CreateFarmingCalenderDto): Promise<FarmingCalender> {
+    @Body() dto: CreateFarmingCalenderDto): Promise<FarmingCalender | any> {
+
     return await this.farmingCalenderService.createFarmingCalender(landId, dto, user);
   }
   @Get('gets')
@@ -35,7 +37,7 @@ export class FarmingCalenderController {
   }
 
   @Patch('update')
-  async updateFarmingCalender(@Query('id') id: string, @Body() data: UpdateFarmingCalenderDto): Promise<FarmingCalender> {
+  async updateFarmingCalender(@Query('id') id: string, @Body() data: UpdateFarmingCalenderDto): Promise<FarmingCalender | any> {
     return await this.farmingCalenderService.updateFarmingCalender(id, data);
   }
 

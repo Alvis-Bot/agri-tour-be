@@ -14,9 +14,18 @@ export class Land extends AuditEntity {
   @Column()
   name: string;
 
+  @Column({
+    nullable: true,
+  })
+  color: string;
+  @Column({
+    nullable: true,
+  })
+  acreage: number;
   @ManyToOne(() => SoilType, soilType => soilType.lands)
   @JoinColumn()
   soilType: SoilType;
+
 
   @ManyToOne(() => Area, area => area.lands, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   area: Area;

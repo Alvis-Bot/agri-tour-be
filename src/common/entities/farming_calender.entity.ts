@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Land } from "./land.entity";
 import { CategoryDetails } from "src/category-details/entities/category-detail.entity";
 import { User } from "./user.entity";
@@ -30,9 +30,14 @@ export class FarmingCalender extends AuditEntity {
     @Column()
     unit: string;
 
-    @ManyToOne(() => Land, land => land.farmingCalenders, { onDelete: 'SET NULL' ,onUpdate:'CASCADE'})
+    @ManyToOne(() => Land, land => land.farmingCalenders, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
     land: Land;
 
-    @ManyToOne(() => User, user => user.farmingCalenders, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
-    user: User;
+    // Many-to-many relationship with User
+    @ManyToMany(() => User, user => user.farmingCalenders)
+    @JoinTable({
+        name:'user_farming_calenders',
+        
+    })
+    users: User[];
 }

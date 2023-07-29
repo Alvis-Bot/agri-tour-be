@@ -21,7 +21,7 @@ export class CategoryDetailsService {
     @InjectRepository(Type)
     private readonly typeRepository: Repository<Type>,
   ) { }
-
+    
   async getCategoryDetailsByParentId(idParent: string): Promise<CategoryDetails[]> {
     return this.categoryDetailsRepository.find({ where: { id_parent: idParent } });
   }

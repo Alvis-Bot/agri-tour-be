@@ -107,7 +107,15 @@ export class LandService implements ILandService {
       .getMany();
   }
 
-
+  async getLandByIdNoRelation(id: string): Promise<Land> {
+    const land = await this.landRepository.findOne({
+      where: { id },
+      select: ['id', 'name'],
+      loadEagerRelations: false
+    })
+    if (!land) throw new NotFoundException("Land not found");
+    return land;
+  }
 
   async getLandById(id: string): Promise<Land> {
     const land = await this.landRepository.

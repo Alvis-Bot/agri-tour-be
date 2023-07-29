@@ -1,16 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CategoryDetails } from "src/category-details/entities/category-detail.entity";
-import { Land } from "../entities/land.entity";
-import { User } from "../entities/user.entity";
+
 
 export class CreateFarmingCalenderDto {
-
-
     @ApiProperty({
         example: 'Tomato',
         description: 'The name of the product.',
     })
-    numberOfVaries: string;
+    product_name: string;
 
     @ApiProperty({
         example: 5,
@@ -47,4 +43,14 @@ export class CreateFarmingCalenderDto {
         description: 'The unit of measurement for the output.',
     })
     unit: string;
+
+    landId: string;
+    @ApiProperty({
+        example: [
+            "1a0b9b4d-2baa-41c3-a80c-30fa7a4abb9a",
+            "9434b220-b8c8-4942-a0a7-d8f18cb64b23",
+            "efb2a120-bc53-4a99-a9c0-fedc046c3f71",
+        ]
+    })
+    users: string[];
 }
