@@ -1,6 +1,6 @@
 import { CategoryDetails } from 'src/category-details/entities/category-detail.entity';
 import { Type } from 'src/types/entities/type.entity';
-import { Entity, PrimaryGeneratedColumn, Column, Tree, TreeChildren, TreeParent, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Tree, TreeChildren, TreeParent, OneToMany, ManyToOne, BeforeInsert } from 'typeorm';
 
 @Entity()
 @Tree("nested-set")
@@ -24,7 +24,7 @@ export class Category {
 
   @TreeParent()
   parent: Category;
-
+  
   @Column({ nullable: true, default: true })
   active: boolean;
   // Mối quan hệ One-to-Many với CategoryDetails
@@ -33,4 +33,5 @@ export class Category {
 
   @ManyToOne(() => Type, type => type.categories)
   type: Type
+
 }

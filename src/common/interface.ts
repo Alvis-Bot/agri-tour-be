@@ -1,4 +1,5 @@
 
+import { BeforeInsert } from "typeorm";
 import { IJwtPayload } from "../auth/auth.service";
 import { User } from "./entities/user.entity";
 
@@ -25,4 +26,8 @@ export class Location {
 
   @IsNumber({}, { message: 'Longitude must be a number' })
   longitude: number;
+}
+
+export interface DynamicField {
+  [key: string]: any;
 }

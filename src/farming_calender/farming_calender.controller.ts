@@ -37,8 +37,11 @@ export class FarmingCalenderController {
   }
 
   @Patch('update')
-  async updateFarmingCalender(@Query('id') id: string, @Body() data: UpdateFarmingCalenderDto): Promise<FarmingCalender | any> {
-    return await this.farmingCalenderService.updateFarmingCalender(id, data);
+  async updateFarmingCalender(
+    @Query('id') id: string,
+    @AuthUser() user: User,
+    @Body() data: UpdateFarmingCalenderDto): Promise<FarmingCalender | any> {
+    return await this.farmingCalenderService.updateFarmingCalender(id, data, user);
   }
 
   @Delete('delete')

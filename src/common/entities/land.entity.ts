@@ -13,7 +13,10 @@ export class Land extends AuditEntity {
 
   @Column()
   name: string;
-
+  @Column({
+    nullable: true
+  })
+  product_type: string;
   @Column({
     nullable: true,
   })

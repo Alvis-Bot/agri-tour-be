@@ -11,6 +11,9 @@ export class FarmingCalender extends AuditEntity {
 
     @Column()
     product_name: string;
+    
+    @Column()
+    product_type: string;
 
     @Column()
     numberOfVarites: number;
@@ -36,8 +39,8 @@ export class FarmingCalender extends AuditEntity {
     // Many-to-many relationship with User
     @ManyToMany(() => User, user => user.farmingCalenders)
     @JoinTable({
-        name:'user_farming_calenders',
-        
+        name: 'user_farming_calenders',
+
     })
     users: User[];
 }

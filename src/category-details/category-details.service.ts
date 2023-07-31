@@ -11,6 +11,7 @@ import * as Excel from 'exceljs';
 import { ImportDataCategoryDto } from './dto/import_category.dto';
 import { Type } from 'src/types/entities/type.entity';
 import { Pagination } from 'src/common/pagination/pagination.dto';
+type ValidRelations = 'type' | 'details';
 @Injectable()
 export class CategoryDetailsService {
   constructor(
@@ -21,35 +22,30 @@ export class CategoryDetailsService {
     @InjectRepository(Type)
     private readonly typeRepository: Repository<Type>,
   ) { }
-    
+
   async getCategoryDetailsByParentId(idParent: string): Promise<CategoryDetails[]> {
     return this.categoryDetailsRepository.find({ where: { id_parent: idParent } });
   }
 
   async create(createCategoryDetailsDto: CreateCategoryDetailDto): Promise<CategoryDetails | any> {
-    const type = await this.typeRepository.findOne({
-      where: { name: createCategoryDetailsDto.type }
-    })
-    if (!type) throw new NotFoundException("TYPE not found")
+    const category = await this.findOneCategory(createCategoryDetailsDto.cateId, ["type"]);
+    let creating = this.categoryDetailsRepository.create(createCategoryDetailsDto);
+    if (category.type.name === "PRODUCT_TYPE") {
+      creating.child_column = {
+        color: await this.generateRandomRGB()
+      }
+    }
+    return await this.categoryDetailsRepository.save({
+      ...creating,
+      category
+    });
 
-    const category = await this.categoryRepository.findOne({
-      where: {
-        type,
-        active: true
-      },
-      select: ['id', 'name', 'description'],
-    })
-    return category;
-    // if (!category) {
-    //   throw new NotFoundException('Could not find category');
-    // }
-    // const creating = await this.categoryDetailsRepository.create({
-    //   ...createCategoryDetailsDto,
-    //   category,
-    // })
-
-    // return await this.categoryDetailsRepository.save(creating);
-
+  }
+  async generateRandomRGB(): Promise<string> {
+    const r = Math.floor(Math.random() * 256); // Random value for red (0 to 255)
+    const g = Math.floor(Math.random() * 256); // Random value for green (0 to 255)
+    const b = Math.floor(Math.random() * 256); // Random value for blue (0 to 255)
+    return `rgb(${r},${g},${b})`; // Return the RGB color string
   }
 
   async findAll(pagination: Pagination): Promise<CategoryDetails[]> {
@@ -59,13 +55,18 @@ export class CategoryDetailsService {
 
       },
       order: {
-        id: pagination.order
+        createdAt: pagination.order
       },
       skip: pagination.skip,
       take: pagination.take,
     });
   }
 
+  async getDataByCategoryId(cate_id: string): Promise<CategoryDetails | any> {
+    const category = await this.findOneCategory(cate_id, ['details']);
+
+    return category.details.flatMap(details => details);
+  }
 
   async findOne(id: string): Promise<CategoryDetails> {
     const categoryDetails = await this.categoryDetailsRepository.findOne({
@@ -85,29 +86,33 @@ export class CategoryDetailsService {
     return await this.categoryDetailsRepository.save(categoryDetails);
   }
 
-  async remove(id: string): Promise<void | Object> {
+  async remove(id: string): Promise<Object> {
     const categoryDetails = await this.findOne(id);
-    await this.categoryDetailsRepository.delete(categoryDetails);
+
+    await this.categoryDetailsRepository.remove(categoryDetails);
     return {
-      message: 'Removed category detail from category successfully'
+      message: ["Delete successfully"]
     }
   }
 
-
+  async findOneCategory(id: string, relations?: ValidRelations[]): Promise<Category> {
+    const category = await this.categoryRepository.findOne({
+      where: {
+        id,
+        active: true
+      },
+      relations,
+    })
+    if (!category) {
+      throw new NotFoundException('Could not find category');
+    }
+    return category;
+  }
   async readDataFromExcel(dto: ImportDataCategoryDto): Promise<CategoryDetails | any> {
     const workbook = new Excel.Workbook();
     const filePath = dto.file;
     try {
-      const category = await this.categoryRepository.findOne({
-        where: {
-          id: dto.cateId,
-          active: true
-        },
-        select: ['id', 'name', 'description']
-      })
-      if (!category) {
-        throw new NotFoundException('Could not find category');
-      }
+      const category = await this.findOneCategory(dto.cateId);
       // Load the workbook
       await workbook.xlsx.readFile(filePath);
       // Get the worksheet

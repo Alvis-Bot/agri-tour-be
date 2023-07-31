@@ -20,9 +20,56 @@ export class FarmingCalenderService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>
   ) { }
+  // async createFarmingCalender(landId: string, dto: CreateFarmingCalenderDto, user: User): Promise<FarmingCalender | any> {
+  //   const userIds = dto.users;
+  //   const errors = [];
+  //   const validatedUserIds = [];
+  //   const users = [];
+  //   for (const userId of userIds) {
+  //     try {
+  //       const user = await this.userRepository.findOne({
+  //         where: { id: userId },
+  //         select: ['id', 'fullName']
+  //       });
+  //       if (!user) {
+  //         throw new NotFoundException(`Người dùng với ID ${userId} không tồn tại.`);
+  //       }
+
+  //       // Thực hiện các kiểm tra khác cho từng người dùng (nếu cần)
+
+  //       validatedUserIds.push(userId);
+  //       users.push(user);
+
+  //     } catch (error) {
+  //       errors.push(error.message);
+  //     }
+  //   }
+
+  //   if (errors.length > 0) {
+  //     throw new BadRequestException({ message: errors });
+  //   }
+
+  //   const land = await this.landService.getLandByIdNoRelation(landId);
+
+  //   if (!land) throw new NotFoundException({
+  //     message:
+  //       ['Vùng canh tác này không tồn tại vui lòng kiểm tra lại !']
+
+  //   })
+  //   const checkingExists = await this.checkUserExistsWithFarm(landId, users);
+  //   if (!checkingExists) throw new ConflictException('Some users already exist in a farming calendar for the specified land.');
+
+
+  //   const calender = this.farmingCalenderRepository.create({
+  //     ...dto,
+  //     users,
+  //     land
+  //   });
+
+  //   return await this.farmingCalenderRepository.save(calender);
+  // }
   async createFarmingCalender(landId: string, dto: CreateFarmingCalenderDto, user: User): Promise<FarmingCalender | any> {
     const userIds = dto.users;
-
     const errors = [];
     const validatedUserIds = [];
     const users = [];
@@ -70,6 +117,7 @@ export class FarmingCalenderService {
     return await this.farmingCalenderRepository.save(calender);
   }
 
+
   async checkUserExistsWithFarm(landId: string, users: User[]): Promise<boolean> {
 
     const queryBuilder = this.farmingCalenderRepository.createQueryBuilder('farmingCalender');
@@ -103,11 +151,22 @@ export class FarmingCalenderService {
     return farming_calender;
   }
 
-  async updateFarmingCalender(id: string, data: UpdateFarmingCalenderDto): Promise<FarmingCalender | any> {
+  async updateFarmingCalender(id: string, data: UpdateFarmingCalenderDto, user: User): Promise<FarmingCalender | any> {
+    const farmingCalender = await this.farmingCalenderRepository.findOne({
+      where: {
+        id
+      },
+      relations: ['land', 'users']
+    });
 
+    if (!farmingCalender) {
+      throw new NotFoundException('Lịch canh tác không tồn tại.');
+    }
+    return farmingCalender
+    //chưa xong
     // try {
     //   const farming_calender = await this.getFarmingCalenderById(id);
-    //   const merged = this.farmingCalenderRepository.merge(farming_calender, data)
+    //   const merged = this.farmingCalenderRepository.merge(farming_calender,data);
     //   return await this.farmingCalenderRepository.save(merged);
     // } catch (error) {
     //   throw new BadRequestException({

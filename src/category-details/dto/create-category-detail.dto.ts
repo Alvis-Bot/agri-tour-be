@@ -13,5 +13,5 @@ export class CreateCategoryDetailDto {
     })
     parentId: string;
 
-    type: string;
+    cateId: string;
 }

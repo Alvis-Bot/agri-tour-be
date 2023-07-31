@@ -49,9 +49,8 @@ export class CategoryDetailsController {
 
 
   @Post('create')
-  @ApiResponse({ status: 201, description: 'Creates a new category detail', type: CategoryDetails })
-  async create(@Query('type') type: string, @Body() createCategoryDetailsDto: CreateCategoryDetailDto): Promise<CategoryDetails> {
-    return this.categoryDetailsService.create({ ...createCategoryDetailsDto, type });
+  async create(@Query('cateId') cateId: string, @Body() createCategoryDetailsDto: CreateCategoryDetailDto): Promise<CategoryDetails> {
+    return this.categoryDetailsService.create({ ...createCategoryDetailsDto, cateId });
   }
 
   @Get('gets')
@@ -64,6 +63,10 @@ export class CategoryDetailsController {
     return this.categoryDetailsService.getCategoryDetailsByParentId(idParent);
   }
 
+  @Get('get-data-by-cate-id')
+  async getCateByCategoryId(@Query('categoryId') cate_id: string): Promise<CategoryDetails[]> {
+    return this.categoryDetailsService.getDataByCategoryId(cate_id);
+  }
   @Get('get')
   @ApiResponse({ status: 200, description: 'Returns a category detail by ID', type: CategoryDetails })
   async findOne(@Query('id') id: string): Promise<CategoryDetails> {

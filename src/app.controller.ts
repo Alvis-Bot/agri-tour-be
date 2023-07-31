@@ -12,6 +12,5 @@ export class AppController {
             statusCode: 200,
             message: "ĐẶNG VĂN HUY LỎ"
         }
-
     }
 }

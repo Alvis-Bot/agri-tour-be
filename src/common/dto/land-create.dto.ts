@@ -14,6 +14,12 @@ export class LandCreateDto {
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @ApiProperty({
+    example: 'Thêm loại sản phẩm từ list ở đây (chưa validation)',
+  })
+  product_type: string;
+
   @ApiProperty({
     example: '#FFFFFF',
   })
