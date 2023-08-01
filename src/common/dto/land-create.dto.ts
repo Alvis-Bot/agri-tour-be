@@ -20,10 +20,6 @@ export class LandCreateDto {
   })
   product_type: string;
 
-  @ApiProperty({
-    example: '#FFFFFF',
-  })
-  color: string;
 
   @ApiProperty({
     example: 14.3322,

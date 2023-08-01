@@ -14,7 +14,7 @@ import { AuditEntity } from "./audit.entity";
 
 
 @Entity('farms')
-export class Farm  extends AuditEntity{
+export class Farm extends AuditEntity {
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -28,18 +28,18 @@ export class Farm  extends AuditEntity{
   @Column({ nullable: true })
   business_type: string;
 
-  @Column()
+  @Column({ nullable: true })
   province: string;
 
-  @Column()
+  @Column({ nullable: true })
   district: string;
 
-  @Column()
+  @Column({ nullable: true })
   wards: string;
 
-  @Column({nullable:true})
+  @Column({ nullable: true })
   address: string;
-  
+
   @Column({ type: 'jsonb', nullable: true })
   location: ILocation;
 
