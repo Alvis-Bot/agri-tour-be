@@ -38,10 +38,9 @@ export class CreateFarmingCalenderDto {
     seedProvider: string;
 
     @ApiProperty({
-        example: 'Premium Quality Harvest',
-        description: 'The expected output of the farming calendar.',
+        example: 1000
     })
-    expectOutput: string;
+    expectOutput: number;
 
     @ApiProperty({
         example: 'tons',

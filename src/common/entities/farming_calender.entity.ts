@@ -11,7 +11,7 @@ export class FarmingCalender extends AuditEntity {
 
     @Column()
     product_name: string;
-    
+
     @Column()
     product_type: string;
 
@@ -28,7 +28,7 @@ export class FarmingCalender extends AuditEntity {
     seedProvider: string;
 
     @Column()
-    expectOutput: string;
+    expectOutput: number;
 
     @Column()
     unit: string;
