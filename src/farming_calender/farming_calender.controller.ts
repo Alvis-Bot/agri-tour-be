@@ -10,6 +10,7 @@ import { QueryLandId } from "./dto/query.dto";
 import { Land } from "../common/entities/land.entity";
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { Pagination } from 'src/common/pagination/pagination.dto';
 
 @Controller('farming-calender')
 @ApiTags('API Lịch canh tác')
@@ -27,13 +28,13 @@ export class FarmingCalenderController {
     return await this.farmingCalenderService.createFarmingCalender(landId, dto, user);
   }
   @Get('gets')
-  async getAllFarmingCalenders() {
-    return await this.farmingCalenderService.getAllFarmingCalenders();
+  async getAllFarmingCalenders(@Query() pagination: Pagination) {
+    return await this.farmingCalenderService.getAllFarmingCalenders(pagination);
   }
 
   @Get('get')
   async getFarmingCalenderById(@Query('id') id: string) {
-    return await this.farmingCalenderService.getFarmingCalenderById(id);
+    return await this.farmingCalenderService.getFarmingCalenderById(id, ['land', 'users']);
   }
 
   @Patch('update')

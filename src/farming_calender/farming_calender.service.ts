@@ -8,8 +8,9 @@ import { Land } from 'src/common/entities/land.entity';
 import { User } from 'src/common/entities/user.entity';
 import { Service } from "../common/enum/service";
 import { ILandService } from "../land/service/land";
+import { Pagination } from "src/common/pagination/pagination.dto";
 
-
+type relationValid = "users" | "land";
 @Injectable()
 export class FarmingCalenderService {
   constructor(
@@ -135,15 +136,25 @@ export class FarmingCalenderService {
     //Nếu không có trùng lặp tục xử lý tạo lịch canh tác hoặc thực hiện logic khác
   }
 
-  async getAllFarmingCalenders(): Promise<FarmingCalender[]> {
-    return await this.farmingCalenderRepository.find();
+  async getAllFarmingCalenders(pagination: Pagination): Promise<FarmingCalender[]> {
+    return await this.farmingCalenderRepository.find({
+      relations: ['users', 'land'],
+      loadRelationIds: true,
+      order: {
+        createdAt: pagination.order
+      },
+      skip: pagination.skip,
+      take: pagination.take
+    });
   }
 
-  async getFarmingCalenderById(id: string): Promise<FarmingCalender> {
+  async getFarmingCalenderById(id: string, relations?: relationValid[]): Promise<FarmingCalender> {
     const farming_calender = await this.farmingCalenderRepository.findOne({
       where: {
-        id
-      }
+        id,
+      },
+      relations,
+      loadRelationIds: true
     });
     if (!farming_calender) {
       throw new NotFoundException("Không tìm thấy lịch canh tác này !");
