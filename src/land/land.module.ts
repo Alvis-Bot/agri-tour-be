@@ -7,11 +7,12 @@ import { Land } from "../common/entities/land.entity";
 import { AreaModule } from "../area/area.module";
 import { SoilType } from "../common/entities/soil-type.entity";
 import { SoilTypeModule } from "../soil-type/soil-type.module";
+import { CategoryDetails } from 'src/category-details/entities/category-detail.entity';
 
 @Module({
   imports: [
     AreaModule, SoilTypeModule
-    ,TypeOrmModule.forFeature([Land])],
+    , TypeOrmModule.forFeature([Land, CategoryDetails])],
   providers: [{
     provide: Service.LAND_SERVICE,
     useClass: LandService
@@ -19,4 +20,4 @@ import { SoilTypeModule } from "../soil-type/soil-type.module";
   controllers: [LandController],
   exports: [Service.LAND_SERVICE]
 })
-export class LandModule {}
+export class LandModule { }

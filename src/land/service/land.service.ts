@@ -16,15 +16,15 @@ import { UploadLandDto } from "../dto/upload-land.dto";
 import * as fs from "fs";
 import { isInt } from "class-validator";
 import { Location as ILocation } from "src/common/interface";
+import { CategoryDetails } from "src/category-details/entities/category-detail.entity";
 @Injectable()
 export class LandService implements ILandService {
   constructor(@InjectRepository(Land) private landRepository: Repository<Land>,
     @Inject(Service.SOIL_TYPE_SERVICE) private soilTypeService: ISoilTypeService,
     @Inject(Service.AREA_SERVICE) private areaService: IAreaService,
+    @InjectRepository(CategoryDetails) private categoryDetailRepository: Repository<CategoryDetails>
   ) { }
-  uploadFile(landId: string, dto: UploadLandDto, files: Express.Multer.File[]): Promise<any> {
-    throw new Error("Method not implemented.");
-  }
+
   async createLandCustom(areaId: string, dto: LandCreateDto): Promise<Land> {
     try {
 
@@ -37,17 +37,17 @@ export class LandService implements ILandService {
           name: dto.name
         }
       })
-      const soilType = await this.soilTypeService.getSoilTypeById(dto.soilTypeId);
-      if (!soilType) {
-        throw new NotFoundException("Không tìm thấy loại đất ! Soil Type Not Found")
-      }
+      const productType = await this.findOneByCategoryDetail(dto.productTypeId, "loại sản phẩm");
+      const soilType = await this.findOneByCategoryDetail(dto.soilTypeId, "loại đất");
+
       if (area && land) {
         throw new ConflictException("Đã tồn tại vùng canh tác này");
       }
       const creating = this.landRepository.create({
         ...dto,
         area,
-        soilType
+        soilType,
+        productType
       });
       return await this.landRepository.save(creating);
     }
@@ -65,7 +65,15 @@ export class LandService implements ILandService {
       });
     }
   }
-
+  async findOneByCategoryDetail(id: string, type?: string): Promise<CategoryDetails> {
+    const categoryDetail = await this.categoryDetailRepository.findOne({
+      where: { id }
+    })
+    if (!categoryDetail) {
+      throw new NotFoundException(`Không tìm thấy  ${type} ! ${type}  Not Found`)
+    }
+    return categoryDetail;
+  }
   async createLand(dto: LandCreateDto, area: Area): Promise<Land> {
     const soilType = await this.soilTypeService.getSoilTypeById(dto.soilTypeId);
     const areaEntity = this.landRepository.create({
@@ -77,22 +85,34 @@ export class LandService implements ILandService {
     return this.landRepository.save(areaEntity);
   }
 
-  async getLands(): Promise<Land[]> {
-    return await this.landRepository
+  async getLands(): Promise<any[]> {
+    const lands = await this.landRepository
       .createQueryBuilder('land')
       .select([
         'land.id',
         'land.name',
+        'land.acreage',
         'land.locations',
         'land.images',
         'area.id',
         'area.name',
         'soilType.id',
-        'soilType.name'
+        'soilType.name',
+        'productType.id',
+        'productType.name',
+        'productType.child_column',
       ])
-      .leftJoin('land.soilType', 'soilType')
       .leftJoin('land.area', 'area')
+      .leftJoin('land.productType', 'productType')
+      .leftJoin('land.soilType', 'soilType')
       .getMany();
+
+    // If you want to map the raw results to the Land entity, you can do it here
+    // For example, if you have a map function to convert the raw results to Land entity, you can use it like:
+    // const mappedLands = lands.map((rawLand) => this.mapRawLandToEntity(rawLand));
+    // return mappedLands;
+
+    return lands;
   }
 
   async getLandsByAreaId(areaId: string): Promise<Land[]> {
@@ -104,6 +124,7 @@ export class LandService implements ILandService {
       createQueryBuilder('land')
       .where('land.areaId = :areaId', { areaId })
       .leftJoinAndSelect('land.soilType', 'soilType')
+      .leftJoinAndSelect('land.productType', 'productType')
       .getMany();
   }
 
@@ -122,6 +143,7 @@ export class LandService implements ILandService {
       createQueryBuilder('land')
       .where('land.id = :id', { id })
       .leftJoinAndSelect('land.soilType', 'soilType')
+      .leftJoinAndSelect('land.productType', 'productType')
       .getOne();
     if (!land) {
       throw new ApiException(ErrorCode.LAND_NOT_FOUND)

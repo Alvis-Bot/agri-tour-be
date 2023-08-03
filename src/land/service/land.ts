@@ -17,5 +17,5 @@ export interface ILandService {
 
   getLandByIdNoRelation(id: string): Promise<Land>
 
-  uploadFile(landId: string, dto: UploadLandDto, files: Express.Multer.File[]): Promise<any>;
+
 }

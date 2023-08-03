@@ -1,8 +1,9 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiQuery } from "@nestjs/swagger";
 import { Point } from "typeorm";
 import { Location as ILocation } from "../interface";
 import { IsNotEmpty, IsNumber, IsString, IsUUID } from "class-validator";
 import { Type } from "class-transformer";
+import { CategoryDetails } from "src/category-details/entities/category-detail.entity";
 
 
 export class LandCreateDto {
@@ -15,10 +16,9 @@ export class LandCreateDto {
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({
-    example: 'Thêm loại sản phẩm từ list ở đây (chưa validation)',
-  })
-  product_type: string;
+  @IsNotEmpty()
+  @ApiProperty()
+  productTypeId: string;
 
 
   @ApiProperty({
@@ -28,7 +28,7 @@ export class LandCreateDto {
   @ApiProperty({
     example: 'ádalsdddjajaja-1aksdkajsd-djakskdaksdl',
   })
-  @IsUUID()
+  @ApiProperty()
   @IsNotEmpty()
   soilTypeId: string;
 

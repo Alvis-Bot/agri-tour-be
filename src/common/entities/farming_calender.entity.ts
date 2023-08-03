@@ -13,7 +13,7 @@ export class FarmingCalender extends AuditEntity {
     product_name: string;
 
     @Column()
-    product_type: string;
+    productType: string;
 
     @Column()
     numberOfVarites: number;
