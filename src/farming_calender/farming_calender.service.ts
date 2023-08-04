@@ -178,7 +178,7 @@ export class FarmingCalenderService {
     return farming_calender;
   }
 
-  async updateFarmingCalender(id: string, landId: string, data: UpdateFarmingCalenderDto, user: User): Promise<FarmingCalender | any> {
+  async updateFarmingCalender(id: string, data: UpdateFarmingCalenderDto, user: User): Promise<FarmingCalender | any> {
     const farmingCalender = await this.getFarmingCalenderById(id, ["productType", "users", "land"]);
     const userIds = data.users;
     const errors = [];
@@ -214,7 +214,7 @@ export class FarmingCalenderService {
     if (!productType) throw new NotFoundException({
       message: ['Product type not found']
     })
-    const checkingExists = await this.checkUserExistsWithFarm(landId, users);
+    const checkingExists = await this.checkUserExistsWithFarm(farmingCalender.land.id, users);
     if (!checkingExists) throw new ConflictException('Some users already exist in a farming calendar for the specified land.');
     //chưa xong
     try {
