@@ -8,10 +8,11 @@ import { Land } from "src/common/entities/land.entity";
 import { User } from "src/common/entities/user.entity";
 import { LandModule } from "../land/land.module";
 import { CategoryDetails } from "src/category-details/entities/category-detail.entity";
+import { Category } from "src/categories/entities/category.entity";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([FarmingCalender, Land, User,CategoryDetails]),
+    TypeOrmModule.forFeature([FarmingCalender, Land, User,CategoryDetails,Category]),
     LandModule,
     JwtConfigModule],
   controllers: [FarmingCalenderController],

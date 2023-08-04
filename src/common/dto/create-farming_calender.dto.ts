@@ -42,7 +42,7 @@ export class CreateFarmingCalenderDto {
     expectOutput: number;
 
     @ApiProperty({
-        example: 'tons',
+        example: 'Tấn',
         description: 'The unit of measurement for the output.',
     })
     unit: string;

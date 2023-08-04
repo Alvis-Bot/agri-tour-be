@@ -10,6 +10,7 @@ import { Service } from "../common/enum/service";
 import { ILandService } from "../land/service/land";
 import { Pagination } from "src/common/pagination/pagination.dto";
 import { CategoryDetails } from "src/category-details/entities/category-detail.entity";
+import { Category } from "src/categories/entities/category.entity";
 
 type relationValid = "users" | "land" | "productType";
 @Injectable()
@@ -23,8 +24,72 @@ export class FarmingCalenderService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(CategoryDetails)
     private readonly categoryDetailRepository: Repository<CategoryDetails>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
 
   ) { }
+  async validateProductType(productTypeid: string): Promise<CategoryDetails> {
+    const productType = await this.categoryDetailRepository.findOne({
+      where: { id: productTypeid },
+      relations: ['category']
+    });
+
+    if (!productType) {
+      throw new NotFoundException({ message: ['Product type not found'] });
+    }
+
+    const findCategory = await this.categoryRepository.findOne({
+      where: { id: productType.category.id },
+      relations: ['type']
+    });
+
+    if (!findCategory || findCategory.type.name !== "PRODUCT_TYPE") {
+      throw new NotFoundException({ message: ['Loại sản phẩm không hợp lệ'] });
+    }
+    return productType
+  }
+
+  async createFarmingCalender(landId: string, dto: CreateFarmingCalenderDto, user: User): Promise<FarmingCalender | any> {
+    const land = await this.landService.getLandById(landId);
+    if (!land) {
+      throw new NotFoundException({ message: ['Vùng canh tác này không tồn tại vui lòng kiểm tra lại !'] });
+    }
+    const userIds = dto.users;
+    if (!userIds) throw new BadRequestException({ message: ['User is valid.'] });
+    const userPromises = userIds.map(async (userId) => {
+      const user = await this.userRepository.findOne({
+        where: { id: userId },
+        select: ['id', 'fullName']
+      });
+
+      if (!user) {
+        throw new NotFoundException(`Người dùng với ID ${userId} không tồn tại.`);
+      }
+
+      return user;
+    });
+
+    try {
+      const users = await Promise.all(userPromises);
+      const productType = await this.validateProductType(dto.productTypeId);
+      // const checkingExists = await this.checkUserExistsWithFarm(landId, users);
+      // if (!checkingExists) {
+      //   throw new ConflictException('Một số người dùng đã tồn tại trong lịch canh tác của vùng này rồi !');
+      // }
+
+      const calender = this.farmingCalenderRepository.create({
+        ...dto,
+        users,
+        land,
+        productType
+      });
+
+      return await this.farmingCalenderRepository.save(calender);
+    } catch (error) {
+      throw new BadRequestException({ message: [error.message] });
+    }
+  }
+
   // async createFarmingCalender(landId: string, dto: CreateFarmingCalenderDto, user: User): Promise<FarmingCalender | any> {
   //   const userIds = dto.users;
   //   const errors = [];
@@ -54,13 +119,30 @@ export class FarmingCalenderService {
   //     throw new BadRequestException({ message: errors });
   //   }
 
-  //   const land = await this.landService.getLandByIdNoRelation(landId);
+  //   const land = await this.landService.getLandById(landId);
 
   //   if (!land) throw new NotFoundException({
   //     message:
   //       ['Vùng canh tác này không tồn tại vui lòng kiểm tra lại !']
 
   //   })
+  //   const productType = await this.categoryDetailRepository.findOne({
+  //     where: { id: dto.productTypeId },
+  //     relations: ['category']
+  //   })
+  //   if (!productType) throw new NotFoundException({
+  //     message: ['Product type not found']
+  //   })
+
+  //   const findCategory = await this.categoryRepository.findOne({
+  //     where: {
+  //       id: productType.category.id
+  //     },
+  //     relations: ['type']
+  //   })
+  //   if (!findCategory) throw new NotFoundException({ message: ['Không tìm thấy danh mục cha chứa product type'] })
+  //   if (findCategory.type.name !== "PRODUCT_TYPE") throw new NotFoundException({ message: ['Loại sản phẩm không hợp lệ'] })
+
   //   const checkingExists = await this.checkUserExistsWithFarm(landId, users);
   //   if (!checkingExists) throw new ConflictException('Some users already exist in a farming calendar for the specified land.');
 
@@ -68,66 +150,12 @@ export class FarmingCalenderService {
   //   const calender = this.farmingCalenderRepository.create({
   //     ...dto,
   //     users,
-  //     land
+  //     land,
+  //     productType
   //   });
 
   //   return await this.farmingCalenderRepository.save(calender);
   // }
-  async createFarmingCalender(landId: string, dto: CreateFarmingCalenderDto, user: User): Promise<FarmingCalender | any> {
-    const userIds = dto.users;
-    const errors = [];
-    const validatedUserIds = [];
-    const users = [];
-    for (const userId of userIds) {
-      try {
-        const user = await this.userRepository.findOne({
-          where: { id: userId },
-          select: ['id', 'fullName']
-        });
-        if (!user) {
-          throw new NotFoundException(`Người dùng với ID ${userId} không tồn tại.`);
-        }
-
-        // Thực hiện các kiểm tra khác cho từng người dùng (nếu cần)
-
-        validatedUserIds.push(userId);
-        users.push(user);
-
-      } catch (error) {
-        errors.push(error.message);
-      }
-    }
-
-    if (errors.length > 0) {
-      throw new BadRequestException({ message: errors });
-    }
-
-    const land = await this.landService.getLandById(landId);
-
-    if (!land) throw new NotFoundException({
-      message:
-        ['Vùng canh tác này không tồn tại vui lòng kiểm tra lại !']
-
-    })
-    const productType = await this.categoryDetailRepository.findOne({
-      where: { id: dto.productTypeId }
-    })
-    if (!productType) throw new NotFoundException({
-      message: ['Product type not found']
-    })
-    const checkingExists = await this.checkUserExistsWithFarm(landId, users);
-    if (!checkingExists) throw new ConflictException('Some users already exist in a farming calendar for the specified land.');
-
-
-    const calender = this.farmingCalenderRepository.create({
-      ...dto,
-      users,
-      land,
-      productType
-    });
-
-    return await this.farmingCalenderRepository.save(calender);
-  }
 
 
   async checkUserExistsWithFarm(landId: string, users: User[]): Promise<boolean> {
@@ -208,19 +236,15 @@ export class FarmingCalenderService {
       throw new BadRequestException({ message: errors });
     }
 
-    const productType = await this.categoryDetailRepository.findOne({
-      where: { id: data.productTypeId }
-    })
-    if (!productType) throw new NotFoundException({
-      message: ['Product type not found']
-    })
-    const checkingExists = await this.checkUserExistsWithFarm(farmingCalender.land.id, users);
-    if (!checkingExists) throw new ConflictException('Some users already exist in a farming calendar for the specified land.');
+    const productType = await this.validateProductType(data.productTypeId)
+    // const checkingExists = await this.checkUserExistsWithFarm(farmingCalender.land.id, users);
+    // if (!checkingExists) throw new ConflictException('Some users already exist in a farming calendar for the specified land.');
     //chưa xong
     try {
       const merged = this.farmingCalenderRepository.merge(farmingCalender, {
         ...data,
         users,
+        productType,
       });
       await this.farmingCalenderRepository.update(id, merged);
       return merged;
