@@ -12,8 +12,8 @@ export class FarmingCalender extends AuditEntity {
     @Column()
     product_name: string;
 
-    @Column()
-    productType: string;
+    @ManyToOne(() => CategoryDetails, categoryDetails => categoryDetails.id)
+    productType: CategoryDetails;
 
     @Column()
     numberOfVarites: number;

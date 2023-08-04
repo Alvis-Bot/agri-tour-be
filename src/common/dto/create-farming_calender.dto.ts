@@ -9,10 +9,9 @@ export class CreateFarmingCalenderDto {
     })
     product_name: string;
     @ApiProperty({
-        example: 'Hành',
-        description: 'Loại sản phẩm',
+        nullable: false
     })
-    productType: string;
+    productTypeId: string;
     @ApiProperty({
         example: 5,
         description: 'The number of varieties of the product.',
