@@ -11,7 +11,7 @@ import { ILandService } from "../land/service/land";
 import { Pagination } from "src/common/pagination/pagination.dto";
 import { CategoryDetails } from "src/category-details/entities/category-detail.entity";
 import { Category } from "src/categories/entities/category.entity";
-
+import { FindOneOptions } from 'typeorm';
 type relationValid = "users" | "land" | "productType";
 @Injectable()
 export class FarmingCalenderService {
@@ -158,6 +158,22 @@ export class FarmingCalenderService {
   // }
 
 
+  // Hàm kiểm tra và thêm người dùng mới vào lịch canh tác
+  // Hàm kiểm tra và thêm người dùng mới vào lịch canh tác
+  async checkUserExistsWithCalender(existingUsers: User[], newUsers: User[]): Promise<void> {
+    const existingUserIds = existingUsers.map((user) => user.id);
+    const newUserIds = newUsers.map((user) => user.id);
+
+    for (const newUser of newUsers) {
+      if (!existingUserIds.includes(newUser.id)) {
+        existingUsers.push(newUser);
+      }
+    }
+  }
+
+
+
+
   async checkUserExistsWithFarm(landId: string, users: User[]): Promise<boolean> {
 
     const queryBuilder = this.farmingCalenderRepository.createQueryBuilder('farmingCalender');
@@ -216,7 +232,7 @@ export class FarmingCalenderService {
       try {
         const user = await this.userRepository.findOne({
           where: { id: userId },
-          select: ['id', 'fullName']
+          // select: ['id', 'fullName']
         });
         if (!user) {
           throw new NotFoundException(`Người dùng với ID ${userId} không tồn tại.`);
@@ -237,17 +253,17 @@ export class FarmingCalenderService {
     }
 
     const productType = await this.validateProductType(data.productTypeId)
-    // const checkingExists = await this.checkUserExistsWithFarm(farmingCalender.land.id, users);
-    // if (!checkingExists) throw new ConflictException('Some users already exist in a farming calendar for the specified land.');
-    //chưa xong
+    await this.checkUserExistsWithCalender(farmingCalender.users, users);
+
     try {
       const merged = this.farmingCalenderRepository.merge(farmingCalender, {
         ...data,
         users,
         productType,
       });
-      await this.farmingCalenderRepository.update(id, merged);
-      return merged;
+
+     return await this.farmingCalenderRepository.save(merged);
+      
     } catch (error) {
       throw new BadRequestException({
         message: [error.message]
