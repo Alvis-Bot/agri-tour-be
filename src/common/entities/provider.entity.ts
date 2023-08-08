@@ -1,7 +1,8 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { AuditEntity } from "./audit.entity";
 
 @Entity()
-export class Provider {
+export class Provider extends AuditEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -13,12 +14,12 @@ export class Provider {
 
     @Column()
     phoneNumber: string;
+
+    @Column()
+    debt: number;
+
     @Column()
     description: string;
 
-    @Column({
-        nullable: true, array: true, type: 'text'
-    })
-    images: string[];
 
 }
