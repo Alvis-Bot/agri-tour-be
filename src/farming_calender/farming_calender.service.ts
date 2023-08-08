@@ -85,6 +85,7 @@ export class FarmingCalenderService {
       });
 
       return await this.farmingCalenderRepository.save(calender);
+
     } catch (error) {
       throw new BadRequestException({ message: [error.message] });
     }
@@ -262,8 +263,8 @@ export class FarmingCalenderService {
         productType,
       });
 
-     return await this.farmingCalenderRepository.save(merged);
-      
+      return await this.farmingCalenderRepository.save(merged);
+
     } catch (error) {
       throw new BadRequestException({
         message: [error.message]

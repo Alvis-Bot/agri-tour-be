@@ -22,6 +22,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { FarmingCalenderModule } from './farming_calender/farming_calender.module';
 import { CategoryDetailsModule } from './category-details/category-details.module';
 import { TypesModule } from './types/types.module';
+import { ProvidersModule } from './providers/providers.module';
 
 
 @Module({
@@ -67,6 +68,7 @@ import { TypesModule } from './types/types.module';
     FarmingCalenderModule,
     CategoryDetailsModule,
     TypesModule,
+    ProvidersModule,
   ],
   controllers:[AppController]
 })
