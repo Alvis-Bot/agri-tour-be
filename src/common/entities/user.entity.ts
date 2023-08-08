@@ -49,7 +49,7 @@ export class User extends AuditEntity {
   @OneToMany(() => Farm, farm => farm.user)
   farms: Farm[];
 
-  
+
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);

@@ -34,7 +34,7 @@ export class FarmingCalenderController {
 
   @Get('get')
   async getFarmingCalenderById(@Query('id') id: string) {
-    return await this.farmingCalenderService.getFarmingCalenderById(id, ['land', 'users']);
+    return await this.farmingCalenderService.getFarmingCalenderById(id, ['land', 'users','productType']);
   }
 
   @Patch('update')

@@ -207,9 +207,7 @@ export class FarmingCalenderService {
   }
 
   async getFarmingCalenderById(id: string, relations?: relationValid[]): Promise<FarmingCalender> {
-    if (!relations) {
-      relations = ["land", "users", "productType"];
-    }
+
     const farming_calender = await this.farmingCalenderRepository.findOne({
       where: {
         id,
@@ -217,6 +215,7 @@ export class FarmingCalenderService {
       relations,
 
     });
+
     if (!farming_calender) {
       throw new NotFoundException("Không tìm thấy lịch canh tác này !");
     }
@@ -257,6 +256,8 @@ export class FarmingCalenderService {
     await this.checkUserExistsWithCalender(farmingCalender.users, users);
 
     try {
+      farmingCalender.users = users;
+
       const merged = this.farmingCalenderRepository.merge(farmingCalender, {
         ...data,
         users,
