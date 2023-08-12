@@ -6,7 +6,6 @@ import {AuthModule} from './auth/auth.module';
 import {PermissionModule} from './permission/permission.module';
 import {GroupModule} from './group/group.module';
 import {FeatureModule} from './feature/feature.module';
-import {ImageModule} from './image/image.module';
 import {FarmModule} from './farm/farm.module';
 import {AreaModule} from './area/area.module';
 import {LandModule} from './land/land.module';
@@ -62,7 +61,6 @@ import {StorageModule} from "./storage/storage.module";
     PermissionModule,
     GroupModule,
     FeatureModule,
-    ImageModule,
     AreaModule,
     FarmModule,
     LandModule,
