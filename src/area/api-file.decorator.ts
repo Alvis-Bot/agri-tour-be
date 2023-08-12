@@ -17,7 +17,6 @@ export function ApiFile(
 
 export function ApiFiles(
   fieldName: string = 'files',
-  required: boolean = false,
   maxCount: number = 10,
   localOptions?: MulterOptions,
 ) {

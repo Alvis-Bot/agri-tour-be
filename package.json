@@ -46,6 +46,7 @@
     "pg": "^8.11.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
+    "sharp": "^0.32.4",
     "typeorm": "^0.3.17",
     "typeorm-transactional": "^0.4.1"
   },

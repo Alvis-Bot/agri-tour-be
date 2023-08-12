@@ -1,26 +1,30 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from "@nestjs/config";
-import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
-import { PermissionModule } from './permission/permission.module';
-import { GroupModule } from './group/group.module';
-import { FeatureModule } from './feature/feature.module';
-import { ImageModule } from './image/image.module';
-import { FarmModule } from './farm/farm.module';
-import { AreaModule } from './area/area.module';
-import { LandModule } from './land/land.module';
-import { SoilTypeModule } from './soil-type/soil-type.module';
-import { AppController } from './app.controller';
-import { RoleModule } from './role/role.module';
-import { AbilityModule } from './ability/ability.module';
-import { JwtConfigModule } from './auth/jwt/jwt.module';
-import { CategoriesModule } from './categories/categories.module';
-import { FarmingCalenderModule } from './farming_calender/farming_calender.module';
-import { CategoryDetailsModule } from './category-details/category-details.module';
-import { TypesModule } from './types/types.module';
-import { ProvidersModule } from './providers/providers.module';
+import {Module} from '@nestjs/common';
+import {TypeOrmModule} from '@nestjs/typeorm';
+import {ConfigModule, ConfigService} from "@nestjs/config";
+import {UserModule} from './user/user.module';
+import {AuthModule} from './auth/auth.module';
+import {PermissionModule} from './permission/permission.module';
+import {GroupModule} from './group/group.module';
+import {FeatureModule} from './feature/feature.module';
+import {ImageModule} from './image/image.module';
+import {FarmModule} from './farm/farm.module';
+import {AreaModule} from './area/area.module';
+import {LandModule} from './land/land.module';
+import {SoilTypeModule} from './soil-type/soil-type.module';
+import {AppController} from './app.controller';
+import {RoleModule} from './role/role.module';
+import {AbilityModule} from './ability/ability.module';
+import {JwtConfigModule} from './auth/jwt/jwt.module';
+import {CategoriesModule} from './categories/categories.module';
+import {FarmingCalenderModule} from './farming_calender/farming_calender.module';
+import {CategoryDetailsModule} from './category-details/category-details.module';
+import {TypesModule} from './types/types.module';
+import {ProvidersModule} from './providers/providers.module';
 import {validationSchema} from "./common/config/validation";
+import {addTransactionalDataSource} from "typeorm-transactional";
+import {DataSource} from "typeorm";
+import {StorageModule} from "./storage/storage.module";
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -41,13 +45,20 @@ import {validationSchema} from "./common/config/validation";
           database: configService.get<string>("POSTGRES_DB"),
           entities: [__dirname + "/**/*.entity{.ts,.js}"],
           synchronize: true,
-          logging: false,
+          logging: true,
           autoLoadEntities: false,
         };
+      },
+      async dataSourceFactory(options) {
+        if (!options) {
+          throw new Error('Invalid options passed');
+        }
+        return addTransactionalDataSource(new DataSource(options));
       },
     }),
     UserModule,
     AuthModule,
+    StorageModule,
     PermissionModule,
     GroupModule,
     FeatureModule,

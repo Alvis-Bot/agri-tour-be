@@ -26,6 +26,7 @@ export const ErrorMessages = {
   TYPE_EXISTED: errorFactory(HttpStatus.CONFLICT, "Type existed"),
   TYPE_NOT_FOUND: errorFactory(HttpStatus.BAD_REQUEST, "Type not found"),
   PROVIDER_NOT_FOUND: errorFactory(HttpStatus.BAD_REQUEST, "Provider not found"),
+  LAND_EXIST: errorFactory(HttpStatus.CONFLICT, "Land existed"),
 
 
 };

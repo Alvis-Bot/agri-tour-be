@@ -1,4 +1,4 @@
-import {BadRequestException, ConflictException, Inject, Injectable, NotFoundException} from "@nestjs/common";
+import {Inject, Injectable, NotFoundException} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {Service} from "../common/enum/service";
@@ -6,57 +6,56 @@ import {Land} from "../common/entities/land.entity";
 import {LandCreateDto} from "../common/dto/land-create.dto";
 import {ApiException} from "../exception/api.exception";
 import {IAreaService} from "../area/service/area";
-import * as fs from "fs";
 import {CategoryDetails} from "src/common/entities/category-detail.entity";
 import {ErrorMessages} from "../exception/error.code";
+import {StorageService} from "../storage/storage.service";
+import {FileTypes} from "../common/enum";
+import {Transactional} from "typeorm-transactional";
 
 @Injectable()
 export class LandService {
   constructor(
     @InjectRepository(Land) private landRepository: Repository<Land>,
     @Inject(Service.AREA_SERVICE) private areaService: IAreaService,
+    private storageService: StorageService,
     @InjectRepository(CategoryDetails) private categoryDetailRepository: Repository<CategoryDetails>
   ) { }
 
-  async createLandCustom(areaId: string, dto: LandCreateDto): Promise<Land> {
-    try {
 
-      const area = await this.areaService.getAreaById(areaId);
-      if (!area) {
-        throw new NotFoundException("Khu vực này không tồn tại !")
-      }
-      const land = await this.landRepository.findOne({
-        where: {
-          name: dto.name
+    async getLandByName(name: string): Promise<Land> {
+        const land = await this.landRepository.findOne({
+            where: {
+                name
+            }
+        })
+        if (!land) {
+            throw new ApiException(ErrorMessages.LAND_NOT_FOUND)
         }
-      })
-      const productType = await this.findOneByCategoryDetail(dto.productTypeId, "loại sản phẩm");
-      const soilType = await this.findOneByCategoryDetail(dto.soilTypeId, "loại đất");
-
-      if (area && land) {
-        throw new ConflictException("Đã tồn tại vùng canh tác này");
-      }
-      const creating = this.landRepository.create({
-        ...dto,
-        area,
-        soilType,
-        productType
-      });
-      return await this.landRepository.save(creating);
+        return land;
     }
-    catch (error) {
 
-      console.log("Create failed ! File deleting...");
+    @Transactional()
+    async createLand(areaId: string, dto: LandCreateDto, files: Express.Multer.File[]): Promise<any> {
+        const area = await this.areaService.getAreaById(areaId);
+        const land = await this.getLandByName(dto.name);
 
-      dto.images.map(image => {
-        fs.unlinkSync(`public/${image}`);
-      })
-      console.log("Deleted!");
+        const productType = await this.findOneByCategoryDetail(dto.productTypeId, "loại sản phẩm");
+        const soilType = await this.findOneByCategoryDetail(dto.soilTypeId, "loại đất");
+        if (area && land) {
+            throw new ApiException(ErrorMessages.LAND_EXIST)
+        }
 
-      throw new BadRequestException({
-        message: [error.message]
-      });
-    }
+        const imageName = await this.storageService.uploadMultiFiles(FileTypes.IMAGE, files);
+        console.log("imageName", imageName);
+
+        const creating = this.landRepository.create({
+            ...dto,
+            area,
+            soilType,
+            productType,
+            images: imageName
+        })
+        return await this.landRepository.save(creating);
   }
   async findOneByCategoryDetail(id: string, type?: string): Promise<CategoryDetails> {
     const categoryDetail = await this.categoryDetailRepository.findOne({

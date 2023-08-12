@@ -7,10 +7,11 @@ import { SwaggerConfig } from "./common/config/swagger.config";
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { HttpExceptionFilter } from "./exception/http-exception.filter";
+import {initializeTransactionalContext} from "typeorm-transactional";
 
 async function bootstrap() {
   // Initialize the transactional context
-  // initializeTransactionalContext();
+  initializeTransactionalContext();
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     rawBody: true,
