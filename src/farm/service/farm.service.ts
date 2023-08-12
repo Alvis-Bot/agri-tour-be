@@ -6,9 +6,9 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "../../common/entities/user.entity";
 import { Repository } from "typeorm";
 import { ApiException } from "../../exception/api.exception";
-import { ErrorCode } from "../../exception/error.code";
 import { QueryAllDto } from "../dto/query-all.dto";
 import * as fs from "fs";
+import {ErrorMessages} from "../../exception/error.code";
 @Injectable()
 export class FarmService implements IFarmService {
 
@@ -55,7 +55,7 @@ export class FarmService implements IFarmService {
       .where("farm.id = :id", { id })
       .getOne();
     if (!farm) {
-      throw new ApiException(ErrorCode.FARM_NOT_FOUND);
+      throw new ApiException(ErrorMessages.FARM_NOT_FOUND);
     }
     return farm;
   }

@@ -1,6 +1,5 @@
-import { IsNotEmpty, IsString, IsUUID } from "class-validator";
-import { ApiProperty, ApiQuery } from "@nestjs/swagger";
-import { CategoryDetailsEnum } from "src/common/enum/cate_details";
+import { IsNotEmpty } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
 
 export class ImportDataCategoryDto {

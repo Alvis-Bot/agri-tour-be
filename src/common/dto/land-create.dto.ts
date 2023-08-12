@@ -3,7 +3,7 @@ import { Point } from "typeorm";
 import { Location as ILocation } from "../interface";
 import { IsNotEmpty, IsNumber, IsString, IsUUID } from "class-validator";
 import { Type } from "class-transformer";
-import { CategoryDetails } from "src/category-details/entities/category-detail.entity";
+import { CategoryDetails } from "src/common/entities/category-detail.entity";
 
 
 export class LandCreateDto {

@@ -5,11 +5,6 @@ import { Pagination } from 'src/common/pagination/pagination.dto';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { UpdateProviderDto } from 'src/common/dto/update-provider.dto';
 import { Provider } from 'src/common/entities/provider.entity';
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import * as path from 'path';
-import { ApiException } from 'src/exception/api.exception';
-import { ErrorCode } from 'src/exception/error.code';
 @ApiTags(
   'API Nhà cung cấp'
 )
@@ -18,7 +13,6 @@ export class ProvidersController {
   constructor(private readonly providersService: ProvidersService) { }
 
   @Post()
-
   async create(@Body() createProviderDto: CreateProviderDto): Promise<Provider> {
     return this.providersService.create(createProviderDto);
   }

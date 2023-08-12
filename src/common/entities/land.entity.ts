@@ -4,7 +4,7 @@ import { Area } from "./area.entity";
 import { Location } from "../interface";
 import { FarmingCalender } from "./farming_calender.entity";
 import { AuditEntity } from "./audit.entity";
-import { CategoryDetails } from "src/category-details/entities/category-detail.entity";
+import { CategoryDetails } from "src/common/entities/category-detail.entity";
 //vùng canh tác
 @Entity('lands')
 export class Land extends AuditEntity {

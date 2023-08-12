@@ -7,7 +7,7 @@ import { JwtConfigModule } from "src/auth/jwt/jwt.module";
 import { Land } from "src/common/entities/land.entity";
 import { User } from "src/common/entities/user.entity";
 import { LandModule } from "../land/land.module";
-import { CategoryDetails } from "src/category-details/entities/category-detail.entity";
+import { CategoryDetails } from "src/common/entities/category-detail.entity";
 import { Category } from "src/categories/entities/category.entity";
 
 @Module({

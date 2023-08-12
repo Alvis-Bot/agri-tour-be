@@ -1,24 +1,18 @@
 import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { ILandService } from "./land";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Area } from "../../common/entities/area.entity";
-import { Int32, Repository } from "typeorm";
-import { Service } from "../../common/enum/service";
-import { IFarmService } from "../../farm/service/farm";
-import { Land } from "../../common/entities/land.entity";
-import { LandCreateDto } from "../../common/dto/land-create.dto";
-import { ISoilTypeService } from "../../soil-type/service/soil-type";
-import { ApiException } from "../../exception/api.exception";
-import { ErrorCode } from "../../exception/error.code";
-import { IAreaService } from "../../area/service/area";
-import { UploadDto } from "../../area/dto/upload.dto";
-import { UploadLandDto } from "../dto/upload-land.dto";
+import { Area } from "../common/entities/area.entity";
+import {  Repository } from "typeorm";
+import { Service } from "../common/enum/service";
+import { Land } from "../common/entities/land.entity";
+import { LandCreateDto } from "../common/dto/land-create.dto";
+import { ISoilTypeService } from "../soil-type/service/soil-type";
+import { ApiException } from "../exception/api.exception";
+import { IAreaService } from "../area/service/area";
 import * as fs from "fs";
-import { isInt } from "class-validator";
-import { Location as ILocation } from "src/common/interface";
-import { CategoryDetails } from "src/category-details/entities/category-detail.entity";
+import { CategoryDetails } from "src/common/entities/category-detail.entity";
+import {ErrorMessages} from "../exception/error.code";
 @Injectable()
-export class LandService implements ILandService {
+export class LandService {
   constructor(@InjectRepository(Land) private landRepository: Repository<Land>,
     @Inject(Service.SOIL_TYPE_SERVICE) private soilTypeService: ISoilTypeService,
     @Inject(Service.AREA_SERVICE) private areaService: IAreaService,
@@ -116,10 +110,7 @@ export class LandService implements ILandService {
   }
 
   async getLandsByAreaId(areaId: string): Promise<Land[]> {
-    const area = await this.areaService.getAreaById(areaId);
-    if (!area) {
-      throw new ApiException(ErrorCode.AREA_NOT_FOUND)
-    }
+    await this.areaService.getAreaById(areaId);
     return this.landRepository.
       createQueryBuilder('land')
       .where('land.areaId = :areaId', { areaId })
@@ -146,7 +137,7 @@ export class LandService implements ILandService {
       .leftJoinAndSelect('land.productType', 'productType')
       .getOne();
     if (!land) {
-      throw new ApiException(ErrorCode.LAND_NOT_FOUND)
+      throw new ApiException(ErrorMessages.LAND_NOT_FOUND)
     }
     return land;
   }

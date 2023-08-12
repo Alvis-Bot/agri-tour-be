@@ -1,6 +1,6 @@
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Land } from "./land.entity";
-import { CategoryDetails } from "src/category-details/entities/category-detail.entity";
+import { CategoryDetails } from "src/common/entities/category-detail.entity";
 import { User } from "./user.entity";
 import { AuditEntity } from "./audit.entity";
 

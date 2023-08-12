@@ -1,16 +1,13 @@
-import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import {Injectable, UnauthorizedException} from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
-import { JwtService } from "@nestjs/jwt";
-import { User } from "../common/entities/user.entity";
-import { UserService } from "../user/service/user.service";
-import { ApiException } from "../exception/api.exception";
-import { ErrorCode } from "../exception/error.code";
-import { IAuthService } from "./auth";
-import { Service } from "../common/enum/service";
-import { IUserService } from "../user/service/user";
-import { UpdateUserDto } from "src/common/dto/update-user.dto";
-import { ConfigService } from "@nestjs/config";
-import { TokenModel } from "./model/token.model";
+import {JwtService} from "@nestjs/jwt";
+import {User} from "../common/entities/user.entity";
+import {ApiException} from "../exception/api.exception";
+import {IAuthService} from "./auth";
+import {ConfigService} from "@nestjs/config";
+import {TokenModel} from "./model/token.model";
+import {UserService} from "../user/user.service";
+import {ErrorMessages} from "../exception/error.code";
 
 export interface IJwtPayload {
   id: string;
@@ -22,7 +19,8 @@ export interface IJwtPayload {
 @Injectable()
 export class AuthService implements IAuthService {
 
-  constructor(@Inject(Service.USER_SERVICE) private userService: IUserService,
+  constructor(
+      private userService: UserService,
     private readonly configService: ConfigService,
     private jwtService: JwtService) {
   }
@@ -59,45 +57,18 @@ export class AuthService implements IAuthService {
     const accessToken = await this.jwtService.signAsync(payload);
     return new TokenModel(accessToken)
   }
-
-  // async generateAccessToken(user: User): Promise<string> {
-  //   const payload: IJwtPayload = {
-  //     id: user.id,
-  //     username: user.username
-  //   };
-  //   const options = { expiresIn: '1h' }; // Customize the token expiration as per your needs
-  //   return this.jwtService.signAsync(payload, options);
-  // }
-
-  // async generateRefreshToken(user: User): Promise<string> {
-  //   const payload: IJwtPayload = {
-  //     id: user.id,
-  //     username: user.username
-  //   };
-  //   const refreshToken = await this.jwtService.signAsync(payload, {
-  //     expiresIn: '7d',
-  //   });
-  //
-  //   await this.userService.updateUserCustom(payload.id, {
-  //     ...user,
-  //     refreshToken,
-  //   })
-  //   return refreshToken;
-  // }
   async validateJwt(payload: IJwtPayload): Promise<User> {
     return await this.userService.getUserById(payload.id);
   }
 
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.userService.getUserByUserName(username);
-    if (!user) throw new ApiException(ErrorCode.USER_NOT_FOUND)
+    if (!user) throw new ApiException(ErrorMessages.USER_NOT_FOUND)
     const isMatch = await bcrypt.compare(pass, user.password);
     return isMatch ? user : null;
   }
 
-   async refreshToken(myUser: User, refreshToken): Promise<any> {
-      // 		// 3. tạo mới accessToken v
-      // 		// 4. trả về accessToken
+   async refreshToken(myUser: User): Promise<any> {
      return await this.getAccessToken(myUser);
   }
 
@@ -109,9 +80,9 @@ export class AuthService implements IAuthService {
     } catch (e) {
       switch (e.name) {
         case 'TokenExpiredError':
-          throw new ApiException(ErrorCode.REFRESH_TOKEN_EXPIRED)
+          throw new ApiException(ErrorMessages.REFRESH_TOKEN_EXPIRED)
         case 'JsonWebTokenError':
-          throw new ApiException(ErrorCode.REFRESH_TOKEN_INVALID)
+          throw new ApiException(ErrorMessages.REFRESH_TOKEN_INVALID)
         default:
           throw new  UnauthorizedException()
       }

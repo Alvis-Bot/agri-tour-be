@@ -1,16 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Query, Delete, Put, BadRequestException, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { CategoryDetailsService } from './category-details.service';
-
 import { ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CategoryDetails } from './entities/category-detail.entity';
+import { CategoryDetails } from '../common/entities/category-detail.entity';
 import { CreateCategoryDetailDto } from './dto/create-category-detail.dto';
 import { UpdateCategoryDetailDto } from './dto/update-category-detail.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path';
-import * as fs from 'fs';
 import { ImportDataCategoryDto } from './dto/import_category.dto';
-import { CategoryDetailsEnum } from 'src/common/enum/cate_details';
 import { Pagination } from 'src/common/pagination/pagination.dto';
 @Controller('category-details')
 @ApiTags('Category-details')
@@ -25,9 +22,7 @@ export class CategoryDetailsController {
       destination: 'uploads',
       filename: (req, file, callback) => {
         const name = file.originalname;
-
-        const filePath = path.join('uploads', `${name}`);
-
+        path.join('uploads', `${name}`);
         console.log("Uploading...");
         callback(null, `${name}`);
 

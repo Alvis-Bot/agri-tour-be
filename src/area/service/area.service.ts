@@ -5,10 +5,10 @@ import { Area } from "../../common/entities/area.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ApiException } from "../../exception/api.exception";
-import { ErrorCode } from "../../exception/error.code";
 import { Service } from "../../common/enum/service";
 import { IFarmService } from "../../farm/service/farm";
 import * as fs from "fs";
+import {ErrorMessages} from "../../exception/error.code";
 @Injectable()
 export class AreaService implements IAreaService {
 
@@ -16,11 +16,10 @@ export class AreaService implements IAreaService {
     @Inject(Service.FARM_SERVICE) private farmService: IFarmService) { }
 
   async createArea(dto: AreaCreateDto, farmId: string): Promise<Area> {
-    try {
       console.log(dto.avatars)
       const farm = await this.farmService.getFarmById(farmId);
       if (!farm) {
-        throw new ApiException(ErrorCode.FARM_NOT_FOUND)
+        throw new ApiException(ErrorMessages.FARM_NOT_FOUND)
       }
       const area = await this.areaRepository.findOne({
         where: {
@@ -36,19 +35,6 @@ export class AreaService implements IAreaService {
       });
       return await this.areaRepository.save(areaEntity);
 
-    }
-    catch (error) {
-      console.log("Create failed ! File deleting...");
-
-      dto.avatars.map(image => {
-        fs.unlinkSync(`public/${image}`);
-      })
-      console.log("Deleted!");
-
-      throw new BadRequestException({
-        message: [error.message],
-      })
-    }
   }
 
   async getAreas(): Promise<Area[]> {
@@ -75,7 +61,7 @@ export class AreaService implements IAreaService {
       .getOne();
 
     if (!area) {
-      throw new ApiException(ErrorCode.AREA_NOT_FOUND)
+      throw new ApiException(ErrorMessages.AREA_NOT_FOUND)
     }
     return area;
   }
@@ -86,7 +72,7 @@ export class AreaService implements IAreaService {
       .getOne();
 
     if (!area) {
-      throw new ApiException(ErrorCode.AREA_NOT_FOUND)
+      throw new ApiException(ErrorMessages.AREA_NOT_FOUND)
     }
 
     area.avatars = file.map((image) => image.filename);

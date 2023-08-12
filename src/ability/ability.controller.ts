@@ -5,7 +5,7 @@ import { UpdateAbilityDto } from 'src/common/dto/update-ability.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('ability')
-@ApiTags("Ability API")
+@ApiTags("Ability APIs")
 export class AbilityController {
   constructor(private readonly abilityService: AbilityService) {}
 

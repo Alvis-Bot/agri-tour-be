@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from "@nestjs/typeorm";
-import { SoilType } from "../../common/entities/soil-type.entity";
-import { Repository } from "typeorm";
-import { ISoilTypeService } from "./soil-type";
-import { ApiException } from "../../exception/api.exception";
-import { ErrorCode } from "../../exception/error.code";
+import {Injectable} from '@nestjs/common';
+import {InjectRepository} from "@nestjs/typeorm";
+import {SoilType} from "../../common/entities/soil-type.entity";
+import {Repository} from "typeorm";
+import {ISoilTypeService} from "./soil-type";
+import {ApiException} from "../../exception/api.exception";
+import {ErrorMessages} from "../../exception/error.code";
 
 @Injectable()
 export class SoilTypeService implements ISoilTypeService{
@@ -15,8 +15,8 @@ export class SoilTypeService implements ISoilTypeService{
   }
 
   async getSoilTypeById(id: string): Promise<SoilType> {
-     const soilType = await this.soilTypeRepository.findOne({where: {id} });
-     if (!soilType) throw new ApiException(ErrorCode.SOIL_TYPE_NOT_FOUND)
+      const soilType = await this.soilTypeRepository.findOneBy({id});
+      if (!soilType) throw new ApiException(ErrorMessages.SOIL_TYPE_NOT_FOUND)
       return soilType;
   }
 

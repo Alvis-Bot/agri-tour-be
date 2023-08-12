@@ -8,7 +8,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as Excel from 'exceljs';
 import { Type } from 'src/types/entities/type.entity';
-import { CategoryDetails } from 'src/category-details/entities/category-detail.entity';
+import { CategoryDetails } from 'src/common/entities/category-detail.entity';
 @Injectable()
 export class CategoryService {
   constructor(

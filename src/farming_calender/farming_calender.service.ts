@@ -1,25 +1,22 @@
-import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { CreateFarmingCalenderDto } from '../common/dto/create-farming_calender.dto';
 import { UpdateFarmingCalenderDto } from 'src/common/dto/update-farming_calender.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FarmingCalender } from 'src/common/entities/farming_calender.entity';
 import { Repository } from 'typeorm';
-import { Land } from 'src/common/entities/land.entity';
 import { User } from 'src/common/entities/user.entity';
 import { Service } from "../common/enum/service";
-import { ILandService } from "../land/service/land";
 import { Pagination } from "src/common/pagination/pagination.dto";
-import { CategoryDetails } from "src/category-details/entities/category-detail.entity";
+import { CategoryDetails } from "src/common/entities/category-detail.entity";
 import { Category } from "src/categories/entities/category.entity";
-import { FindOneOptions } from 'typeorm';
+import {LandService} from "../land/land.service";
 type relationValid = "users" | "land" | "productType";
 @Injectable()
 export class FarmingCalenderService {
   constructor(
     @InjectRepository(FarmingCalender)
     private readonly farmingCalenderRepository: Repository<FarmingCalender>,
-    @Inject(Service.LAND_SERVICE)
-    private readonly landService: ILandService,
+    private readonly landService: LandService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(CategoryDetails)

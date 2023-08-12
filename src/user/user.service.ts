@@ -1,28 +1,22 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { User } from "../../common/entities/user.entity";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { User } from "../common/entities/user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { In, Repository } from "typeorm";
-import { UserCreateDto } from "../../common/dto/user-create.dto";
-import { ApiException } from "../../exception/api.exception";
-import { ErrorCode } from "../../exception/error.code";
-import { Permission } from "../../common/entities/permission.entity";
-import { Pagination } from "../../common/pagination/pagination.dto";
-import { PaginationModel } from "../../common/pagination/pagination.model";
-import { Meta } from "../../common/pagination/meta.dto";
-import { CreateLocationDto } from "../../common/dto/create-location.dto";
-import { Farm } from "../../common/entities/farm.entity";
-import { IUserService } from "./user";
+import {  Repository } from "typeorm";
+import { UserCreateDto } from "../common/dto/user-create.dto";
+import { ApiException } from "../exception/api.exception";
+import { Pagination } from "../common/pagination/pagination.dto";
+import { PaginationModel } from "../common/pagination/pagination.model";
+import { Meta } from "../common/pagination/meta.dto";
 import { UpdateUserDto } from "src/common/dto/update-user.dto";
+import {ErrorMessages} from "../exception/error.code";
 @Injectable()
-export class UserService implements IUserService {
+export class UserService {
 
-  constructor(@InjectRepository(User) private usersRepository: Repository<User>,
-    @InjectRepository(Permission) private permissionRepository: Repository<Permission>,
-    @InjectRepository(Farm) private farmRepository: Repository<Farm>,) { }
+  constructor(@InjectRepository(User) private usersRepository: Repository<User>) { }
 
   async createUser(dto: UserCreateDto): Promise<User> {
     if (await this.existsUsername(dto.username)) {
-      throw new ApiException(ErrorCode.USER_ALREADY_EXIST);
+      throw new ApiException(ErrorMessages.USER_ALREADY_EXIST);
     }
     const userEntity = this.usersRepository.create({
       ...dto,

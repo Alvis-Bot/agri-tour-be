@@ -1,21 +1,18 @@
 import { Body, Controller, Get, Inject, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { Router } from "../common/enum/router";
 import { Service } from "../common/enum/service";
-import { AuthService, IJwtPayload } from "./auth.service";
+import { AuthService } from "./auth.service";
 import { LoginDto } from "../common/dto/login.dto";
 import { LocalAuthGuard } from "./guard/local-auth.guard";
-import { ApiConsumes, ApiTags } from "@nestjs/swagger";
+import {ApiTags } from "@nestjs/swagger";
 import { UserCreateDto } from "../common/dto/user-create.dto";
 import { AuthUser } from "../common/decorator/user.decorator";
 import { User } from "../common/entities/user.entity";
-import { Pagination } from "../common/pagination/pagination.dto";
-import { IUserService } from "../user/service/user";
 import { Note } from "src/common/decorator/description.decorator";
-import { JwtAuthGuard } from "./guard/jwt-auth.guard";
-import { AuthGuard } from "@nestjs/passport";
 import { RefreshTokenDto } from "./dto/refresh-token.dto";
 import { TokenModel } from "./model/token.model";
 import { RefreshAuthGuard } from "./guard/refresh-auth.guard";
+import {UserService} from "../user/user.service";
 
 @Controller(Router.AUTH)
 @ApiTags("Auth APIs  (auth)")
@@ -23,7 +20,7 @@ export class AuthController {
 
   constructor(
     @Inject(Service.AUTH_SERVICE) private readonly authService: AuthService,
-    @Inject(Service.USER_SERVICE) private readonly userService: IUserService
+     private readonly userService: UserService
   ) { }
 
 
@@ -66,7 +63,7 @@ export class AuthController {
     @AuthUser() myUser: User,
     @Body() dto: RefreshTokenDto,
   ): Promise<TokenModel> {
-    return this.authService.refreshToken(myUser, dto.refreshToken);
+    return this.authService.refreshToken(myUser);
 
   }
   

@@ -1,46 +1,43 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
-import { TypesService } from './types.service';
-import { CreateTypeDto } from './dto/create-type.dto';
-import { UpdateTypeDto } from './dto/update-type.dto';
-import { ApiTags } from '@nestjs/swagger';
-import { Type } from './entities/type.entity';
+import {Body, Controller, Delete, Get, Patch, Post, Query} from '@nestjs/common';
+import {TypesService} from './types.service';
+import {TypeCreateDto} from './dto/type-create.dto';
+import {UpdateTypeDto} from './dto/update-type.dto';
+import {ApiTags} from '@nestjs/swagger';
+import {Type} from './entities/type.entity';
+import {Note} from "../common/decorator/description.decorator";
+import {UUIDQuery} from "../common/decorator/uuid.decorator";
 
 @Controller('types')
 @ApiTags('Thêm loại danh mục')
 export class TypesController {
   constructor(private readonly typesService: TypesService) { }
-
-  @Post('init')
-  initData() {
-    return this.typesService.initData();
-  }
-
   @Post('create')
-  create(@Body() createTypeDto: CreateTypeDto) {
-    return this.typesService.create(createTypeDto);
+  @Note('Tạo loại danh mục')
+  create(@Body() dto: TypeCreateDto): Promise<Type> {
+    return this.typesService.createType(dto);
   }
 
   @Get('gets')
-  findAll() {
-    return this.typesService.findAll();
+  async getTypes() {
+    return await this.typesService.getTypes();
   }
 
   @Get('get')
-  findOne(@Query('id') id: string) {
-    return this.typesService.findOne(id);
+  async getTypeById(@UUIDQuery('id') id: string): Promise<Type> {
+    return this.typesService.getTypeById(id);
   }
 
   @Get('getByName')
-  findByName(@Query('name') name: string) {
-    return this.typesService.findOneByName(name);
+  async getTypeByName(@Query('name') name: string) {
+    return this.typesService.getTypeByName(name);
   }
   @Patch('update')
   updateType(@Query('id') id: string, @Body() dto: UpdateTypeDto): Promise<Type> {
-    return this.typesService.update(id, dto);
+    return this.typesService.updateType(id, dto);
   }
 
   @Delete('delete')
-  deleteType(@Query('id') id: string): Promise<void> {
+  deleteType(@UUIDQuery('id') id: string): Promise<void> {
     return this.typesService.deleteType(id);
   }
 

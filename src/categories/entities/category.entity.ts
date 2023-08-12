@@ -1,4 +1,4 @@
-import { CategoryDetails } from 'src/category-details/entities/category-detail.entity';
+import { CategoryDetails } from 'src/common/entities/category-detail.entity';
 import { Type } from 'src/types/entities/type.entity';
 import { Entity, PrimaryGeneratedColumn, Column, Tree, TreeChildren, TreeParent, OneToMany, ManyToOne, BeforeInsert } from 'typeorm';
 

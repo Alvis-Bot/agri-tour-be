@@ -1,11 +1,10 @@
 
-import { randomUUID } from 'crypto';
 import { Category } from 'src/categories/entities/category.entity';
 import { AuditEntity } from 'src/common/entities/audit.entity';
 import { DynamicField } from 'src/common/interface';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, PrimaryColumn, BeforeInsert } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'category_details'})
 export class CategoryDetails extends AuditEntity{
     @PrimaryGeneratedColumn('uuid')
     id: string;

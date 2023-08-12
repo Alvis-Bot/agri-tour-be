@@ -4,33 +4,23 @@ import {
   Controller,
   Get,
   Inject,
-  Param,
   Post,
   Query,
-  Res,
-  UploadedFile,
-  UploadedFiles, UseGuards,
+  UploadedFiles,
   UseInterceptors,
-  ValidationPipe
 } from "@nestjs/common";
 import { Router } from "../common/enum/router";
 import { Note } from "../common/decorator/description.decorator";
 import { AreaCreateDto } from "../common/dto/area-create.dto";
 import { IAreaService } from "./service/area";
 import { Service } from "../common/enum/service";
-import { IS_UUID, ValidationTypes, Validator } from "class-validator";
-import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import { ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { QueryFarmIdDto } from "./dto/query-farm-id.dto";
-import { ApiFile, ApiFiles } from "./api-file.decorator";
-import { QueryAreaIdDto } from "./dto/query-area-id.dto";
 import * as path from "path";
 import { ApiException } from "../exception/api.exception";
-import { ErrorCode } from "../exception/error.code";
 import { diskStorage } from "multer";
-import { UploadDto } from "./dto/upload.dto";
-import { response } from "express";
-import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import {ErrorMessages} from "../exception/error.code";
 
 @Controller(Router.AREA)
 @ApiTags("Area APIs  (area)")
@@ -66,7 +56,7 @@ export class AreaController {
         cb(null, true);
       } else {
         // Reject file
-        cb(new ApiException(ErrorCode.FILE_TYPE_NOT_MATCHING), false);
+        cb(new ApiException(ErrorMessages.FILE_TYPE_NOT_MATCHING), false);
       }
     },
   }

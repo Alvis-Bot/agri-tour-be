@@ -1,29 +1,24 @@
 import { BadRequestException, Body, Controller, Get, Inject, Logger, Patch, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { Router } from "../common/enum/router";
-import { ILandService } from "./service/land";
 import { Service } from "../common/enum/service";
 import { LandCreateDto } from "../common/dto/land-create.dto";
 import { Land } from "../common/entities/land.entity";
-import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
+import { ApiConsumes, ApiTags } from "@nestjs/swagger";
+
 import { Note } from "../common/decorator/description.decorator";
 import { IAreaService } from "../area/service/area";
 import { QueryAreaIdDto } from "../common/dto/query-area-id.dto";
 import { QueryIdDto } from "../common/dto/query-id.dto";
-import { ApiFiles } from "../area/api-file.decorator";
 import { diskStorage } from "multer";
 import * as path from 'path';
-
 import { ApiException } from "../exception/api.exception";
-import { ErrorCode } from "../exception/error.code";
-
-import { Location as ILocation } from '../common/interface'
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import {ErrorMessages} from "../exception/error.code";
+import {LandService} from "./land.service";
 @Controller(Router.LAND)
 @ApiTags('Land APIs')
-// @UseGuards(JwtAuthGuard)
 export class LandController {
-  constructor(@Inject(Service.LAND_SERVICE) private readonly landService: ILandService,
+  constructor(private readonly landService: LandService,
     @Inject(Service.AREA_SERVICE) private readonly areaService: IAreaService) {
   }
 
@@ -55,7 +50,7 @@ export class LandController {
         cb(null, true);
       } else {
         // Reject file
-        cb(new ApiException(ErrorCode.FILE_TYPE_NOT_MATCHING), false);
+        cb(new ApiException(ErrorMessages.FILE_TYPE_NOT_MATCHING), false);
       }
     },
   }

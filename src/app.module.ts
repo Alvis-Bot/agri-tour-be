@@ -1,11 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { addTransactionalDataSource } from "typeorm-transactional";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { validationSchema } from "./common/config/validation";
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { ManagerModule } from './manager/manager.module';
 import { PermissionModule } from './permission/permission.module';
 import { GroupModule } from './group/group.module';
 import { FeatureModule } from './feature/feature.module';
@@ -23,13 +20,13 @@ import { FarmingCalenderModule } from './farming_calender/farming_calender.modul
 import { CategoryDetailsModule } from './category-details/category-details.module';
 import { TypesModule } from './types/types.module';
 import { ProvidersModule } from './providers/providers.module';
-
-
+import {validationSchema} from "./common/config/validation";
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      // validationSchema,
+      validationSchema,
+        envFilePath: [`.env`, `.env.${process.env.NODE_ENV}`], // load env
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -45,14 +42,12 @@ import { ProvidersModule } from './providers/providers.module';
           entities: [__dirname + "/**/*.entity{.ts,.js}"],
           synchronize: true,
           logging: false,
-          options: { encrypt: false },
           autoLoadEntities: false,
         };
       },
     }),
     UserModule,
     AuthModule,
-    ManagerModule,
     PermissionModule,
     GroupModule,
     FeatureModule,

@@ -1,27 +1,19 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { CreateGroupDto } from "../common/dto/create-group.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Group } from "../common/entities/group.entity";
 import { PermissionService } from "../permission/permission.service";
-import { UpdateGroupDto } from "../common/dto/update-group.dto";
-import { ApiException } from "../exception/api.exception";
-import { ErrorCode } from "../exception/error.code";
-import { FeatureService } from "../feature/service/feature.service";
 import { Service } from "../common/enum/service";
 import { IFeatureService } from "../feature/service/feature";
 import { Permission } from "../common/entities/permission.entity";
 import { User } from "src/common/entities/user.entity";
-import { UserService } from "src/user/service/user.service";
+import { UserService } from "src/user/user.service";
 
 @Injectable()
 export class GroupService {
 
   constructor(
     @InjectRepository(Group) private groupRepository: Repository<Group>,
-    @InjectRepository(Permission) private permissionRepository: Repository<Permission>,
-    @InjectRepository(User) private userRepository: Repository<User>,
-    private readonly permissionService: PermissionService,
     private readonly userService: UserService,
     @Inject(Service.FEATURE_SERVICE) private readonly featureService: IFeatureService) { }
 

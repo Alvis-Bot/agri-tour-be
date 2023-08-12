@@ -1,91 +1,85 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateTypeDto } from './dto/create-type.dto';
-import { UpdateTypeDto } from './dto/update-type.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Type } from './entities/type.entity';
-import { Repository } from 'typeorm';
+import {Injectable, OnModuleInit} from '@nestjs/common';
+import {TypeCreateDto} from './dto/type-create.dto';
+import {UpdateTypeDto} from './dto/update-type.dto';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Type} from './entities/type.entity';
+import {Repository} from 'typeorm';
+import {ApiException} from "../exception/api.exception";
+import {ErrorMessages} from "../exception/error.code";
 
 @Injectable()
-export class TypesService {
-  constructor(@InjectRepository(Type)
-  private typeRepository: Repository<Type>
+export class TypesService implements OnModuleInit {
+  constructor(
+      @InjectRepository(Type) private typeRepository: Repository<Type>
   ) {
-
   }
-  async initData() {
-    const types = [
-      { name: 'TINH_THANH' },
-      { name: 'QUAN_HUYEN' },
-      { name: 'PHUONG_XA' },
-      { name: 'LOAI_DAT' },
-      { name: 'BUSINESS_TYPE' },
-      { name: 'BUSINESS_MODEL' },
-      { name: 'SOIL_TYPE' },
-      { name: 'PRODUCT_TYPE' },
-      { name: 'UNIT_TYPE' },
-      { name: 'ROOT' },
 
+
+  async onModuleInit(): Promise<void> {
+    const types = [
+      {name: 'TINH_THANH'},
+      {name: 'QUAN_HUYEN'},
+      {name: 'PHUONG_XA'},
+      {name: 'LOAI_DAT'},
+      {name: 'BUSINESS_TYPE'},
+      {name: 'BUSINESS_MODEL'},
+      {name: 'SOIL_TYPE'},
+      {name: 'PRODUCT_TYPE'},
+      {name: 'UNIT_TYPE'},
+      {name: 'ROOT'},
     ];
 
-    for (const type of types) {
-      const existingType = await this.typeRepository.findOne({
-        where: { name: type.name }
-      });
+    const itemsCount = await this.typeRepository.count();
+    if (itemsCount > 0) return;
+    await this.typeRepository.save(types);
 
-
-      if (!existingType) {
-        await this.typeRepository.save(this.typeRepository.create(type));
-        return existingType;
-      }
-
-    }
   }
-  create(createTypeDto: CreateTypeDto) {
-    const creating = this.typeRepository.create(createTypeDto);
+
+
+  async createType(dto: TypeCreateDto): Promise<Type> {
+    // kiểm tra xem đã tồn tại chưa
+    await this.existsByName(dto.name);
+    const creating = this.typeRepository.create(dto);
     return this.typeRepository.save(creating);
   }
 
-  findAll() {
+
+  async existsByName(name: string): Promise<void> {
+    const existingType = await this.typeRepository.exist({where: {name}});
+    if (existingType) throw new ApiException(ErrorMessages.TYPE_EXISTED)
+  }
+
+  async getTypes(): Promise<Type[]> {
     return this.typeRepository.find({
       select: ['id', 'name']
     });
   }
 
-  findOne(id: string) {
-    const type = this.typeRepository.findOne({
-      where: { id },
-    });
-    if (!type) throw new NotFoundException('No type found');
+  async getTypeById(id: string): Promise<Type> {
+    const type = await this.typeRepository.findOne({where: {id}});
+    if (!type) throw new ApiException(ErrorMessages.TYPE_NOT_FOUND)
     return type
   }
 
-  findOneByName(name: string) {
-    const type = this.typeRepository.findOne({
+  async getTypeByName(name: string): Promise<Type> {
+    const type = await this.typeRepository.findOne({
       where: { name },
     });
-    if (!type) throw new NotFoundException('No type found');
+    if (!type) throw new ApiException(ErrorMessages.TYPE_NOT_FOUND)
     return type
   }
 
-  async update(id: string, dto: UpdateTypeDto): Promise<Type> {
-    const type = await this.findOne(id);
-    const merged = this.typeRepository.merge(type, dto);
-
-    const updated = await this.typeRepository.update(id, merged);
-    if (!updated) throw new BadRequestException({
-      message: ['Update type failed']
-    })
-    return merged;
+  async updateType(id: string, dto: UpdateTypeDto): Promise<Type> {
+    const type = await this.getTypeById(id);
+    return this.typeRepository.save({
+      ...type,
+      ...dto
+    });
   }
 
   async deleteType(id: string): Promise<void | any> {
-    const result = await this.typeRepository.delete({ id });
-
-    if (result.affected === 0) {
-      throw new NotFoundException('Type not found');
-    }
-    return {
-      message: ['Type deleted successfully']
-    }
+    const type = await this.getTypeById(id);
+    return this.typeRepository.delete(type);
   }
+
 }

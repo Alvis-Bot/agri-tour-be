@@ -17,8 +17,8 @@ import * as fs from "fs";
 import { Farm } from "src/common/entities/farm.entity";
 import { AuthGuard } from "src/auth/guard/Auth.guard";
 import { ApiException } from "src/exception/api.exception";
-import { ErrorCode } from "src/exception/error.code";
 import { JwtAuthGuard } from "src/auth/guard/jwt-auth.guard";
+import {ErrorMessages} from "../exception/error.code";
 @Controller(Router.FARM)
 @UseGuards(JwtAuthGuard)
 
@@ -55,7 +55,7 @@ export class FarmController {
         cb(null, true);
       } else {
         // Reject file
-        cb(new ApiException(ErrorCode.FILE_TYPE_NOT_MATCHING), false);
+        cb(new ApiException(ErrorMessages.FILE_TYPE_NOT_MATCHING), false);
       }
     },
   }))

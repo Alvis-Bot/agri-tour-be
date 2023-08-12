@@ -3,7 +3,7 @@ import { Category } from './entities/category.entity';
 import { CategoryService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { ApiBody, ApiConsumes, ApiProperty, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CategoryDetails } from 'src/category-details/entities/category-detail.entity';
+import { CategoryDetails } from 'src/common/entities/category-detail.entity';
 import { Note } from 'src/common/decorator/description.decorator';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
