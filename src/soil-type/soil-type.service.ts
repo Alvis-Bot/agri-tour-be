@@ -1,13 +1,12 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
-import {SoilType} from "../../common/entities/soil-type.entity";
+import {SoilType} from "../common/entities/soil-type.entity";
 import {Repository} from "typeorm";
-import {ISoilTypeService} from "./soil-type";
-import {ApiException} from "../../exception/api.exception";
-import {ErrorMessages} from "../../exception/error.code";
+import {ApiException} from "../exception/api.exception";
+import {ErrorMessages} from "../exception/error.code";
 
 @Injectable()
-export class SoilTypeService implements ISoilTypeService{
+export class SoilTypeService {
    constructor(@InjectRepository(SoilType) private soilTypeRepository: Repository<SoilType>) {}
 
   async getSoilTypes(): Promise<SoilType[]> {

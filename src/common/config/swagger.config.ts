@@ -14,6 +14,11 @@ export class SwaggerConfig {
 			.addSecurityRequirements("Authorization")
 			.build();
 		const document = SwaggerModule.createDocument(app, options);
-		SwaggerModule.setup("api", app, document);
+		SwaggerModule.setup("api", app, document ,{
+			swaggerOptions: {
+				// save token
+				persistAuthorization: true,
+			}
+		});
 	}
 }

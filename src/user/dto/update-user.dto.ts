@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Farm } from "../entities/farm.entity";
-import { Group } from "../entities/group.entity";
+import { Farm } from "../../common/entities/farm.entity";
+import { Group } from "../../common/entities/group.entity";
 
 export class UpdateUserDto {
 

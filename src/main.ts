@@ -28,7 +28,6 @@ async function bootstrap() {
     }),
   );
 
-  // exxception global
 
 
   // app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));

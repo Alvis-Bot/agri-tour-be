@@ -8,7 +8,7 @@ import { FarmCreateDto } from "../common/dto/farm-create.dto";
 import { AuthUser } from "../common/decorator/user.decorator";
 import { User } from "../common/entities/user.entity";
 import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
-import { Public } from "../auth/public.meta";
+import { Public } from "../common/meta/public.meta";
 import { QueryAllDto } from "./dto/query-all.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";

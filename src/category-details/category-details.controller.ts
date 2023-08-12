@@ -79,7 +79,7 @@ export class CategoryDetailsController {
 
   @Delete('delete')
   @ApiResponse({ status: 200, description: 'Deletes a category detail' })
-  async remove(@Query('id') id: string): Promise<void | Object> {
+  async remove(@Query('id') id: string): Promise<void | NonNullable<unknown>> {
     return await this.categoryDetailsService.remove(id);
   }
 

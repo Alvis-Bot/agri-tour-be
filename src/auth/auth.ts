@@ -6,6 +6,6 @@ export interface IAuthService{
     validateJwt(payload: IJwtPayload): Promise<User>;
     validateUser(username: string, password: string): Promise<any>;
 
-    refreshToken(id: User, refreshToken): Promise<any>;
-    validateUserRefreshToken(id: string, refreshToken): Promise<void>;
+    refreshToken(id: User, refreshToken : string): Promise<any>;
+    validateUserRefreshToken(id: string, refreshToken : string): Promise<void>;
 }

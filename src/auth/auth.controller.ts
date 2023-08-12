@@ -5,7 +5,7 @@ import { AuthService } from "./auth.service";
 import { LoginDto } from "../common/dto/login.dto";
 import { LocalAuthGuard } from "./guard/local-auth.guard";
 import {ApiTags } from "@nestjs/swagger";
-import { UserCreateDto } from "../common/dto/user-create.dto";
+import { UserCreateDto } from "../user/dto/user-create.dto";
 import { AuthUser } from "../common/decorator/user.decorator";
 import { User } from "../common/entities/user.entity";
 import { Note } from "src/common/decorator/description.decorator";

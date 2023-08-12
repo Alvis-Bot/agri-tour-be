@@ -1,20 +1,19 @@
-import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Area } from "../common/entities/area.entity";
-import {  Repository } from "typeorm";
-import { Service } from "../common/enum/service";
-import { Land } from "../common/entities/land.entity";
-import { LandCreateDto } from "../common/dto/land-create.dto";
-import { ISoilTypeService } from "../soil-type/service/soil-type";
-import { ApiException } from "../exception/api.exception";
-import { IAreaService } from "../area/service/area";
+import {BadRequestException, ConflictException, Inject, Injectable, NotFoundException} from "@nestjs/common";
+import {InjectRepository} from "@nestjs/typeorm";
+import {Repository} from "typeorm";
+import {Service} from "../common/enum/service";
+import {Land} from "../common/entities/land.entity";
+import {LandCreateDto} from "../common/dto/land-create.dto";
+import {ApiException} from "../exception/api.exception";
+import {IAreaService} from "../area/service/area";
 import * as fs from "fs";
-import { CategoryDetails } from "src/common/entities/category-detail.entity";
+import {CategoryDetails} from "src/common/entities/category-detail.entity";
 import {ErrorMessages} from "../exception/error.code";
+
 @Injectable()
 export class LandService {
-  constructor(@InjectRepository(Land) private landRepository: Repository<Land>,
-    @Inject(Service.SOIL_TYPE_SERVICE) private soilTypeService: ISoilTypeService,
+  constructor(
+    @InjectRepository(Land) private landRepository: Repository<Land>,
     @Inject(Service.AREA_SERVICE) private areaService: IAreaService,
     @InjectRepository(CategoryDetails) private categoryDetailRepository: Repository<CategoryDetails>
   ) { }
@@ -68,45 +67,34 @@ export class LandService {
     }
     return categoryDetail;
   }
-  async createLand(dto: LandCreateDto, area: Area): Promise<Land> {
-    const soilType = await this.soilTypeService.getSoilTypeById(dto.soilTypeId);
-    const areaEntity = this.landRepository.create({
-      name: dto.name,
-      soilType,
-      area,
-      locations: dto.locations
-    });
-    return this.landRepository.save(areaEntity);
-  }
+
 
   async getLands(): Promise<any[]> {
-    const lands = await this.landRepository
-      .createQueryBuilder('land')
-      .select([
-        'land.id',
-        'land.name',
-        'land.acreage',
-        'land.locations',
-        'land.images',
-        'area.id',
-        'area.name',
-        'soilType.id',
-        'soilType.name',
-        'productType.id',
-        'productType.name',
-        'productType.child_column',
-      ])
-      .leftJoin('land.area', 'area')
-      .leftJoin('land.productType', 'productType')
-      .leftJoin('land.soilType', 'soilType')
-      .getMany();
-
     // If you want to map the raw results to the Land entity, you can do it here
     // For example, if you have a map function to convert the raw results to Land entity, you can use it like:
     // const mappedLands = lands.map((rawLand) => this.mapRawLandToEntity(rawLand));
     // return mappedLands;
 
-    return lands;
+    return await this.landRepository
+        .createQueryBuilder('land')
+        .select([
+          'land.id',
+          'land.name',
+          'land.acreage',
+          'land.locations',
+          'land.images',
+          'area.id',
+          'area.name',
+          'soilType.id',
+          'soilType.name',
+          'productType.id',
+          'productType.name',
+          'productType.child_column',
+        ])
+        .leftJoin('land.area', 'area')
+        .leftJoin('land.productType', 'productType')
+        .leftJoin('land.soilType', 'soilType')
+        .getMany();
   }
 
   async getLandsByAreaId(areaId: string): Promise<Land[]> {
@@ -117,16 +105,6 @@ export class LandService {
       .leftJoinAndSelect('land.soilType', 'soilType')
       .leftJoinAndSelect('land.productType', 'productType')
       .getMany();
-  }
-
-  async getLandByIdNoRelation(id: string): Promise<Land> {
-    const land = await this.landRepository.findOne({
-      where: { id },
-      select: ['id', 'name'],
-      loadEagerRelations: false
-    })
-    if (!land) throw new NotFoundException("Land not found");
-    return land;
   }
 
   async getLandById(id: string): Promise<Land> {
@@ -142,9 +120,5 @@ export class LandService {
     return land;
   }
 
-  // async uploadFile(landId: string, dto: UploadLandDto, files: Express.Multer.File[]) {
-  //   const land = await this.getLandById(landId);
-  //   land.images = files.map(file => file.filename);
-  //   return this.landRepository.save(land);
-  // }
+
 }

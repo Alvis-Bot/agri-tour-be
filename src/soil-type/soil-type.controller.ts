@@ -1,16 +1,13 @@
-import { Body, Controller, Get, Inject, Post, Query, UseGuards } from "@nestjs/common";
-import { ISoilTypeService } from "./service/soil-type";
-import { Service } from "../common/enum/service";
+import {  Controller, Get, Post, Query } from "@nestjs/common";
 import { Note } from "../common/decorator/description.decorator";
-import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
 import { ApiTags } from "@nestjs/swagger";
+import {SoilTypeService} from "./soil-type.service";
 
 @Controller('soil-type')
 @ApiTags("Soil Type APIs")
-// @UseGuards(JwtAuthGuard)
 export class SoilTypeController {
 
-  constructor(@Inject(Service.SOIL_TYPE_SERVICE) private readonly soilTypeService: ISoilTypeService) {
+  constructor(private readonly soilTypeService: SoilTypeService) {
   }
 
   @Post()

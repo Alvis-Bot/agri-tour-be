@@ -67,7 +67,7 @@ export class LandController {
       throw new BadRequestException('Images file is required');
     }
     const filesPath = images?.map(file => `uploads/lands/${file.filename}`);
-    var locations = null;
+    let locations = null;
     const regex = /\[|\]/;
     if (regex.test(createLandDto.locations.toString())) {
       if (typeof createLandDto.locations === 'string') {

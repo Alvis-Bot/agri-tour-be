@@ -1,39 +1,45 @@
-import { Controller, Get, Post, Body, Patch, Query, Delete, UseInterceptors, UploadedFiles } from '@nestjs/common';
-import { ProvidersService } from './providers.service';
-import { CreateProviderDto } from '../common/dto/create-provider.dto';
-import { Pagination } from 'src/common/pagination/pagination.dto';
-import { ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { UpdateProviderDto } from 'src/common/dto/update-provider.dto';
-import { Provider } from 'src/common/entities/provider.entity';
-@ApiTags(
-  'API Nhà cung cấp'
-)
+import {Body, Controller, Delete, Get, Patch, Post, Query} from '@nestjs/common';
+import {ProvidersService} from './providers.service';
+import {CreateProviderDto} from '../common/dto/create-provider.dto';
+import {Pagination} from 'src/common/pagination/pagination.dto';
+import {ApiTags} from '@nestjs/swagger';
+import {UpdateProviderDto} from 'src/common/dto/update-provider.dto';
+import {Provider} from 'src/common/entities/provider.entity';
+import {UUIDQuery} from "../common/decorator/uuid.decorator";
+import {Note} from "../common/decorator/description.decorator";
+
+@ApiTags('API Nhà cung cấp')
 @Controller('providers')
 export class ProvidersController {
   constructor(private readonly providersService: ProvidersService) { }
 
   @Post()
-  async create(@Body() createProviderDto: CreateProviderDto): Promise<Provider> {
-    return this.providersService.create(createProviderDto);
+  @Note('Tạo mới nhà cung cấp')
+  async create(@Body() dto: CreateProviderDto): Promise<Provider> {
+    return this.providersService.createProvider(dto);
   }
 
   @Get()
-  async findAll(@Query() pagination: Pagination): Promise<Provider[]> {
-    return await this.providersService.findAll(pagination);
+  @Note('Lấy danh sách nhà cung cấp')
+  async getPaginationProviders(@Query() pagination: Pagination) {
+    return await this.providersService.getPaginationProviders(pagination);
   }
 
   @Get('get')
-  async findOne(@Query('id') id: string) {
-    return this.providersService.findOne(id);
+  @Note('Lấy thông tin nhà cung cấp theo id')
+  async getProviderById(@UUIDQuery('id') id: string) {
+    return this.providersService.getProviderById(id);
   }
 
   @Patch('update')
-  async update(@Query('id') id: string, @Body() updateProviderDto: UpdateProviderDto): Promise<Provider> {
-    return await this.providersService.update(id, updateProviderDto);
+  @Note('Cập nhật thông tin nhà cung cấp')
+  async update(@UUIDQuery('id') id: string, @Body() dto: UpdateProviderDto): Promise<Provider> {
+    return await this.providersService.updateProvider(id, dto);
   }
 
   @Delete('delete')
-  async remove(@Query('id') id: string): Promise<Object> {
-    return await this.providersService.remove(id);
+  @Note('Xóa nhà cung cấp')
+  async remove(@UUIDQuery('id') id: string): Promise<void> {
+    await this.providersService.removeProvider(id);
   }
 }

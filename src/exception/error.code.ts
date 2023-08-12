@@ -25,6 +25,7 @@ export const ErrorMessages = {
   SOIL_TYPE_NOT_FOUND: errorFactory(HttpStatus.BAD_REQUEST, "Soil type not found"),
   TYPE_EXISTED: errorFactory(HttpStatus.CONFLICT, "Type existed"),
   TYPE_NOT_FOUND: errorFactory(HttpStatus.BAD_REQUEST, "Type not found"),
+  PROVIDER_NOT_FOUND: errorFactory(HttpStatus.BAD_REQUEST, "Provider not found"),
 
 
 };
