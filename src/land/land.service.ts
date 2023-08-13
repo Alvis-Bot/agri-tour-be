@@ -9,8 +9,9 @@ import {IAreaService} from "../area/service/area";
 import {CategoryDetails} from "src/common/entities/category-detail.entity";
 import {ErrorMessages} from "../exception/error.code";
 import {StorageService} from "../storage/storage.service";
-import {FileTypes} from "../common/enum";
+import {ImageType} from "../common/enum";
 import {Transactional} from "typeorm-transactional";
+import {CategoryName} from "../common/enum/category.enum";
 
 @Injectable()
 export class LandService {
@@ -39,14 +40,13 @@ export class LandService {
         const area = await this.areaService.getAreaById(areaId);
         const land = await this.getLandByName(dto.name);
 
-        const productType = await this.findOneByCategoryDetail(dto.productTypeId, "loại sản phẩm");
-        const soilType = await this.findOneByCategoryDetail(dto.soilTypeId, "loại đất");
+        const productType = await this.getCategoryDetailById(dto.productTypeId, CategoryName.PRODUCT_NAME);
+        const soilType = await this.getCategoryDetailById(dto.soilTypeId, CategoryName.SOIL_NAME);
         if (area && land) {
             throw new ApiException(ErrorMessages.LAND_EXIST)
         }
 
-        const imageName = await this.storageService.uploadMultiFiles(FileTypes.IMAGE, files);
-        console.log("imageName", imageName);
+        const imageName = await this.storageService.uploadMultiFiles(ImageType.CARD_LAND, files);
 
         const creating = this.landRepository.create({
             ...dto,
@@ -57,12 +57,16 @@ export class LandService {
         })
         return await this.landRepository.save(creating);
   }
-  async findOneByCategoryDetail(id: string, type?: string): Promise<CategoryDetails> {
-    const categoryDetail = await this.categoryDetailRepository.findOne({
-      where: { id }
-    })
+
+
+    async getCategoryDetailById(id: string, type: CategoryName): Promise<CategoryDetails> {
+        const categoryDetail = await this.categoryDetailRepository.createQueryBuilder('categoryDetail')
+            .where('categoryDetail.id = :id', {id})
+            .leftJoin('categoryDetail.category', 'category')
+            .where('category.name = :name', { name : type })
+            .getOne();
     if (!categoryDetail) {
-      throw new NotFoundException(`Không tìm thấy  ${type} ! ${type}  Not Found`)
+      throw new ApiException(ErrorMessages.CATEGORY_DETAIL_NOT_FOUND)
     }
     return categoryDetail;
   }

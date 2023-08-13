@@ -1,59 +1,39 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  Inject,
-  Post,
-  Query,
-  UploadedFiles,
-  UseInterceptors
-} from "@nestjs/common";
+import {Body, Controller, Get, Post, Query, UploadedFiles,} from "@nestjs/common";
 import {Router} from "../common/enum/router";
-import {Service} from "../common/enum/service";
 import {LandCreateDto} from "../common/dto/land-create.dto";
 import {Land} from "../common/entities/land.entity";
-import {ApiConsumes, ApiTags} from "@nestjs/swagger";
-
+import {ApiTags} from "@nestjs/swagger";
 import {Note} from "../common/decorator/description.decorator";
-import {IAreaService} from "../area/service/area";
 import {QueryAreaIdDto} from "../common/dto/query-area-id.dto";
 import {QueryIdDto} from "../common/dto/query-id.dto";
 import {LandService} from "./land.service";
-import {FileFieldsInterceptor} from "@nestjs/platform-express";
-import {diskStorage} from "multer";
-import * as path from "path";
-import {ApiException} from "../exception/api.exception";
-import {ErrorMessages} from "../exception/error.code";
 import {ApiFiles} from "../common/decorator/file.decorator";
-import {FileTypes} from "../common/enum";
+import {FileTypes, ImageType} from "../common/enum";
+import {FileDto} from "./dto/file.dto";
+import {StorageService} from "../storage/storage.service";
 
 @Controller(Router.LAND)
 @ApiTags('Land APIs')
 export class LandController {
   constructor(private readonly landService: LandService,
-    @Inject(Service.AREA_SERVICE) private readonly areaService: IAreaService) {
-  }
+              private readonly storageService: StorageService
+  ) {}
 
   @Post('create')
   @ApiFiles("images", 10, FileTypes.IMAGE)
   async create(@Query('areaId') areaId: string, @Body() dto: LandCreateDto, @UploadedFiles() files: Express.Multer.File[]
   ) {
-    console.log("dto", dto.locations);
-    console.log("files", files);
     return this.landService.createLand(areaId, dto, files);
   }
 
 
-  // @Post('creatsnv')
-  // // @ApiFiles("files", 10, FileTypes.IMAGE)
-  // @ApiConsumes('multipart/form-data')
-  // @Note("Tạo mới vùng canh tác (test)")
-  // async createTest(@Body() dto: LandCreateDto) {
-  //   console.log("dto", dto);
+  // @Post('abc')
+  // @ApiFiles("files", 10, FileTypes.IMAGE)
+  // async abc( @Body() dto: FileDto, @UploadedFiles() files: Express.Multer.File[]
+  // ) {
+  //   console.log(dto ,files);
+  //   return this.storageService.uploadMultiFiles(ImageType.CARD_FARM, files);
   // }
-  //
-
 
   @Get('all')
   @Note('Lấy tất cả vùng trồng')

@@ -2,7 +2,7 @@ import {Injectable, OnModuleInit} from '@nestjs/common';
 import {TypeCreateDto} from './dto/type-create.dto';
 import {UpdateTypeDto} from './dto/update-type.dto';
 import {InjectRepository} from '@nestjs/typeorm';
-import {Type} from './entities/type.entity';
+import {Type} from '../common/entities/type.entity';
 import {Repository} from 'typeorm';
 import {ApiException} from "../exception/api.exception";
 import {ErrorMessages} from "../exception/error.code";
@@ -77,9 +77,9 @@ export class TypesService implements OnModuleInit {
     });
   }
 
-  async deleteType(id: string): Promise<void | any> {
+  async deleteType(id: string): Promise<void> {
     const type = await this.getTypeById(id);
-    return this.typeRepository.delete(type);
+    await this.typeRepository.delete(type);
   }
 
 }

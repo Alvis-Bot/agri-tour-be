@@ -2,10 +2,7 @@ import { BadRequestException, Inject, Injectable, NotFoundException } from "@nes
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Group } from "../common/entities/group.entity";
-import { PermissionService } from "../permission/permission.service";
 import { Service } from "../common/enum/service";
-import { IFeatureService } from "../feature/service/feature";
-import { Permission } from "../common/entities/permission.entity";
 import { User } from "src/common/entities/user.entity";
 import { UserService } from "src/user/user.service";
 
@@ -14,8 +11,7 @@ export class GroupService {
 
   constructor(
     @InjectRepository(Group) private groupRepository: Repository<Group>,
-    private readonly userService: UserService,
-    @Inject(Service.FEATURE_SERVICE) private readonly featureService: IFeatureService) { }
+    private readonly userService: UserService) { }
 
   async createGroup(groupData: Partial<Group>): Promise<Group> {
     const newGroup = this.groupRepository.create(groupData);
@@ -40,7 +36,7 @@ export class GroupService {
 
   async updateGroup(groupId: string, groupData: Partial<Group>): Promise<Group> {
     const group = await this.getGroup(groupId);
-    const merged = await this.groupRepository.merge(group, groupData);
+    const merged = this.groupRepository.merge(group, groupData);
 
     const updated = await this.groupRepository.update(groupId, merged);
     if (!updated) {

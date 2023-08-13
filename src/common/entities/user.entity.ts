@@ -2,17 +2,13 @@ import {
   BeforeInsert,
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
-  ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn
 } from "typeorm";
 import { AuditEntity } from "./audit.entity";
 import * as bcrypt from 'bcrypt';
-import { Permission } from "./permission.entity";
 import { Group } from "./group.entity";
 import { Exclude } from "class-transformer";
 import { Farm } from "./farm.entity";
@@ -38,9 +34,6 @@ export class User extends AuditEntity {
   isLocked: boolean;
 
 
-  // @ManyToOne(() => Group, group => group.users)
-  // @JoinColumn({ name: 'group_id' })
-  // group: Group;
   @ManyToMany(() => Group, group => group.users)
   @JoinTable({
     name: 'user_groups'
@@ -49,13 +42,15 @@ export class User extends AuditEntity {
   @OneToMany(() => Farm, farm => farm.user)
   farms: Farm[];
 
+  // Many-to-many relationship with FarmingCalender
+  @ManyToMany(() => FarmingCalender, farmingCalender => farmingCalender.users)
+  farmingCalenders: FarmingCalender[];
+
+
 
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
-  // Many-to-many relationship with FarmingCalender
-  @ManyToMany(() => FarmingCalender, farmingCalender => farmingCalender.users)
-  farmingCalenders: FarmingCalender[];
 
 }

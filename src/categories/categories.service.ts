@@ -1,14 +1,13 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
-import { EntityManager, ILike, Like, Repository, TreeRepository } from 'typeorm';
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { Category } from './entities/category.entity';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as Excel from 'exceljs';
-import { Type } from 'src/types/entities/type.entity';
-import { CategoryDetails } from 'src/common/entities/category-detail.entity';
+import {BadRequestException, ConflictException, Injectable, NotFoundException} from '@nestjs/common';
+import {CreateCategoryDto} from './dto/create-category.dto';
+import {UpdateCategoryDto} from './dto/update-category.dto';
+import {EntityManager, ILike, Like, Repository, TreeRepository} from 'typeorm';
+import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm';
+import {Category} from './entities/category.entity';
+import {Type} from 'src/common/entities/type.entity';
+import {ApiException} from "../exception/api.exception";
+import {ErrorMessages} from "../exception/error.code";
+
 @Injectable()
 export class CategoryService {
   constructor(
@@ -83,14 +82,14 @@ export class CategoryService {
     }
     return data;
   }
-  async getOneCategoryByName(name: string): Promise<Category> {
-    const cate = await this.categoryRepository.findOne({
-      where: { name },
-      select: ['id', 'name']
-    })
-    if (!cate) throw new NotFoundException(`Category ${name} not found`);
-    return cate;
-  }
+  // async getOneCategoryByName(name: string): Promise<Category> {
+  //   const cate = await this.categoryRepository.findOne({
+  //     where: { name },
+  //     select: ['id', 'name']
+  //   })
+  //   if (!cate) throw new NotFoundException(`Category ${name} not found`);
+  //   return cate;
+  // }
   async searchCategoriesByName(name: string): Promise<Category[]> {
     return this.categoryRepository.find({
       where: {
@@ -123,25 +122,14 @@ export class CategoryService {
   }
 
   async getCategoryById(id: string): Promise<Category> {
-    try {
-      const category = await this.categoryRepository.findOne({
-        where: {
-          id
-        }
-      });
-      if (!category) {
-        throw new NotFoundException("Category not found");
-      }
-      return category;
-    } catch (err) {
-      throw new BadRequestException(err.message);
-    }
+    const category = await this.categoryRepository.findOneBy({id})
+    if (!category) throw new ApiException(ErrorMessages.CATEGORY_NOT_FOUND)
+    return category;
   }
 
   async updateCategory(data: UpdateCategoryDto, id: string): Promise<Category> {
     try {
       const category = await this.getCategoryById(id);
-      ;
       const mergedData = this.categoryRepository.merge(category, data);
       await this.categoryRepository.update(id, mergedData);
       return mergedData;
@@ -152,24 +140,18 @@ export class CategoryService {
     }
   }
 
-  async deleteCategory(id: string): Promise<void | Object> {
+  async deleteCategory(id: string): Promise<void> {
     const category = await this.getCategoryById(id);
-    const deleting = await this.categoryRepository.softDelete(id);
-    if (!deleting) {
-      throw new BadRequestException('Category not deleted');
-    }
-    return {
-      message: "Delete Category Successfully"
-    }
+    await this.categoryRepository.softDelete(category);
   }
 
-  async getCategoryWithChildren(categoryId: string): Promise<Category> {
-    return this.categoryRepository.findOneOrFail({
-      where: {
-        id: categoryId
-      }
-      , relations: ['children']
-    });
-  }
+  // async getCategoryWithChildren(categoryId: string): Promise<Category> {
+  //   return this.categoryRepository.findOneOrFail({
+  //     where: {
+  //       id: categoryId
+  //     }
+  //     , relations: ['children']
+  //   });
+  // }
 
 }

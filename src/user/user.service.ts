@@ -7,7 +7,7 @@ import { ApiException } from "../exception/api.exception";
 import { Pagination } from "../common/pagination/pagination.dto";
 import { PaginationModel } from "../common/pagination/pagination.model";
 import { Meta } from "../common/pagination/meta.dto";
-import { UpdateUserDto } from "src/user/dto/update-user.dto";
+import { UserUpdateDto } from "src/user/dto/user-update.dto";
 import {ErrorMessages} from "../exception/error.code";
 @Injectable()
 export class UserService {

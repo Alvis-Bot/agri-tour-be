@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Render } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 @Controller()
 @ApiTags('APPLICATION')

@@ -11,6 +11,7 @@ import { diskStorage } from 'multer';
 import * as path from 'path';
 import * as fs from 'fs';
 import { CategoryDetailsEnum } from 'src/common/enum/cate_details';
+import {UUIDQuery} from "../common/decorator/uuid.decorator";
 
 @ApiTags("Categories Table Tree")
 @Controller('categories')
@@ -24,12 +25,12 @@ export class CategoryController {
 
   @Post('create-child-category')
   async createChildCategory(
-    @Body() categoryData: CreateCategoryDto,
+    @Body() dto: CreateCategoryDto,
     @Query('parentId') parentId: string,
     @Query('type') type: string
 
   ): Promise<Category> {
-    return this.categoryService.createCategory(categoryData, type, parentId);
+    return this.categoryService.createCategory(dto, type, parentId);
   }
 
   @Get('list_type_category')
@@ -52,21 +53,10 @@ export class CategoryController {
   async findAllByCateid(@Query('type') type: string): Promise<CategoryDetails[]> {
     return await this.categoryService.getAllCategoryDetailsByType(type);
   }
-  
-  // @Get('tinh-thanh')
-  // @Note("Lấy dữ liệu tỉnh thành")
-  // async findTinhThanh(@Query('type') type: string): Promise<CategoryDetails[]> {
-  //   return await this.categoryService.getTinhThanh(type);
-  // }
-  // @Get('quan-huyen')
-  // @Note("Lấy dữ liệu quận huyện trong các tỉnh")
-  // async findQuanHuyen(@Query('type') type: string): Promise<CategoryDetails[]> {
-  //   return await this.categoryService.getQuanHuyen(type);
-  // }
 
   
   @Get('get')
-  async getCategoryById(@Query('id') id: string): Promise<Category> {
+  async getCategoryById(@UUIDQuery('id') id: string): Promise<Category> {
     return this.categoryService.getCategoryById(id);
   }
 
@@ -91,8 +81,8 @@ export class CategoryController {
   }
 
   @Delete('delete')
-  async deleteCategory(@Query('id') id: string): Promise<void | Object> {
-    return await this.categoryService.deleteCategory(id);
+  async deleteCategory(@UUIDQuery('id') id: string): Promise<void> {
+     await this.categoryService.deleteCategory(id);
   }
 
 

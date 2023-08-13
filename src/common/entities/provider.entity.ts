@@ -20,6 +20,4 @@ export class Provider extends AuditEntity {
 
     @Column()
     description: string;
-
-
 }

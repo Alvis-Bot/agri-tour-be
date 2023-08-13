@@ -16,7 +16,7 @@ export class FarmingCalender extends AuditEntity {
     productType: CategoryDetails;
 
     @Column()
-    numberOfVarites: number;
+    numberOfVarites: number; // số lượng giống
 
     @Column()
     startDay: Date;
@@ -25,13 +25,13 @@ export class FarmingCalender extends AuditEntity {
     endDate: Date;
 
     @Column()
-    seedProvider: string;
+    seedProvider: string; // nhà cung cấp giống
 
     @Column()
-    expectOutput: number;
+    expectOutput: number; // dự kiến sản lượng
 
     @Column()
-    unit: string;
+    unit: string; // đơn vị
 
     @ManyToOne(() => Land, land => land.farmingCalenders, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
     land: Land;
@@ -40,7 +40,6 @@ export class FarmingCalender extends AuditEntity {
     @ManyToMany(() => User, user => user.farmingCalenders)
     @JoinTable({
         name: 'user_farming_calenders',
-
     })
     users: User[];
 }

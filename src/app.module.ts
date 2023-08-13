@@ -3,9 +3,7 @@ import {TypeOrmModule} from '@nestjs/typeorm';
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import {UserModule} from './user/user.module';
 import {AuthModule} from './auth/auth.module';
-import {PermissionModule} from './permission/permission.module';
 import {GroupModule} from './group/group.module';
-import {FeatureModule} from './feature/feature.module';
 import {FarmModule} from './farm/farm.module';
 import {AreaModule} from './area/area.module';
 import {LandModule} from './land/land.module';
@@ -58,9 +56,7 @@ import {StorageModule} from "./storage/storage.module";
     UserModule,
     AuthModule,
     StorageModule,
-    PermissionModule,
     GroupModule,
-    FeatureModule,
     AreaModule,
     FarmModule,
     LandModule,

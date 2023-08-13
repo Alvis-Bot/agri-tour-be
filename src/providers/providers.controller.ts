@@ -8,7 +8,7 @@ import {Provider} from 'src/common/entities/provider.entity';
 import {UUIDQuery} from "../common/decorator/uuid.decorator";
 import {Note} from "../common/decorator/description.decorator";
 
-@ApiTags('API Nhà cung cấp')
+@ApiTags('Providers APIs')
 @Controller('providers')
 export class ProvidersController {
   constructor(private readonly providersService: ProvidersService) { }

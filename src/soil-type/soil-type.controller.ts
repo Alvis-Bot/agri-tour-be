@@ -16,6 +16,7 @@ export class SoilTypeController {
     return this.soilTypeService.createSoilType(name);
   }
 
+
   @Get('all')
   @Note('Lấy danh sách loại đất')
   async getSoilTypes() {

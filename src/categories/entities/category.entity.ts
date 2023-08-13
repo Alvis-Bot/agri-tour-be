@@ -1,11 +1,11 @@
 import { CategoryDetails } from 'src/common/entities/category-detail.entity';
-import { Type } from 'src/types/entities/type.entity';
+import { Type } from 'src/common/entities/type.entity';
 import { Entity, PrimaryGeneratedColumn, Column, Tree, TreeChildren, TreeParent, OneToMany, ManyToOne, BeforeInsert } from 'typeorm';
 
 @Entity()
 @Tree("nested-set")
 export class Category {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()

@@ -9,7 +9,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as Excel from 'exceljs';
 import { ImportDataCategoryDto } from './dto/import_category.dto';
-import { Type } from 'src/types/entities/type.entity';
+import { Type } from 'src/common/entities/type.entity';
 import { Pagination } from 'src/common/pagination/pagination.dto';
 type ValidRelations = 'type' | 'details';
 @Injectable()

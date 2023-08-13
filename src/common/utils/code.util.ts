@@ -2,6 +2,8 @@ import { FileTypes } from "../enum";
 
 export class CodeUtil {
 
+
+
   public static getMineType(minType: FileTypes) {
     switch (minType) {
       case FileTypes.IMAGE:

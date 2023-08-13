@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Farm } from "../../common/entities/farm.entity";
 import { Group } from "../../common/entities/group.entity";
 
-export class UpdateUserDto {
+export class UserUpdateDto {
 
     @ApiProperty()
     fullName: string;
