@@ -1,4 +1,4 @@
-import { Location as ILocation } from "../interface";
+import { Location as ILocation } from "../abc";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 

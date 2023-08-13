@@ -1,7 +1,7 @@
 
 import { Category } from 'src/common/entities/category.entity';
 import { AuditEntity } from 'src/common/entities/audit.entity';
-import { DynamicField } from 'src/common/interface';
+import { DynamicField } from 'src/common/abc';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity({ name: 'category_details'})

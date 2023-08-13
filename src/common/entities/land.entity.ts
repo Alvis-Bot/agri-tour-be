@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Area } from "./area.entity";
-import { Location } from "../interface";
+import { Location } from "../abc";
 import { FarmingCalender } from "./farming_calender.entity";
 import { AuditEntity } from "./audit.entity";
 import { CategoryDetails } from "src/common/entities/category-detail.entity";

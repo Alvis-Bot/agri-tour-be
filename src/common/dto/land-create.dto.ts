@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Location as ILocation } from "../interface";
+import { Location as ILocation } from "../abc";
 import {IsNotEmpty, IsString} from "class-validator";
 import {Transform} from "class-transformer";
 

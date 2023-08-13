@@ -1,2 +1,2 @@
-export * from './exception.interface'
-export * from './auth.interface'
+export * from './exception'
+export * from './auth'

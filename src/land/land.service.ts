@@ -11,7 +11,7 @@ import {ErrorMessages} from "../exception/error.code";
 import {StorageService} from "../storage/storage.service";
 import {ImageType} from "../common/enum";
 import {Transactional} from "typeorm-transactional";
-import {CategoryName} from "../common/enum/category.enum";
+import {CategoryName} from "../common/enum/category";
 
 @Injectable()
 export class LandService {

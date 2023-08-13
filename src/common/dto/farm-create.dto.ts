@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Location as ILocation } from "../interface";
+import { Location as ILocation } from "../abc";
 import { User } from "../entities/user.entity";
 
 

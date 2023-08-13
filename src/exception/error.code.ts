@@ -1,5 +1,5 @@
 import {HttpStatus} from "@nestjs/common";
-import {IError} from "./exception.interface";
+import {IError} from "../common/interface";
 
 
 type ErrorFactory = (status: HttpStatus, message: string) => IError;

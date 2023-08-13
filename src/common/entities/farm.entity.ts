@@ -8,7 +8,7 @@ import {
 } from "typeorm";
 import { User } from "./user.entity";
 import { Area } from "./area.entity";
-import { Location as ILocation } from "../interface";
+import { Location as ILocation } from "../abc";
 import { AuditEntity } from "./audit.entity";
 
 

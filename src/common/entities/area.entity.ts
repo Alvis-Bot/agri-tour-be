@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Farm } from "./farm.entity";
 import { Land } from "./land.entity";
-import { Location } from "../interface";
+import { Location } from "../abc";
 
 
 
