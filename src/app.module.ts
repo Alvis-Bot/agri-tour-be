@@ -7,7 +7,6 @@ import {GroupModule} from './group/group.module';
 import {FarmModule} from './farm/farm.module';
 import {AreaModule} from './area/area.module';
 import {LandModule} from './land/land.module';
-import {SoilTypeModule} from './soil-type/soil-type.module';
 import {AppController} from './app.controller';
 import {RoleModule} from './role/role.module';
 import {AbilityModule} from './ability/ability.module';
@@ -60,7 +59,6 @@ import {StorageModule} from "./storage/storage.module";
     AreaModule,
     FarmModule,
     LandModule,
-    SoilTypeModule,
     RoleModule,
     AbilityModule,
     JwtConfigModule,

@@ -12,12 +12,13 @@ import {StorageService} from "../storage/storage.service";
 import {ImageType} from "../common/enum";
 import {Transactional} from "typeorm-transactional";
 import {CategoryName} from "../common/enum/category";
+import {AreaService} from "../area/area.service";
 
 @Injectable()
 export class LandService {
   constructor(
     @InjectRepository(Land) private landRepository: Repository<Land>,
-    @Inject(Service.AREA_SERVICE) private areaService: IAreaService,
+    private areaService: AreaService,
     private storageService: StorageService,
     @InjectRepository(CategoryDetails) private categoryDetailRepository: Repository<CategoryDetails>
   ) { }

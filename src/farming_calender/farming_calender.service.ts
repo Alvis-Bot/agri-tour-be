@@ -1,11 +1,10 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { CreateFarmingCalenderDto } from '../common/dto/create-farming_calender.dto';
 import { UpdateFarmingCalenderDto } from 'src/common/dto/update-farming_calender.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FarmingCalender } from 'src/common/entities/farming_calender.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/common/entities/user.entity';
-import { Service } from "../common/enum/service";
 import { Pagination } from "src/common/pagination/pagination.dto";
 import { CategoryDetails } from "src/common/entities/category-detail.entity";
 import { Category } from "src/common/entities/category.entity";

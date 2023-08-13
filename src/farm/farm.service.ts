@@ -1,21 +1,19 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { IFarmService } from "./farm";
-import { FarmCreateDto } from "../../common/dto/farm-create.dto";
-import { Farm } from "../../common/entities/farm.entity";
+import { BadRequestException, ConflictException, Injectable, } from '@nestjs/common';
+import { FarmCreateDto } from "../common/dto/farm-create.dto";
+import { Farm } from "../common/entities/farm.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "../../common/entities/user.entity";
 import { Repository } from "typeorm";
-import { ApiException } from "../../exception/api.exception";
-import { QueryAllDto } from "../dto/query-all.dto";
+import { ApiException } from "../exception/api.exception";
+import { QueryAllDto } from "./dto/query-all.dto";
 import * as fs from "fs";
-import {ErrorMessages} from "../../exception/error.code";
+import {ErrorMessages} from "../exception/error.code";
 @Injectable()
-export class FarmService implements IFarmService {
+export class FarmService  {
 
   constructor(@InjectRepository(Farm) private farmRepository: Repository<Farm>,
   ) { }
 
-  async createFarm(dto: FarmCreateDto): Promise<Farm | any> {
+  async createFarm(dto: FarmCreateDto): Promise<Farm> {
     try {
 
       const user = dto.user;

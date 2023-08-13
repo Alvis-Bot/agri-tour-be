@@ -1,30 +1,25 @@
 import { BadRequestException, Body, Controller, Get, Inject, Post, Query, Req, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
-import { Router } from "../common/enum/router";
-import { Service } from "../common/enum/service";
-import { IFarmService } from "./service/farm";
+import { Router } from "../common/enum";
 import { Note } from "../common/decorator/description.decorator";
 import { FarmCreateDto } from "../common/dto/farm-create.dto";
 
 import { AuthUser } from "../common/decorator/user.decorator";
-import { User } from "../common/entities/user.entity";
-import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
-import { Public } from "../common/meta/public.meta";
+import {  ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { QueryAllDto } from "./dto/query-all.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import * as path from "path";
-import * as fs from "fs";
 import { Farm } from "src/common/entities/farm.entity";
-import { AuthGuard } from "src/auth/guard/Auth.guard";
 import { ApiException } from "src/exception/api.exception";
 import { JwtAuthGuard } from "src/auth/guard/jwt-auth.guard";
 import {ErrorMessages} from "../exception/error.code";
+import {FarmService} from "./farm.service";
 @Controller(Router.FARM)
 @UseGuards(JwtAuthGuard)
 
 @ApiTags('Farm APIs')
 export class FarmController {
-  constructor(@Inject(Service.FARM_SERVICE) private readonly farmService: IFarmService) {
+  constructor( private readonly farmService: FarmService) {
   }
 
   @Post('create-farm')

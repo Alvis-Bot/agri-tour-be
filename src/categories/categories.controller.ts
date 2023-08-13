@@ -1,16 +1,11 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete, Query, UseInterceptors, UploadedFile, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body , Patch, Delete, Query } from '@nestjs/common';
 import { Category } from '../common/entities/category.entity';
 import { CategoryService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { ApiBody, ApiConsumes, ApiProperty, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {  ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CategoryDetails } from 'src/common/entities/category-detail.entity';
 import { Note } from 'src/common/decorator/description.decorator';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import * as path from 'path';
-import * as fs from 'fs';
-import { CategoryDetailsEnum } from 'src/common/enum/cate_details';
 import {UUIDQuery} from "../common/decorator/uuid.decorator";
 
 @ApiTags("Categories Table Tree")

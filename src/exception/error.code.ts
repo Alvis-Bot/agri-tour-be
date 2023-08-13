@@ -29,6 +29,4 @@ export const ErrorMessages = {
   LAND_EXIST: errorFactory(HttpStatus.CONFLICT, "Land existed"),
   CATEGORY_NOT_FOUND: errorFactory(HttpStatus.BAD_REQUEST, "Category not found"),
   CATEGORY_DETAIL_NOT_FOUND: errorFactory(HttpStatus.BAD_REQUEST, "Category detail not found"),
-
-
 };

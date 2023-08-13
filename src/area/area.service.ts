@@ -1,19 +1,16 @@
-import { BadRequestException, ConflictException, Inject, Injectable } from "@nestjs/common";
-import { IAreaService } from "./area";
-import { AreaCreateDto } from "../../common/dto/area-create.dto";
-import { Area } from "../../common/entities/area.entity";
+import { ConflictException, Injectable } from "@nestjs/common";
+import { AreaCreateDto } from "../common/dto/area-create.dto";
+import { Area } from "../common/entities/area.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { ApiException } from "../../exception/api.exception";
-import { Service } from "../../common/enum/service";
-import { IFarmService } from "../../farm/service/farm";
-import * as fs from "fs";
-import {ErrorMessages} from "../../exception/error.code";
+import { ApiException } from "../exception/api.exception";
+import {ErrorMessages} from "../exception/error.code";
+import {FarmService} from "../farm/farm.service";
 @Injectable()
-export class AreaService implements IAreaService {
+export class AreaService  {
 
   constructor(@InjectRepository(Area) private areaRepository: Repository<Area>,
-    @Inject(Service.FARM_SERVICE) private farmService: IFarmService) { }
+    private farmService: FarmService) { }
 
   async createArea(dto: AreaCreateDto, farmId: string): Promise<Area> {
       console.log(dto.avatars)

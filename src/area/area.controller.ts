@@ -1,33 +1,22 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  Inject,
-  Post,
-  Query,
-  UploadedFiles,
-  UseInterceptors,
-} from "@nestjs/common";
-import { Router } from "../common/enum/router";
-import { Note } from "../common/decorator/description.decorator";
-import { AreaCreateDto } from "../common/dto/area-create.dto";
-import { IAreaService } from "./service/area";
-import { Service } from "../common/enum/service";
-import { ApiConsumes, ApiTags } from "@nestjs/swagger";
-import { QueryFarmIdDto } from "./dto/query-farm-id.dto";
+import {BadRequestException, Body, Controller, Get, Post, Query, UploadedFiles, UseInterceptors,} from "@nestjs/common";
+import {Router} from "../common/enum";
+import {Note} from "../common/decorator/description.decorator";
+import {AreaCreateDto} from "../common/dto/area-create.dto";
+import {ApiConsumes, ApiTags} from "@nestjs/swagger";
+import {QueryFarmIdDto} from "./dto/query-farm-id.dto";
 import * as path from "path";
-import { ApiException } from "../exception/api.exception";
-import { diskStorage } from "multer";
-import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import {ApiException} from "../exception/api.exception";
+import {diskStorage} from "multer";
+import {FileFieldsInterceptor} from "@nestjs/platform-express";
 import {ErrorMessages} from "../exception/error.code";
+import {AreaService} from "./area.service";
 
 @Controller(Router.AREA)
 @ApiTags("Area APIs  (area)")
 // @UseGuards(JwtAuthGuard)
 export class AreaController {
 
-  constructor(@Inject(Service.AREA_SERVICE) private areaService: IAreaService) {
+  constructor(private areaService: AreaService) {
   }
 
   @Post()
@@ -67,7 +56,7 @@ export class AreaController {
     @UploadedFiles() files?: {
       avatars?: Express.Multer.File[]
     }
-  ): Promise<AreaCreateDto | any> {
+  ): Promise<AreaCreateDto> {
 
     // Access the file(s) if they exist
     const images = files?.avatars;
