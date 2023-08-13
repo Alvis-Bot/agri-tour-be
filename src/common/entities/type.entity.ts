@@ -1,4 +1,4 @@
-import { Category } from "src/categories/entities/category.entity";
+import { Category } from "src/common/entities/category.entity";
 import { AuditEntity } from "src/common/entities/audit.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 

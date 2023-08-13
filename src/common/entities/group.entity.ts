@@ -11,7 +11,6 @@ import {
   PrimaryGeneratedColumn
 } from "typeorm";
 import { AuditEntity } from "./audit.entity";
-import { Permission } from "./permission.entity";
 import { User } from "./user.entity";
 import { Role } from "./role.entity";
 
@@ -44,12 +43,4 @@ export class Group extends AuditEntity {
     name:'group_roles'
   })
   roles: Role[];
-  // @OneToMany(() => Permission , permission => permission.groups)
-  // permissions: Permission[];
-
-  // @OneToMany(() => User , user => user.group ,{
-  //   cascade : true
-  // })
-  // users: User[];
-
 }

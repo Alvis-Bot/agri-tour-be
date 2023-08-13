@@ -16,9 +16,6 @@ export class Category {
   })
   description: string;
 
-  // @Column()
-  // type: string
-
   @TreeChildren()
   children: Category[];
 

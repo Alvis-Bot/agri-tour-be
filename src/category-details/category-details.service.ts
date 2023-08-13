@@ -4,7 +4,7 @@ import { UpdateCategoryDetailDto } from './dto/update-category-detail.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryDetails } from '../common/entities/category-detail.entity';
 import { Like, Repository } from 'typeorm';
-import { Category } from 'src/categories/entities/category.entity';
+import { Category } from 'src/common/entities/category.entity';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as Excel from 'exceljs';

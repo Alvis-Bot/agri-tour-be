@@ -3,7 +3,7 @@ import {CreateCategoryDto} from './dto/create-category.dto';
 import {UpdateCategoryDto} from './dto/update-category.dto';
 import {EntityManager, ILike, Like, Repository, TreeRepository} from 'typeorm';
 import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm';
-import {Category} from './entities/category.entity';
+import {Category} from '../common/entities/category.entity';
 import {Type} from 'src/common/entities/type.entity';
 import {ApiException} from "../exception/api.exception";
 import {ErrorMessages} from "../exception/error.code";

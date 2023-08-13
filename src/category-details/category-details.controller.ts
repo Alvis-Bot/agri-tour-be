@@ -10,7 +10,7 @@ import * as path from 'path';
 import { ImportDataCategoryDto } from './dto/import_category.dto';
 import { Pagination } from 'src/common/pagination/pagination.dto';
 @Controller('category-details')
-@ApiTags('Category-details')
+@ApiTags('Category Details APIs')
 export class CategoryDetailsController {
   constructor(private readonly categoryDetailsService: CategoryDetailsService) { }
 

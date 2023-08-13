@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, Patch, Delete, Query, UseInterceptors, UploadedFile, NotFoundException, BadRequestException } from '@nestjs/common';
-import { Category } from './entities/category.entity';
+import { Category } from '../common/entities/category.entity';
 import { CategoryService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { ApiBody, ApiConsumes, ApiProperty, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';

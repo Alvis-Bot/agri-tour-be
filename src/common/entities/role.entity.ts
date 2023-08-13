@@ -1,6 +1,5 @@
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Group } from "./group.entity";
-import { Permission } from "./permission.entity";
 import { Ability } from "./ability.entity";
 import { AuditEntity } from "./audit.entity";
 
@@ -20,12 +19,6 @@ export class Role  extends AuditEntity{
   @ManyToMany(() => Group, group => group.roles)
  
   groups: Group[];
-
-  @ManyToMany(() => Permission, permission => permission.roles)
-  @JoinTable({
-    name:'role_permissions'
-  })
-  permissions: Permission[];
 
   @ManyToMany(() => Ability, ability => ability.roles)
   @JoinTable({

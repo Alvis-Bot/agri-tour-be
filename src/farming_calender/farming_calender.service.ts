@@ -8,7 +8,7 @@ import { User } from 'src/common/entities/user.entity';
 import { Service } from "../common/enum/service";
 import { Pagination } from "src/common/pagination/pagination.dto";
 import { CategoryDetails } from "src/common/entities/category-detail.entity";
-import { Category } from "src/categories/entities/category.entity";
+import { Category } from "src/common/entities/category.entity";
 import {LandService} from "../land/land.service";
 type relationValid = "users" | "land" | "productType";
 @Injectable()

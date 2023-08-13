@@ -8,7 +8,7 @@ import { Land } from "src/common/entities/land.entity";
 import { User } from "src/common/entities/user.entity";
 import { LandModule } from "../land/land.module";
 import { CategoryDetails } from "src/common/entities/category-detail.entity";
-import { Category } from "src/categories/entities/category.entity";
+import { Category } from "src/common/entities/category.entity";
 
 @Module({
   imports: [
