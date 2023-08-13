@@ -6,9 +6,7 @@ import { ConfigService } from "@nestjs/config";
 import { Request } from "express";
 import { ApiException } from "../../exception/api.exception";
 import { JwtService } from "@nestjs/jwt";
-import { Service } from "../../common/enum/service";
-import { IAuthService } from "../auth";
-import { IJwtPayload } from "../auth.service";
+import {AuthService, IJwtPayload} from "../auth.service";
 import {ErrorMessages} from "../../exception/error.code";
 
 @Injectable()
@@ -17,9 +15,8 @@ export class JwtRefreshStrategy extends PassportStrategy(
 	"refresh",
 ) {
 	constructor(
-		private readonly userService: UserService,
 		private readonly configService: ConfigService,
-		@Inject(Service.AUTH_SERVICE) private readonly authService: IAuthService,
+		private readonly authService: AuthService,
 		private readonly jwtService: JwtService,
 	) {
 		super({

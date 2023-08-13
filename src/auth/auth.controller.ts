@@ -19,7 +19,7 @@ import {UserService} from "../user/user.service";
 export class AuthController {
 
   constructor(
-    @Inject(Service.AUTH_SERVICE) private readonly authService: AuthService,
+     private readonly authService: AuthService,
      private readonly userService: UserService
   ) { }
 

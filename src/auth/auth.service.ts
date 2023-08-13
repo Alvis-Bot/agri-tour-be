@@ -3,7 +3,6 @@ import * as bcrypt from 'bcrypt';
 import {JwtService} from "@nestjs/jwt";
 import {User} from "../common/entities/user.entity";
 import {ApiException} from "../exception/api.exception";
-import {IAuthService} from "./auth";
 import {ConfigService} from "@nestjs/config";
 import {TokenModel} from "./model/token.model";
 import {UserService} from "../user/user.service";
@@ -17,7 +16,7 @@ export interface IJwtPayload {
 
 
 @Injectable()
-export class AuthService implements IAuthService {
+export class AuthService {
 
   constructor(
       private userService: UserService,
