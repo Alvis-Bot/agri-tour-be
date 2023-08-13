@@ -4,11 +4,11 @@ import { FarmService } from './farm.service';
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Farm } from "../common/entities/farm.entity";
 
-import { JwtConfigModule } from 'src/auth/jwt/jwt.module';
+
 import { User } from 'src/common/entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Farm,User]),JwtConfigModule],
+  imports: [TypeOrmModule.forFeature([Farm,User])],
   controllers: [FarmController],
   providers: [FarmService],
   exports: [FarmService]
