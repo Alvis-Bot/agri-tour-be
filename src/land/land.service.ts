@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Service } from "../common/enum/service";
@@ -39,14 +39,11 @@ export class LandService {
   @Transactional()
   async createLand(areaId: string, dto: LandCreateDto, files: Express.Multer.File[]): Promise<any> {
     const area = await this.areaService.getAreaById(areaId);
-    const land = await this.getLandByName(dto.name);
 
     const productType = await this.getCategoryDetailById(dto.productTypeId, CategoryName.PRODUCT_NAME);
     const soilType = await this.getCategoryDetailById(dto.soilTypeId, CategoryName.SOIL_NAME);
-    if (area && land) {
-      throw new ApiException(ErrorMessages.LAND_EXIST)
-    }
-
+    const check = await this.ExistLandByName(dto.name);
+    if (check) throw new ApiException(ErrorMessages.LAND_EXIST);
     const imageName = await this.storageService.uploadMultiFiles(ImageType.CARD_LAND, files);
 
     const creating = this.landRepository.create({
@@ -59,12 +56,17 @@ export class LandService {
     return await this.landRepository.save(creating);
   }
 
+  async ExistLandByName(name: string): Promise<boolean> {
+    const land = await this.landRepository.exist({
+      where: { name }
+    });
+    return land;
+  }
 
   async getCategoryDetailById(id: string, type: CategoryName): Promise<CategoryDetails> {
     const categoryDetail = await this.categoryDetailRepository.createQueryBuilder('categoryDetail')
       .where('categoryDetail.id = :id', { id })
       .leftJoin('categoryDetail.category', 'category')
-      .where('category.name = :name', { name: type })
       .getOne();
     if (!categoryDetail) {
       throw new ApiException(ErrorMessages.CATEGORY_DETAIL_NOT_FOUND)
