@@ -50,7 +50,6 @@ export class LandCreateDto {
   })
 
   @IsNotEmpty()
-  @Transform(({ value }) => JSON.parse(value))
   locations: ILocation[];
   @ApiProperty({ type: 'array', items: { type: 'string', format: 'binary' } })
   images: Express.Multer.File[];
