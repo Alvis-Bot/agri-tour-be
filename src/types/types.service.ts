@@ -1,32 +1,35 @@
-import {Injectable, OnModuleInit} from '@nestjs/common';
-import {TypeCreateDto} from './dto/type-create.dto';
-import {UpdateTypeDto} from './dto/update-type.dto';
-import {InjectRepository} from '@nestjs/typeorm';
-import {Type} from '../common/entities/type.entity';
-import {Repository} from 'typeorm';
-import {ApiException} from "../exception/api.exception";
-import {ErrorMessages} from "../exception/error.code";
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { TypeCreateDto } from './dto/type-create.dto';
+import { UpdateTypeDto } from './dto/update-type.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Type } from '../common/entities/type.entity';
+import { Repository } from 'typeorm';
+import { ApiException } from "../exception/api.exception";
+import { ErrorMessages } from "../exception/error.code";
 
 @Injectable()
 export class TypesService implements OnModuleInit {
   constructor(
-      @InjectRepository(Type) private typeRepository: Repository<Type>
+    @InjectRepository(Type) private typeRepository: Repository<Type>
   ) {
   }
 
 
   async onModuleInit(): Promise<void> {
     const types = [
-      {name: 'TINH_THANH'},
-      {name: 'QUAN_HUYEN'},
-      {name: 'PHUONG_XA'},
-      {name: 'LOAI_DAT'},
-      {name: 'BUSINESS_TYPE'},
-      {name: 'BUSINESS_MODEL'},
-      {name: 'SOIL_TYPE'},
-      {name: 'PRODUCT_TYPE'},
-      {name: 'UNIT_TYPE'},
-      {name: 'ROOT'},
+      { name: 'TINH_THANH' },
+      { name: 'QUAN_HUYEN' },
+      { name: 'PHUONG_XA' },
+      { name: 'LOAI_DAT' },
+      { name: 'BUSINESS_TYPE' },
+      { name: 'BUSINESS_MODEL' },
+      { name: 'SOIL_TYPE' },
+      { name: 'PRODUCT_TYPE' },
+      { name: 'UNIT_TYPE' },
+      { name: 'ROOT' },
+      { name: 'KHACH_HANG' },
+      { name: 'DOI_TUONG_KHAC' },
+      { name: 'PROVIDER' },
     ];
 
     const itemsCount = await this.typeRepository.count();
@@ -45,7 +48,7 @@ export class TypesService implements OnModuleInit {
 
 
   async existsByName(name: string): Promise<void> {
-    const existingType = await this.typeRepository.exist({where: {name}});
+    const existingType = await this.typeRepository.exist({ where: { name } });
     if (existingType) throw new ApiException(ErrorMessages.TYPE_EXISTED)
   }
 
@@ -56,7 +59,7 @@ export class TypesService implements OnModuleInit {
   }
 
   async getTypeById(id: string): Promise<Type> {
-    const type = await this.typeRepository.findOne({where: {id}});
+    const type = await this.typeRepository.findOne({ where: { id } });
     if (!type) throw new ApiException(ErrorMessages.TYPE_NOT_FOUND)
     return type
   }

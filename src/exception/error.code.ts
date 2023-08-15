@@ -1,5 +1,5 @@
-import {HttpStatus} from "@nestjs/common";
-import {IError} from "../common/interface";
+import { HttpStatus } from "@nestjs/common";
+import { IError } from "../common/interface";
 
 
 type ErrorFactory = (status: HttpStatus, message: string) => IError;
@@ -25,7 +25,8 @@ export const ErrorMessages = {
   SOIL_TYPE_NOT_FOUND: errorFactory(HttpStatus.BAD_REQUEST, "Soil type not found"),
   TYPE_EXISTED: errorFactory(HttpStatus.CONFLICT, "Type existed"),
   TYPE_NOT_FOUND: errorFactory(HttpStatus.BAD_REQUEST, "Type not found"),
-  PROVIDER_NOT_FOUND: errorFactory(HttpStatus.BAD_REQUEST, "Provider not found"),
+  PERSON_NOT_FOUND: errorFactory(HttpStatus.BAD_REQUEST, "Person not found"),
+  PERSON_EXIST: errorFactory(HttpStatus.CONFLICT, "Person Exists"),
   LAND_EXIST: errorFactory(HttpStatus.CONFLICT, "Land existed"),
   CATEGORY_NOT_FOUND: errorFactory(HttpStatus.BAD_REQUEST, "Category not found"),
   CATEGORY_DETAIL_NOT_FOUND: errorFactory(HttpStatus.BAD_REQUEST, "Category detail not found"),

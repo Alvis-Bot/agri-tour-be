@@ -1,8 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { AuditEntity } from "./audit.entity";
+import { Type } from "./type.entity";
 
 @Entity()
-export class Provider extends AuditEntity {
+export class PersonEntity extends AuditEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -20,4 +21,7 @@ export class Provider extends AuditEntity {
 
     @Column()
     description: string;
+
+    @ManyToOne(() => Type, types => types.id)
+    type: Type;
 }
