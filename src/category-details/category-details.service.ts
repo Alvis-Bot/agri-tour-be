@@ -1,16 +1,18 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateCategoryDetailDto } from './dto/create-category-detail.dto';
-import { UpdateCategoryDetailDto } from './dto/update-category-detail.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CategoryDetails } from '../common/entities/category-detail.entity';
-import { Like, Repository } from 'typeorm';
-import { Category } from 'src/common/entities/category.entity';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
+import {CreateCategoryDetailDto} from './dto/create-category-detail.dto';
+import {UpdateCategoryDetailDto} from './dto/update-category-detail.dto';
+import {InjectRepository} from '@nestjs/typeorm';
+import {CategoryDetails} from '../common/entities/category-detail.entity';
+import {Repository} from 'typeorm';
+import {Category} from 'src/common/entities/category.entity';
 import * as fs from 'fs';
-import * as path from 'path';
 import * as Excel from 'exceljs';
-import { ImportDataCategoryDto } from './dto/import_category.dto';
-import { Type } from 'src/common/entities/type.entity';
-import { Pagination } from 'src/common/pagination/pagination.dto';
+import {ImportDataCategoryDto} from './dto/import_category.dto';
+import {Type} from 'src/common/entities/type.entity';
+import {Pagination} from 'src/common/pagination/pagination.dto';
+import {ApiException} from "../exception/api.exception";
+import {ErrorMessages} from "../exception/error.code";
+
 type ValidRelations = 'type' | 'details';
 @Injectable()
 export class CategoryDetailsService {
@@ -68,18 +70,18 @@ export class CategoryDetailsService {
     return category.details.flatMap(details => details);
   }
 
-  async findOne(id: string): Promise<CategoryDetails> {
+  async getDetailCategoryById(id: string): Promise<CategoryDetails> {
     const categoryDetails = await this.categoryDetailsRepository.findOne({
       where: { id }
     });
     if (!categoryDetails) {
-      throw new NotFoundException('Category Detail not found');
+      throw new ApiException(ErrorMessages.CATEGORY_DETAIL_NOT_FOUND)
     }
     return categoryDetails;
   }
 
   async update(id: string, updateCategoryDetailsDto: UpdateCategoryDetailDto): Promise<CategoryDetails> {
-    const categoryDetails = await this.findOne(id);
+    const categoryDetails = await this.getDetailCategoryById(id);
     categoryDetails.name = updateCategoryDetailsDto.name;
     categoryDetails.description = updateCategoryDetailsDto.description;
 
@@ -87,7 +89,7 @@ export class CategoryDetailsService {
   }
 
   async remove(id: string): Promise<Object> {
-    const categoryDetails = await this.findOne(id);
+    const categoryDetails = await this.getDetailCategoryById(id);
 
     await this.categoryDetailsRepository.remove(categoryDetails);
     return {

@@ -1,16 +1,7 @@
 
-import { BeforeInsert } from "typeorm";
-import { IJwtPayload } from "../auth/auth.service";
-import { User } from "./entities/user.entity";
+
 
 import { IsInt, IsNumber, Min } from 'class-validator';
-
-// export interface Location {
-//   point?: number;
-//   latitude: number;
-//   longitude: number;
-// }
-// src/locations/entities/location.entity.ts
 
 
 export class Location {

@@ -18,25 +18,30 @@ export class TypesController {
   }
 
   @Get('gets')
+  @Note('Lấy tất cả loại danh mục')
   async getTypes() {
     return await this.typesService.getTypes();
   }
 
   @Get('get')
+  @Note('Lấy loại danh mục theo id')
   async getTypeById(@UUIDQuery('id') id: string): Promise<Type> {
     return this.typesService.getTypeById(id);
   }
 
   @Get('getByName')
+  @Note('Lấy loại danh mục theo tên')
   async getTypeByName(@Query('name') name: string) {
     return this.typesService.getTypeByName(name);
   }
   @Patch('update')
+  @Note('Cập nhật loại danh mục')
   async updateType(@UUIDQuery('id') id: string, @Body() dto: UpdateTypeDto): Promise<Type> {
     return this.typesService.updateType(id, dto);
   }
 
   @Delete('delete')
+  @Note('Xóa loại danh mục')
   async deleteType(@UUIDQuery('id') id: string): Promise<void> {
     return this.typesService.deleteType(id);
   }

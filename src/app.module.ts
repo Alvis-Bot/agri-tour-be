@@ -3,13 +3,10 @@ import {TypeOrmModule} from '@nestjs/typeorm';
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import {UserModule} from './user/user.module';
 import {AuthModule} from './auth/auth.module';
-import {GroupModule} from './group/group.module';
 import {FarmModule} from './farm/farm.module';
 import {AreaModule} from './area/area.module';
 import {LandModule} from './land/land.module';
 import {AppController} from './app.controller';
-import {RoleModule} from './role/role.module';
-import {AbilityModule} from './ability/ability.module';
 import {CategoriesModule} from './categories/categories.module';
 import {FarmingCalenderModule} from './farming_calender/farming_calender.module';
 import {CategoryDetailsModule} from './category-details/category-details.module';
@@ -19,6 +16,7 @@ import {validationSchema} from "./common/config/validation";
 import {addTransactionalDataSource} from "typeorm-transactional";
 import {DataSource} from "typeorm";
 import {StorageModule} from "./storage/storage.module";
+import { CropsModule } from './crops/crops.module';
 
 @Module({
   imports: [
@@ -41,7 +39,7 @@ import {StorageModule} from "./storage/storage.module";
           entities: [__dirname + "/**/*.entity{.ts,.js}"],
           synchronize: true,
           logging: true,
-          autoLoadEntities: false,
+          autoLoadEntities: true,
         };
       },
       async dataSourceFactory(options) {
@@ -54,17 +52,15 @@ import {StorageModule} from "./storage/storage.module";
     UserModule,
     AuthModule,
     StorageModule,
-    GroupModule,
     AreaModule,
     FarmModule,
     LandModule,
-    RoleModule,
-    AbilityModule,
     CategoriesModule,
     FarmingCalenderModule,
     CategoryDetailsModule,
     TypesModule,
     ProvidersModule,
+    CropsModule,
   ],
   controllers:[AppController]
 })

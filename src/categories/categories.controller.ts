@@ -8,12 +8,13 @@ import { Note } from 'src/common/decorator/description.decorator';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import {UUIDQuery} from "../common/decorator/uuid.decorator";
 
-@ApiTags("Categories Table Tree")
+@ApiTags("Category APIs")
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) { }
 
   @Post('create-root')
+
   async createRootCategory(): Promise<Category> {
     return this.categoryService.createRootCategory();
   }
@@ -30,7 +31,6 @@ export class CategoryController {
 
   @Get('list_type_category')
   async list_category() {
-
     return await this.categoryService.findAllTypesCategory();
 
   }

@@ -31,10 +31,10 @@ export class Group extends AuditEntity {
   isDeleted: boolean;
 
 
-  @ManyToMany(() => User, user => user.groups, {
-    cascade: true
-  })
-  users: User[];
+  // @ManyToMany(() => User, user => user.groups, {
+  //   cascade: true
+  // })
+  // users: User[];
 
   @ManyToMany(() => Role, role => role.groups, {
     cascade: true

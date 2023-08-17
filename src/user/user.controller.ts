@@ -7,6 +7,8 @@ import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
 import { Note } from "../common/decorator/description.decorator";
 import { Pagination } from "src/common/pagination/pagination.dto";
 import {UserService} from "./user.service";
+import {Roles} from "../common/decorator/role.decorator";
+import {Role} from "../common/enum";
 
 @Controller(Router.USER)
 @ApiTags("User APIs  (user)")
@@ -22,9 +24,9 @@ export class UserController {
   }
 
   @Get('gets')
+  // @Roles(Role.USER, Role.ADMIN)
   @Note('Lấy thông tin tất cả người dùng')
   async getAllUsers(@Query() pagination: Pagination) {
-
     return await this.userService.getUsers(pagination);
   }
 

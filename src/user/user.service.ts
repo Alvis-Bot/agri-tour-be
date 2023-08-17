@@ -1,14 +1,14 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
-import { User } from "../common/entities/user.entity";
-import { InjectRepository } from "@nestjs/typeorm";
-import {  Repository } from "typeorm";
-import { UserCreateDto } from "./dto/user-create.dto";
-import { ApiException } from "../exception/api.exception";
-import { Pagination } from "../common/pagination/pagination.dto";
-import { PaginationModel } from "../common/pagination/pagination.model";
-import { Meta } from "../common/pagination/meta.dto";
-import { UserUpdateDto } from "src/user/dto/user-update.dto";
+import {Injectable, NotFoundException} from "@nestjs/common";
+import {User} from "../common/entities/user.entity";
+import {InjectRepository} from "@nestjs/typeorm";
+import {Repository} from "typeorm";
+import {UserCreateDto} from "./dto/user-create.dto";
+import {ApiException} from "../exception/api.exception";
+import {Pagination} from "../common/pagination/pagination.dto";
+import {PaginationModel} from "../common/pagination/pagination.model";
+import {Meta} from "../common/pagination/meta.dto";
 import {ErrorMessages} from "../exception/error.code";
+
 @Injectable()
 export class UserService {
 

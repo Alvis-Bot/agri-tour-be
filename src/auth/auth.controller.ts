@@ -1,10 +1,9 @@
-import { Body, Controller, Get, Inject, Post, Query, Req, UseGuards } from "@nestjs/common";
-import { Router } from "../common/enum/router";
-import { Service } from "../common/enum/service";
+import { Body, Controller, Post, Query, Req, UseGuards } from "@nestjs/common";
+import { Router } from "../common/enum";
 import { AuthService } from "./auth.service";
 import { LoginDto } from "../common/dto/login.dto";
 import { LocalAuthGuard } from "./guard/local-auth.guard";
-import {ApiTags } from "@nestjs/swagger";
+import {ApiBody, ApiTags} from "@nestjs/swagger";
 import { UserCreateDto } from "../user/dto/user-create.dto";
 import { AuthUser } from "../common/decorator/user.decorator";
 import { User } from "../common/entities/user.entity";
@@ -25,36 +24,42 @@ export class AuthController {
 
 
   @UseGuards(LocalAuthGuard)
+  @Note("Đăng nhập")
+  @ApiBody({
+    type: LoginDto,
+    examples: {
+      ADMIN: {
+        value: {
+          username: 'admin',
+          password: '123456',
+        } as LoginDto,
+      },
+      FARMER: {
+        value: {
+          username: 'farmer',
+          password: '123456',
+        } as LoginDto,
+      },
+      USER: {
+        value: {
+            username: 'user',
+            password: '123456',
+        } as LoginDto,
+      }
+    },
+  })
   @Post('login')
   async login(@Body() dto: LoginDto, @AuthUser() user: User) {
     return this.authService.login(user);
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Post('profile')
-  // async profile(@Req() req) {
-  //   return req.user;
-  // }
+
 
   @Post('register')
+  @Note("Đăng ký")
   createUser(@Body() dto: UserCreateDto) {
     return this.userService.createUser(dto);
   }
-
-  // @Note("Gia hạn mã token")
-  // @Post('accessToken/get-time')
-  // // @UseGuards(AuthGuard)
-  // async accessToken(@Req() req) {
-  //   const { user } = req;
-  //
-  //   // Generate a new token
-  //   const accessToken = await this.authService.generateAccessToken(user);
-  //   const refreshToken = await this.authService.generateRefreshToken(user);
-  //   return {
-  //     accessToken,
-  //     refreshToken
-  //   };
-  // }
 
   @Post("refresh-tokens")
   @Note("Lấy lại token mới khi hết hạn")

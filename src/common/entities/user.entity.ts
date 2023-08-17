@@ -1,18 +1,13 @@
-import {
-  BeforeInsert,
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  PrimaryGeneratedColumn
-} from "typeorm";
-import { AuditEntity } from "./audit.entity";
+import {BeforeInsert, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {AuditEntity} from "./audit.entity";
 import * as bcrypt from 'bcrypt';
-import { Group } from "./group.entity";
-import { Exclude } from "class-transformer";
-import { Farm } from "./farm.entity";
-import { FarmingCalender } from "./farming_calender.entity";
+import {Group} from "./group.entity";
+import {Exclude} from "class-transformer";
+import {Farm} from "./farm.entity";
+import {FarmingCalender} from "./farming_calender.entity";
+import {Role} from "../enum";
+
+
 
 @Entity('users')
 export class User extends AuditEntity {
@@ -30,15 +25,17 @@ export class User extends AuditEntity {
   @Exclude()
   password: string;
 
+  @Column({nullable: false , default: Role.USER, enum: Role})
+  role: Role;
+
   @Column({ default: false })
   isLocked: boolean;
 
-
-  @ManyToMany(() => Group, group => group.users)
-  @JoinTable({
-    name: 'user_groups'
-  })
-  groups: Group[];
+  // @ManyToMany(() => Group, group => group.users)
+  // @JoinTable({
+  //   name: 'user_groups'
+  // })
+  // groups: Group[];
   @OneToMany(() => Farm, farm => farm.user)
   farms: Farm[];
 

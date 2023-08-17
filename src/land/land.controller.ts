@@ -48,15 +48,6 @@ export class LandController {
     }, files);
   }
 
-
-  // @Post('abc')
-  // @ApiFiles("files", 10, FileTypes.IMAGE)
-  // async abc( @Body() dto: FileDto, @UploadedFiles() files: Express.Multer.File[]
-  // ) {
-  //   console.log(dto ,files);
-  //   return this.storageService.uploadMultiFiles(ImageType.CARD_FARM, files);
-  // }
-
   @Get('all')
   @Note('Lấy tất cả vùng trồng')
   async getLands(): Promise<Land[]> {

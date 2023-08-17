@@ -1,18 +1,16 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { Service } from "../common/enum/service";
-import { Land } from "../common/entities/land.entity";
-import { LandCreateDto } from "../common/dto/land-create.dto";
-import { ApiException } from "../exception/api.exception";
-import { IAreaService } from "../area/service/area";
-import { CategoryDetails } from "src/common/entities/category-detail.entity";
-import { ErrorMessages } from "../exception/error.code";
-import { StorageService } from "../storage/storage.service";
-import { ImageType } from "../common/enum";
-import { Transactional } from "typeorm-transactional";
-import { CategoryName } from "../common/enum/category";
-import { AreaService } from "../area/area.service";
+import {Injectable} from "@nestjs/common";
+import {InjectRepository} from "@nestjs/typeorm";
+import {Repository} from "typeorm";
+import {Land} from "../common/entities/land.entity";
+import {LandCreateDto} from "../common/dto/land-create.dto";
+import {ApiException} from "../exception/api.exception";
+import {CategoryDetails} from "src/common/entities/category-detail.entity";
+import {ErrorMessages} from "../exception/error.code";
+import {StorageService} from "../storage/storage.service";
+import {ImageType} from "../common/enum";
+import {Transactional} from "typeorm-transactional";
+import {CategoryName} from "../common/enum/category";
+import {AreaService} from "../area/area.service";
 
 @Injectable()
 export class LandService {
@@ -39,10 +37,9 @@ export class LandService {
   @Transactional()
   async createLand(areaId: string, dto: LandCreateDto, files: Express.Multer.File[]): Promise<any> {
     const area = await this.areaService.getAreaById(areaId);
-
     const productType = await this.getCategoryDetailById(dto.productTypeId, CategoryName.PRODUCT_NAME);
     const soilType = await this.getCategoryDetailById(dto.soilTypeId, CategoryName.SOIL_NAME);
-    const check = await this.ExistLandByName(dto.name);
+    const check = await this.existLandByName(dto.name);
     if (check) throw new ApiException(ErrorMessages.LAND_EXIST);
     const imageName = await this.storageService.uploadMultiFiles(ImageType.CARD_LAND, files);
 
@@ -56,11 +53,10 @@ export class LandService {
     return await this.landRepository.save(creating);
   }
 
-  async ExistLandByName(name: string): Promise<boolean> {
-    const land = await this.landRepository.exist({
-      where: { name }
+  async existLandByName(name: string): Promise<boolean> {
+    return await this.landRepository.exist({
+      where: {name}
     });
-    return land;
   }
 
   async getCategoryDetailById(id: string, type: CategoryName): Promise<CategoryDetails> {
