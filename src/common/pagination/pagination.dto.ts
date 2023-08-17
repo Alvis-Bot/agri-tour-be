@@ -14,7 +14,6 @@ export class Pagination {
 		default: 1,
 		type: Number
 	})
-
 	// true / fale typeof boolean  string
 	@Transform(({ value }) => parseInt(value))
 	@IsInt()
@@ -34,6 +33,10 @@ export class Pagination {
 	@Max(50)
 	@IsOptional()
 	take?: number = 10;
+
+
+	@ApiPropertyOptional({})
+	search?: string;
 
 	@Expose()
 	get skip(): number {

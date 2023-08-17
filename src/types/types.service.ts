@@ -80,7 +80,7 @@ export class TypesService implements OnModuleInit {
     });
   }
 
-  async deleteType(id: string): Promise<Object | any> {
+  async deleteType(id: string): Promise<NonNullable<unknown> | any> {
     const type = await this.getTypeById(id);
     await this.typeRepository.remove(type);
     return {

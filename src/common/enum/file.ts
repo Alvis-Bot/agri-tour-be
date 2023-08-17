@@ -10,4 +10,5 @@ export enum FileTypes {
 export enum ImageType {
     CARD_FARM = 'farms',
     CARD_LAND = 'lands',
+    CARD_CROP = 'crops',
 }

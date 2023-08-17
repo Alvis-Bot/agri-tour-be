@@ -29,13 +29,15 @@ export class StorageService implements OnModuleInit  {
         const imageName = await this.buildImageFileName(type)
         const imagePath = await this.buildImageFilePath(type ,imageName);
         await sharp(file.buffer).webp().toFile(imagePath);
-        return imageName
+        //public\\uploads\\crops\\crops.Gg4axDvEYBr1.1692280106174.webp
+          // bỏ đi public và thay bằng /uploads
+        return imagePath.replace(/\\?public\\?uploads\\/, '\\uploads\\');
       default:
         // Xử lý cho các trường hợp mimetype không rơi vào các trường hợp trên
         const fileName = await this.buildOtherFileName(type, file.filename)
         const filePath = await this.buildImageFilePath(type, fileName);
         await sharp(filePath).toFile(filePath)
-        break;
+        return filePath.replace(/\\?public\\?uploads\\/, '\\uploads\\');
     }
   }
 
@@ -65,7 +67,11 @@ export class StorageService implements OnModuleInit  {
   }
   private async buildImageFilePath(type : ImageType, fileName: string): Promise<string> {
     const patch = this.configService.get<string>("FOLDER_UPLOAD");
-    return join(patch, type, fileName);
+    const path = join('.', patch, type);
+    if (!fs.existsSync(path)) {
+        fs.mkdirSync(path);
+    }
+    return join(path, fileName);
   }
 
 

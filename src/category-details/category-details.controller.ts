@@ -65,7 +65,7 @@ export class CategoryDetailsController {
   @Get('get')
   @ApiResponse({ status: 200, description: 'Returns a category detail by ID', type: CategoryDetails })
   async findOne(@Query('id') id: string): Promise<CategoryDetails> {
-    return await this.categoryDetailsService.findOne(id);
+    return await this.categoryDetailsService.getDetailCategoryById(id);
   }
 
   @Put('update')
