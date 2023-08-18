@@ -47,6 +47,6 @@ export class CropCreateDto{
     // nhóm cây trồng
 
     // ảnh cây trồng
-    @ApiProperty({ type: 'string', format: 'binary'})
-    image: string;
+    @ApiProperty({ type: 'array', items: { type: 'string', format: 'binary' }})
+    images: Express.Multer.File[];
 }

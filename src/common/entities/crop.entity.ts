@@ -39,8 +39,8 @@ export class Crop extends AuditEntity {
     groupCrop: CategoryDetails;
 
     // ảnh cây trồng
-    @Column({ nullable: false })
-    image: string;
+    @Column({ nullable: true, array: true, type: 'text' })
+    images: string[];
 
 
 

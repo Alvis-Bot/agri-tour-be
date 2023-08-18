@@ -22,7 +22,7 @@ export class CropsService {
     ) {
     }
 
-    async createCrop(dto: CropCreateDto, image: Express.Multer.File) : Promise<Crop>  {
+    async createCrop(dto: CropCreateDto, images: Express.Multer.File[]) : Promise<Crop> {
 
         // kiểm tra xem tên cây trồng đã tồn tại chưa
         await this.existsByName(dto.name)
@@ -31,12 +31,12 @@ export class CropsService {
 
 
         // upload ảnh
-        const imageCrop = await this.storageService.uploadFile(ImageType.CARD_CROP, image )
+        const imageCrop = await this.storageService.uploadMultiFiles(ImageType.CARD_CROP, images )
 
         const crop = this.cropRepository.create({
             ...dto,
             groupCrop,
-            image: imageCrop
+            images: imageCrop
         });
         return await this.cropRepository.save(crop);
     }
