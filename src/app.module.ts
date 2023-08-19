@@ -17,6 +17,7 @@ import {addTransactionalDataSource} from "typeorm-transactional";
 import {DataSource} from "typeorm";
 import {StorageModule} from "./storage/storage.module";
 import { CropsModule } from './crops/crops.module';
+import { WorkOfDayModule } from './work-of-day/work-of-day.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { CropsModule } from './crops/crops.module';
     TypesModule,
     ProvidersModule,
     CropsModule,
+    WorkOfDayModule,
   ],
   controllers:[AppController]
 })

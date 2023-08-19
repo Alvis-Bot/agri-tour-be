@@ -1,10 +1,10 @@
-import {Module} from '@nestjs/common';
-import {LandService} from './land.service';
-import {LandController} from './land.controller';
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {Land} from "../common/entities/land.entity";
-import {AreaModule} from "../area/area.module";
-import {CategoryDetails} from "../common/entities/category-detail.entity";
+import { Module } from '@nestjs/common';
+import { LandService } from './land.service';
+import { LandController } from './land.controller';
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { Land } from "../common/entities/land.entity";
+import { AreaModule } from "../area/area.module";
+import { CategoryDetails } from "../common/entities/category-detail.entity";
 
 @Module({
   imports: [

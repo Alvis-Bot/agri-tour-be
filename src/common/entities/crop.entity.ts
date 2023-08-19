@@ -1,6 +1,7 @@
-import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
-import {AuditEntity} from "./audit.entity";
-import {CategoryDetails} from "./category-detail.entity";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { AuditEntity } from "./audit.entity";
+import { CategoryDetails } from "./category-detail.entity";
+import { WorkOfDay } from "./work-of-day.entity";
 
 
 @Entity('crops')
@@ -9,7 +10,7 @@ export class Crop extends AuditEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ nullable: false})
+    @Column({ nullable: false })
     name: string;
 
     //loại bệnh thường gặp
@@ -29,7 +30,7 @@ export class Crop extends AuditEntity {
     harvest: string;
 
     // giá bán giống cây trồng
-    @Column({ nullable: false , type : 'decimal' , precision : 10 , scale : 2 })
+    @Column({ nullable: false, type: 'decimal', precision: 10, scale: 2 })
     price: number;
 
 
@@ -42,7 +43,8 @@ export class Crop extends AuditEntity {
     @Column({ nullable: true, array: true, type: 'text' })
     images: string[];
 
-
+    @OneToMany(() => WorkOfDay, workOfDay => workOfDay.crop)
+    workOfDays: WorkOfDay[];
 
 
 }

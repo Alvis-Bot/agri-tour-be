@@ -30,6 +30,8 @@ export class TypesService implements OnModuleInit {
       { name: 'KHACH_HANG' },
       { name: 'DOI_TUONG_KHAC' },
       { name: 'PROVIDER' },
+      { name: 'NHOM_CAY_TRONG' }
+
     ];
 
     const itemsCount = await this.typeRepository.count();

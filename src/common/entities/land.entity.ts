@@ -4,6 +4,7 @@ import { Location } from "../abc";
 import { FarmingCalender } from "./farming_calender.entity";
 import { AuditEntity } from "./audit.entity";
 import { CategoryDetails } from "src/common/entities/category-detail.entity";
+import { WorkOfDay } from "./work-of-day.entity";
 //vùng canh tác
 @Entity('lands')
 export class Land extends AuditEntity {
@@ -38,4 +39,7 @@ export class Land extends AuditEntity {
 
   @OneToMany(() => FarmingCalender, farmingCalender => farmingCalender.land, { cascade: true, onDelete: 'CASCADE' })
   farmingCalenders: FarmingCalender[];
+
+  @OneToMany(() => WorkOfDay, workOfDays => workOfDays.land, { cascade: true, onDelete: 'CASCADE' })
+  workOfDays: WorkOfDay[];
 }

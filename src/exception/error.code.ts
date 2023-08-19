@@ -2,10 +2,10 @@ import { HttpStatus } from "@nestjs/common";
 import { IError } from "../common/interface";
 
 
-type ErrorFactory = (status: HttpStatus, message: string) => IError;
+type ErrorFactory = (status: HttpStatus, message?: string) => IError;
 
-const errorFactory: ErrorFactory = (status: HttpStatus, message: string) => ({
-  code: message.toUpperCase().replace(/ /g, "_"),
+const errorFactory: ErrorFactory = (status: HttpStatus, message?: string) => ({
+  code: message?.toUpperCase().replace(/ /g, "_"),
   message,
   status
 });
@@ -31,5 +31,7 @@ export const ErrorMessages = {
   CATEGORY_NOT_FOUND: errorFactory(HttpStatus.BAD_REQUEST, "Category not found"),
   CATEGORY_DETAIL_NOT_FOUND: errorFactory(HttpStatus.BAD_REQUEST, "Category detail not found"),
   CROP_EXISTED: errorFactory(HttpStatus.CONFLICT, "Crop existed"),
+  CROP_NOT_FOUND: errorFactory(HttpStatus.NOT_FOUND, "Crop not found"),
+  BAD_REQUEST: errorFactory(HttpStatus.BAD_REQUEST)
 
 };
