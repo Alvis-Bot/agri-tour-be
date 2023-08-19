@@ -21,9 +21,9 @@ export class WorkOfDay extends AuditEntity {
     @Column()
     description: string;
 
-    @ManyToOne(() => Land, lands => lands.workOfDays)
+    @ManyToOne(() => Land, lands => lands.workOfDays, { eager: true, onDelete: 'SET NULL', onUpdate: 'CASCADE' })
     land: Land;
 
-    @ManyToOne(() => Crop, crops => crops.workOfDays)
+    @ManyToOne(() => Crop, crops => crops.workOfDays, { eager: true, onDelete: 'SET NULL', onUpdate: 'CASCADE' })
     crop: Crop;
 }

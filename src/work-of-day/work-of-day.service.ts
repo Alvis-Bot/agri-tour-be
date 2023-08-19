@@ -40,7 +40,8 @@ export class WorkOfDayService {
       take: pagination.take,
       order: {
         createdAt: pagination.order
-      }
+      },
+
     })
     const meta = new Meta({ itemCount, pagination });
 
@@ -51,7 +52,8 @@ export class WorkOfDayService {
     const workOfDay = await this.workOfDayRepository.findOne({
       where: {
         id
-      }
+      },
+
     })
     if (!workOfDay) throw new ApiException(ErrorMessages.CROP_NOT_FOUND)
     return workOfDay;
