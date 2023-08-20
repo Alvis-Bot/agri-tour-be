@@ -29,7 +29,7 @@ export class PersonsController {
   @Get('getsByType')
   @Note('Lấy danh sách theo loại')
   async getPersonByType(@Query() { type }: QueryTypeDTO, @Query() pagination: Pagination) {
-    return await this.PersonsService.getPersonsByType(type,pagination);
+    return await this.PersonsService.getPersonsByType(type, pagination);
   }
   @Get('get')
   @Note('Lấy thông tin nhà cung cấp theo id')
@@ -45,7 +45,7 @@ export class PersonsController {
 
   @Delete('delete')
   @Note('Xóa nhà cung cấp')
-  async remove(@UUIDQuery('id') id: string): Promise<void> {
-    await this.PersonsService.removePerson(id);
+  async remove(@UUIDQuery('id') id: string): Promise<Object> {
+    return await this.PersonsService.removePerson(id);
   }
 }

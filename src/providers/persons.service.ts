@@ -91,8 +91,11 @@ export class PersonsService {
     return await this.personsRepository.save(updating);
   }
 
-  async removePerson(id: string): Promise<void> {
+  async removePerson(id: string): Promise<object> {
     const person = await this.getPersonById(id);
-    await this.personsRepository.delete(person);
+    await this.personsRepository.remove(person);
+    return {
+      message: `Removed person with id = ${id}  successfully`
+    }
   }
 }
