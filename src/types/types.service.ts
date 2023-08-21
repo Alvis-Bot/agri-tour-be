@@ -6,9 +6,9 @@ import { Type } from '../common/entities/type.entity';
 import { QueryRunner, Repository } from 'typeorm';
 import { ApiException } from "../exception/api.exception";
 import { ErrorMessages } from "../exception/error.code";
-
+//implements OnModuleInit
 @Injectable()
-export class TypesService implements OnModuleInit {
+export class TypesService {
   constructor(
     @InjectRepository(Type) private typeRepository: Repository<Type>
   ) {

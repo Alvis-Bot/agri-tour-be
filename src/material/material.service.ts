@@ -62,7 +62,8 @@ export class MaterialService {
 
   async findOne(id: string): Promise<Material> {
     const material = await this.materialRepository.findOne({
-      where: { id }
+      where: { id },
+      loadEagerRelations: true
     })
     if (!material) throw new ApiException(ErrorMessages.MATERIAL_NOT_FOUND);
     return material;

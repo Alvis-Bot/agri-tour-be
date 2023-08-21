@@ -8,7 +8,9 @@ import { User } from 'src/common/entities/user.entity';
 import { Pagination } from "src/common/pagination/pagination.dto";
 import { CategoryDetails } from "src/common/entities/category-detail.entity";
 import { Category } from "src/common/entities/category.entity";
-import {LandService} from "../land/land.service";
+import { LandService } from "../land/land.service";
+import { PaginationModel } from "src/common/pagination/pagination.model";
+import { Meta } from "src/common/pagination/meta.dto";
 type relationValid = "users" | "land" | "productType";
 @Injectable()
 export class FarmingCalenderService {
@@ -188,10 +190,10 @@ export class FarmingCalenderService {
     //Nếu không có trùng lặp tục xử lý tạo lịch canh tác hoặc thực hiện logic khác
   }
 
-  async getAllFarmingCalenders(pagination: Pagination): Promise<FarmingCalender[] | any> {
+  async getAllFarmingCalenders(pagination: Pagination): Promise<PaginationModel<FarmingCalender> | any> {
     const relations: relationValid[] = ['users', 'land', "productType"];
 
-    return await this.farmingCalenderRepository.find({
+    const [entities, itemCount] = await this.farmingCalenderRepository.findAndCount({
       relations,
       order: {
         createdAt: pagination.order
@@ -199,6 +201,8 @@ export class FarmingCalenderService {
       skip: pagination.skip,
       take: pagination.take
     });
+    const meta = new Meta({ pagination, itemCount });
+    return new PaginationModel<FarmingCalender>(entities, meta);
 
   }
 

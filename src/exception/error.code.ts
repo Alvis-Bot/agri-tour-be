@@ -35,5 +35,6 @@ export const ErrorMessages = {
   BAD_REQUEST: errorFactory(HttpStatus.BAD_REQUEST),
   MATERIAL_EXISTED: errorFactory(HttpStatus.CONFLICT, "Material existed"),
   MATERIAL_NOT_FOUND: errorFactory(HttpStatus.NOT_FOUND, "Material not found"),
-
+  BILL_REQUEST_EXISTS: errorFactory(HttpStatus.CONFLICT, "Vật tư đã tồn tại trong phiếu yêu cầu"),
+  BILL_REQUEST_NOT_FOUND: errorFactory(HttpStatus.NOT_FOUND, "Phiếu yêu cầu không tồn tại !"),
 };

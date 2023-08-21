@@ -8,6 +8,7 @@ import { Type } from 'src/common/entities/type.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([PersonEntity, Type])],
   controllers: [PersonsController],
-  providers: [PersonsService]
+  providers: [PersonsService],
+  exports: [PersonsService]
 })
-export class ProvidersModule { }
+export class PersonsModule { }

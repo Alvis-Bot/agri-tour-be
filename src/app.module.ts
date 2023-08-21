@@ -11,7 +11,7 @@ import {CategoriesModule} from './categories/categories.module';
 import {FarmingCalenderModule} from './farming_calender/farming_calender.module';
 import {CategoryDetailsModule} from './category-details/category-details.module';
 import {TypesModule} from './types/types.module';
-import {ProvidersModule} from './providers/persons.module';
+import {PersonsModule} from './providers/persons.module';
 import {validationSchema} from "./common/config/validation";
 import {addTransactionalDataSource} from "typeorm-transactional";
 import {DataSource} from "typeorm";
@@ -19,6 +19,7 @@ import {StorageModule} from "./storage/storage.module";
 import { CropsModule } from './crops/crops.module';
 import { WorkOfDayModule } from './work-of-day/work-of-day.module';
 import { MaterialModule } from './material/material.module';
+import { BillRequestModule } from './bill-request/bill-request.module';
 
 @Module({
   imports: [
@@ -61,10 +62,11 @@ import { MaterialModule } from './material/material.module';
     FarmingCalenderModule,
     CategoryDetailsModule,
     TypesModule,
-    ProvidersModule,
+    PersonsModule,
     CropsModule,
     WorkOfDayModule,
     MaterialModule,
+    BillRequestModule,
   ],
   controllers:[AppController]
 })

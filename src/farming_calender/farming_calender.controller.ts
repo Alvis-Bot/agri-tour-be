@@ -28,7 +28,7 @@ export class FarmingCalenderController {
     return await this.farmingCalenderService.createFarmingCalender(landId, dto, user);
   }
   @Get('gets')
-  async getAllFarmingCalenders(@Query() pagination: Pagination) {
+  async getAllFarmingCalenders(@Query() pagination: Pagination):Promise<FarmingCalender> {
     return await this.farmingCalenderService.getAllFarmingCalenders(pagination);
   }
 

@@ -2,14 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFiles, Query
 import { MaterialService } from './material.service';
 import { CreateMaterialDto } from './dto/create-material.dto';
 import { UpdateMaterialDto } from './dto/update-material.dto';
-import { ApiConsumes } from '@nestjs/swagger';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Material } from 'src/common/entities/material.entity';
 import { ApiFiles } from 'src/common/decorator/file.decorator';
 import { FileTypes } from 'src/common/enum';
 import { PaginationModel } from 'src/common/pagination/pagination.model';
 import { Pagination } from 'src/common/pagination/pagination.dto';
 import { QueryIdDto } from 'src/common/dto/query-id.dto';
-
+@ApiTags("API Vật tư")
 @Controller('material')
 export class MaterialController {
   constructor(private readonly materialService: MaterialService) { }
