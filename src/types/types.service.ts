@@ -1,9 +1,9 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { TypeCreateDto } from './dto/type-create.dto';
 import { UpdateTypeDto } from './dto/update-type.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Type } from '../common/entities/type.entity';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { ApiException } from "../exception/api.exception";
 import { ErrorMessages } from "../exception/error.code";
 
@@ -14,8 +14,7 @@ export class TypesService implements OnModuleInit {
   ) {
   }
 
-
-  async onModuleInit(): Promise<void> {
+  async onModuleInit(): Promise<{ added: Type[], skipped: string[], errors: string[] }> {
     const types = [
       { name: 'TINH_THANH' },
       { name: 'QUAN_HUYEN' },
@@ -30,15 +29,73 @@ export class TypesService implements OnModuleInit {
       { name: 'KHACH_HANG' },
       { name: 'DOI_TUONG_KHAC' },
       { name: 'PROVIDER' },
-      { name: 'NHOM_CAY_TRONG' }
+      { name: 'NHOM_CAY_TRONG' },
+      { name: 'NHOM_VAT_TU' },
 
     ];
+    const addedTypes: Type[] = [];
+    const skippedTypes: string[] = [];
+    const errorMessages: string[] = [];
+    const queryRunner: QueryRunner = this.typeRepository.manager.connection.createQueryRunner();
 
-    const itemsCount = await this.typeRepository.count();
-    if (itemsCount > 0) return;
-    await this.typeRepository.save(types);
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
+    try {
+      for (const type of types) {
+        const existingType = await queryRunner.manager.findOne(Type, {
+          where: {
+            name: type.name,
+          },
+        });
+        if (!existingType) {
+          const newType = await queryRunner.manager.save(Type, type);
+          addedTypes.push(newType);
+          Logger.error(`Added new type: ${type.name}`);
+        } else {
+          skippedTypes.push(type.name);
+          Logger.error(`Type already exists: ${type.name}`);
+        }
+      }
+
+      await queryRunner.commitTransaction();
+      return { added: addedTypes, skipped: skippedTypes, errors: errorMessages };
+    } catch (error) {
+      errorMessages.push(error.message);
+      Logger.error(`Error during transaction: ${error}`);
+      await queryRunner.rollbackTransaction();
+      return { added: addedTypes, skipped: skippedTypes, errors: errorMessages };
+    } finally {
+      await queryRunner.release();
+    }
   }
+
+
+  // async onModuleInit(): Promise<void> {
+  //   const types = [
+  //     { name: 'TINH_THANH' },
+  //     { name: 'QUAN_HUYEN' },
+  //     { name: 'PHUONG_XA' },
+  //     { name: 'LOAI_DAT' },
+  //     { name: 'BUSINESS_TYPE' },
+  //     { name: 'BUSINESS_MODEL' },
+  //     { name: 'SOIL_TYPE' },
+  //     { name: 'PRODUCT_TYPE' },
+  //     { name: 'UNIT_TYPE' },
+  //     { name: 'ROOT' },
+  //     { name: 'KHACH_HANG' },
+  //     { name: 'DOI_TUONG_KHAC' },
+  //     { name: 'PROVIDER' },
+  //     { name: 'NHOM_CAY_TRONG' },
+  //     { name: 'NHOM_VAT_TU' },
+
+  //   ];
+
+  //   const itemsCount = await this.typeRepository.count();
+  //   if (itemsCount > 0) return;
+  //   await this.typeRepository.save(types);
+
+  // }
 
 
   async createType(dto: TypeCreateDto): Promise<Type> {

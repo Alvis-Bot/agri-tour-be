@@ -1,16 +1,23 @@
-import {Body, Controller, Delete, Get, Patch, Post, Query} from '@nestjs/common';
-import {TypesService} from './types.service';
-import {TypeCreateDto} from './dto/type-create.dto';
-import {UpdateTypeDto} from './dto/update-type.dto';
-import {ApiTags} from '@nestjs/swagger';
-import {Type} from '../common/entities/type.entity';
-import {Note} from "../common/decorator/description.decorator";
-import {UUIDQuery} from "../common/decorator/uuid.decorator";
+import { Body, Controller, Delete, Get, Patch, Post, Query } from '@nestjs/common';
+import { TypesService } from './types.service';
+import { TypeCreateDto } from './dto/type-create.dto';
+import { UpdateTypeDto } from './dto/update-type.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { Type } from '../common/entities/type.entity';
+import { Note } from "../common/decorator/description.decorator";
+import { UUIDQuery } from "../common/decorator/uuid.decorator";
 
 @Controller('types')
 @ApiTags('Thêm loại danh mục')
 export class TypesController {
+
   constructor(private readonly typesService: TypesService) { }
+  @Post()
+  @Note('Khởi tạo danh mục')
+  async init() {
+    return await this.typesService.onModuleInit();
+  }
+
   @Post('create')
   @Note('Tạo loại danh mục')
   create(@Body() dto: TypeCreateDto): Promise<Type> {

@@ -18,6 +18,7 @@ import {DataSource} from "typeorm";
 import {StorageModule} from "./storage/storage.module";
 import { CropsModule } from './crops/crops.module';
 import { WorkOfDayModule } from './work-of-day/work-of-day.module';
+import { MaterialModule } from './material/material.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { WorkOfDayModule } from './work-of-day/work-of-day.module';
     ProvidersModule,
     CropsModule,
     WorkOfDayModule,
+    MaterialModule,
   ],
   controllers:[AppController]
 })

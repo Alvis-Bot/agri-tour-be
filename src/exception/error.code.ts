@@ -32,6 +32,8 @@ export const ErrorMessages = {
   CATEGORY_DETAIL_NOT_FOUND: errorFactory(HttpStatus.BAD_REQUEST, "Category detail not found"),
   CROP_EXISTED: errorFactory(HttpStatus.CONFLICT, "Crop existed"),
   CROP_NOT_FOUND: errorFactory(HttpStatus.NOT_FOUND, "Crop not found"),
-  BAD_REQUEST: errorFactory(HttpStatus.BAD_REQUEST)
+  BAD_REQUEST: errorFactory(HttpStatus.BAD_REQUEST),
+  MATERIAL_EXISTED: errorFactory(HttpStatus.CONFLICT, "Material existed"),
+  MATERIAL_NOT_FOUND: errorFactory(HttpStatus.NOT_FOUND, "Material not found"),
 
 };
