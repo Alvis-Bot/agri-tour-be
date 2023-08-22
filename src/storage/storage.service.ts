@@ -26,7 +26,7 @@ export class StorageService implements OnModuleInit {
       case 'image/jpeg':
       case 'image/png':
         // Xử lý cho các loại hình ảnh JPEG và PNG
-        const imageName = await this.buildImageFileName(type, file.filename);
+        const imageName = await this.buildOtherFileName(type, file.filename);
         const imagePath = await this.buildImageFilePath(type, imageName);
         await sharp(file.buffer).toFile(imagePath);
         //public\\uploads\\crops\\crops.Gg4axDvEYBr1.1692280106174.webp
@@ -56,10 +56,10 @@ export class StorageService implements OnModuleInit {
   }
 
 
-  private async buildImageFileName(type: ImageType, fileName: string): Promise<string> {
-    const extension = fileName.split('.').pop();
-    return `${type}.${StringUtil.generateRandomString(12)}.${Date.now()}.${extension}`;
-  }
+  // private async buildImageFileName(type: ImageType, fileName: string): Promise<string> {
+  //   const extension = fileName.split('.').pop();
+  //   return `${type}.${StringUtil.generateRandomString(12)}.${Date.now()}.${extension}`;
+  // }
 
   private async buildOtherFileName(type: ImageType, fileName: string) {
     const extension = fileName.split('.').pop();
