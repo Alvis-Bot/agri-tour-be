@@ -5,12 +5,15 @@ import { ImageType } from "../common/enum";
 import { StringUtil } from "../common/utils/string.util";
 import * as sharp from "sharp";
 import { join } from "path";
+import { ApiException } from "src/exception/api.exception";
+
 
 @Injectable()
 export class StorageService implements OnModuleInit {
   constructor(
     private readonly configService: ConfigService
-  ) { }
+  ) {
+  }
 
   onModuleInit(): void {
     const path = join('.', this.configService.get<string>('FOLDER_UPLOAD'));
@@ -20,19 +23,25 @@ export class StorageService implements OnModuleInit {
   }
 
   private async uploadStorage(type: ImageType, file: Express.Multer.File): Promise<string> {
-    const mimeType = file.mimetype;
-    const imageName = await this.buildImageFileName(type, file?.filename || file.filename);
-    const imagePath = await this.buildImageFilePath(type, imageName);
 
-    if (mimeType === 'image/jpeg' || mimeType === 'image/png') {
-      await sharp(file.buffer).toFile(imagePath);
-    } else {
-      // Xử lý cho các trường hợp mimetype không rơi vào 'image/jpeg' hoặc 'image/png'
-      await sharp(imagePath).toFile(imagePath);
+    switch (file?.mimetype) {
+      case 'image/jpeg':
+      case 'image/png':
+        // Xử lý cho các loại hình ảnh JPEG và PNG
+        const imageName = await this.buildImageFileName(type, file);
+        const imagePath = await this.buildImageFilePath(type, imageName);
+        await sharp(file.buffer).toFile(imagePath);
+        //public\\uploads\\crops\\crops.Gg4axDvEYBr1.1692280106174.webp
+        // bỏ đi public và thay bằng /uploads
+        return imagePath.replace(/\\?public\\?uploads\\/, '\\uploads\\');
+      default:
+        // Xử lý cho các trường hợp mimetype không rơi vào các trường hợp trên
+        const fileName = await this.buildOtherFileName(type, file.filename)
+        const filePath = await this.buildImageFilePath(type, fileName);
+        await sharp(filePath).toFile(filePath)
+        return filePath.replace(/\\?public\\?uploads\\/, '\\uploads\\');
     }
 
-    // Cập nhật đường dẫn dạng /uploads thay vì \\uploads
-    return imagePath.replace(/\\?public\\?uploads\\/, '/uploads/');
   }
 
   async uploadFile(type: ImageType, file: Express.Multer.File): Promise<string> {
@@ -45,27 +54,33 @@ export class StorageService implements OnModuleInit {
 
   async deleteFile(type: ImageType, fileName: string): Promise<void> {
     const path = await this.buildImageFilePath(type, fileName);
-    // Xoá tập tin
+    // xoá  file
     fs.existsSync(path) && fs.unlinkSync(path);
   }
 
-  private async buildImageFileName(type: ImageType, fileName: string): Promise<string> {
-    if (fileName) {
-      const extension = fileName.split('.').pop();
-      return `${type}.${StringUtil.generateRandomString(12)}.${Date.now()}.${extension}`;
-    }
-    return ''; // Hoặc xử lý khác tùy trường hợp của bạn
+
+  private async buildImageFileName(type: ImageType, file: Express.Multer.File): Promise<string> {
+    const extension = file.originalname.split('.').pop(); // Extract extension
+    return `${type}.${StringUtil.generateRandomString(12)}.${Date.now()}.${extension}`;
   }
 
-  private async buildImageFilePath(type: ImageType, fileName: string): Promise<string> {
-    if (type && fileName) {
-      const patch = this.configService.get<string>("FOLDER_UPLOAD");
-      const path = join('.', patch, type);
-      if (!fs.existsSync(path)) {
-        fs.mkdirSync(path);
-      }
-      return join(path, fileName);
-    }
-    return ''; // Hoặc xử lý khác tùy trường hợp của bạn
+  private async buildOtherFileName(type: ImageType, fileName: string) {
+    const extension = fileName.split('.').pop();
+    return `${type}.${StringUtil.generateRandomString(12)}.${Date.now()}.${extension}`;
+
   }
+  private async buildImageFilePath(type: ImageType, fileName: string): Promise<string> {
+    const patch = this.configService.get<string>("FOLDER_UPLOAD");
+    const path = join('.', patch, type);
+    if (!fs.existsSync(path)) {
+      fs.mkdirSync(path);
+    }
+    return join(path, fileName);
+  }
+
+
+
+
+
+
 }
