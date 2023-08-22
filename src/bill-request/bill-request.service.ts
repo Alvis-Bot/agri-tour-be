@@ -22,7 +22,7 @@ export class BillRequestService {
   ) { }
   async create(createBillRequestDto: CreateBillRequestDto): Promise<BillRequest> {
     const checked = await this.checkExist(createBillRequestDto.name);
-    if (!checked) throw new ApiException(ErrorMessages.BILL_REQUEST_EXISTS);
+    if (checked) throw new ApiException(ErrorMessages.BILL_REQUEST_EXISTS);
     const provider = await this.personService.findTypeByName(createBillRequestDto.providerId);
     const material = await this.materialService.findOne(createBillRequestDto.materialId);
     // Here you can map the data from the DTO to the Entity and save it
