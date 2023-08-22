@@ -1,14 +1,14 @@
-import {Injectable, OnModuleInit} from "@nestjs/common";
-import {ConfigService} from "@nestjs/config";
+import { Injectable, OnModuleInit } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import * as fs from "fs";
-import {ImageType} from "../common/enum";
-import {StringUtil} from "../common/utils/string.util";
+import { ImageType } from "../common/enum";
+import { StringUtil } from "../common/utils/string.util";
 import * as sharp from "sharp";
-import {join} from "path";
+import { join } from "path";
 
 
 @Injectable()
-export class StorageService implements OnModuleInit  {
+export class StorageService implements OnModuleInit {
   constructor(
     private readonly configService: ConfigService
   ) {
@@ -17,7 +17,7 @@ export class StorageService implements OnModuleInit  {
   onModuleInit(): void {
     const path = join('.', this.configService.get<string>('FOLDER_UPLOAD'));
     if (!fs.existsSync(path)) {
-        fs.mkdirSync(path);
+      fs.mkdirSync(path);
     }
   }
 
@@ -26,11 +26,11 @@ export class StorageService implements OnModuleInit  {
       case 'image/jpeg':
       case 'image/png':
         // Xử lý cho các loại hình ảnh JPEG và PNG
-        const imageName = await this.buildImageFileName(type)
-        const imagePath = await this.buildImageFilePath(type ,imageName);
-        await sharp(file.buffer).webp().toFile(imagePath);
+        const imageName = await this.buildImageFileName(type, file.filename);
+        const imagePath = await this.buildImageFilePath(type, imageName);
+        await sharp(file.buffer).toFile(imagePath);
         //public\\uploads\\crops\\crops.Gg4axDvEYBr1.1692280106174.webp
-          // bỏ đi public và thay bằng /uploads
+        // bỏ đi public và thay bằng /uploads
         return imagePath.replace(/\\?public\\?uploads\\/, '\\uploads\\');
       default:
         // Xử lý cho các trường hợp mimetype không rơi vào các trường hợp trên
@@ -50,14 +50,15 @@ export class StorageService implements OnModuleInit  {
   }
 
   async deleteFile(type: ImageType, fileName: string): Promise<void> {
-     const path = await this.buildImageFilePath(type, fileName);
-     // xoá  file
-     fs.existsSync(path) && fs.unlinkSync(path);
+    const path = await this.buildImageFilePath(type, fileName);
+    // xoá  file
+    fs.existsSync(path) && fs.unlinkSync(path);
   }
 
 
-  private async buildImageFileName(type: ImageType): Promise<string> {
-    return `${type}.${StringUtil.generateRandomString(12)}.${Date.now()}.webp`;
+  private async buildImageFileName(type: ImageType, fileName: string): Promise<string> {
+    const extension = fileName.split('.').pop();
+    return `${type}.${StringUtil.generateRandomString(12)}.${Date.now()}.${extension}`;
   }
 
   private async buildOtherFileName(type: ImageType, fileName: string) {
@@ -65,11 +66,11 @@ export class StorageService implements OnModuleInit  {
     return `${type}.${StringUtil.generateRandomString(12)}.${Date.now()}.${extension}`;
 
   }
-  private async buildImageFilePath(type : ImageType, fileName: string): Promise<string> {
+  private async buildImageFilePath(type: ImageType, fileName: string): Promise<string> {
     const patch = this.configService.get<string>("FOLDER_UPLOAD");
     const path = join('.', patch, type);
     if (!fs.existsSync(path)) {
-        fs.mkdirSync(path);
+      fs.mkdirSync(path);
     }
     return join(path, fileName);
   }
