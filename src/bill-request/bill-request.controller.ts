@@ -18,7 +18,7 @@ export class BillRequestController {
   }
 
   @Get('gets')
-  async findAll(pagination: Pagination): Promise<PaginationModel<BillRequest>> {
+  async findAll(@Query() pagination: Pagination): Promise<PaginationModel<BillRequest>> {
     return this.billRequestService.findAll(pagination);
   }
 
