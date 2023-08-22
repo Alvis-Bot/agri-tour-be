@@ -61,10 +61,11 @@ export class StorageService implements OnModuleInit {
   //   return `${type}.${StringUtil.generateRandomString(12)}.${Date.now()}.${extension}`;
   // }
 
-  private async buildOtherFileName(type: ImageType, fileName: string) {
-    const extension = fileName.split('.').pop();
-    return `${type}.${StringUtil.generateRandomString(12)}.${Date.now()}.${extension}`;
-
+  private async buildOtherFileName(type: ImageType, fileName: string): Promise<string> {
+    if (fileName) {
+      const extension = fileName.split('.').pop();
+      return `${type}.${StringUtil.generateRandomString(12)}.${Date.now()}.${extension}`;
+    }
   }
   private async buildImageFilePath(type: ImageType, fileName: string): Promise<string> {
     const patch = this.configService.get<string>("FOLDER_UPLOAD");
