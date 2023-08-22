@@ -68,12 +68,15 @@ export class StorageService implements OnModuleInit {
     }
   }
   private async buildImageFilePath(type: ImageType, fileName: string): Promise<string> {
-    const patch = this.configService.get<string>("FOLDER_UPLOAD");
-    const path = join('.', patch, type);
-    if (!fs.existsSync(path)) {
-      fs.mkdirSync(path);
+    if (type && fileName) {
+      const patch = this.configService.get<string>("FOLDER_UPLOAD");
+      const path = join('.', patch, type);
+      if (!fs.existsSync(path)) {
+        fs.mkdirSync(path);
+      }
+      return join(path, fileName);
     }
-    return join(path, fileName);
+
   }
 
 
