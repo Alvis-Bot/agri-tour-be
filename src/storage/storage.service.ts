@@ -34,13 +34,13 @@ export class StorageService implements OnModuleInit {
         //public\\uploads\\crops\\crops.Gg4axDvEYBr1.1692280106174.webp
         // bỏ đi public và thay bằng /uploads
 
-        return imagePath.replace(patch, '/uploads/');
+        return imagePath.replace(patch, '/uploads');
       default:
         // Xử lý cho các trường hợp mimetype không rơi vào các trường hợp trên
         const fileName = await this.buildOtherFileName(type, file.filename)
         const filePath = await this.buildImageFilePath(type, fileName);
         await sharp(filePath).toFile(filePath)
-        return filePath.replace(patch, '/uploads/');
+        return filePath.replace(patch, '/uploads');
     }
 
   }
