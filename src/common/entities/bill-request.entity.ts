@@ -4,7 +4,7 @@ import { PersonEntity } from "./person.entity";
 import { AuditEntity } from "./audit.entity";
 
 @Entity()
-export class BillRequest extends AuditEntity{
+export class BillRequest extends AuditEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -17,10 +17,10 @@ export class BillRequest extends AuditEntity{
     @Column()
     description: string;
 
-    @ManyToOne(() => Material, material => material.billRequests, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
+    @ManyToOne(() => Material, material => material.billRequests, { eager: true, onDelete: 'SET NULL', onUpdate: 'CASCADE' })
     material: Material;
 
-    @ManyToOne(() => PersonEntity, persons => persons.billRequests, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
+    @ManyToOne(() => PersonEntity, persons => persons.billRequests, { eager: true, onDelete: 'SET NULL', onUpdate: 'CASCADE' })
     provider: PersonEntity;
 
 }

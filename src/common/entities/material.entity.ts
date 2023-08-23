@@ -18,6 +18,6 @@ export class Material extends AuditEntity {
     @Column({ nullable: true, array: true, type: 'text' })
     images: string[];
 
-    @OneToMany(() => BillRequest, billRequests => billRequests.material, { eager: true, onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @OneToMany(() => BillRequest, billRequests => billRequests.material, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     billRequests: BillRequest[];
 }

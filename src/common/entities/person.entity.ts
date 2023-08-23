@@ -26,7 +26,7 @@ export class PersonEntity extends AuditEntity {
     @ManyToOne(() => Type, types => types.id)
     type: Type;
 
-    @OneToMany(() => BillRequest, billRequest => billRequest.provider, { eager: true, onDelete: 'SET NULL', cascade: true })
+    @OneToMany(() => BillRequest, billRequest => billRequest.provider, { onDelete: 'SET NULL', cascade: true })
     billRequests: BillRequest[];
 
 }

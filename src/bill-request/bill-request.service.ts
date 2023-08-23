@@ -47,7 +47,7 @@ export class BillRequestService {
       order: {
         createdAt: pagination.order
       },
-
+      loadEagerRelations: true
     })
     const meta = new Meta({ itemCount, pagination });
     return new PaginationModel<BillRequest>(entities, meta);
@@ -55,7 +55,8 @@ export class BillRequestService {
 
   async findOne(id: string): Promise<BillRequest> {
     const billRequest = await this.billRequestRepository.findOne({
-      where: { id }
+      where: { id },
+      loadEagerRelations: true
     })
     if (!billRequest) throw new ApiException(ErrorMessages.BILL_REQUEST_NOT_FOUND);
     return billRequest;
