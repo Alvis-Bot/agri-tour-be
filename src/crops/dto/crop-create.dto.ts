@@ -36,12 +36,12 @@ export class CropCreateDto {
 
     // giá bán giống cây trồng
     @ApiProperty()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     price: number;
 
     @ApiProperty()
     @IsUUID()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     groupCrop: string;
 
     // nhóm cây trồng
