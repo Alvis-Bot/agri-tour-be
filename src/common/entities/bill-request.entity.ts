@@ -17,6 +17,12 @@ export class BillRequest extends AuditEntity {
     @Column()
     description: string;
 
+    @Column({
+        type: 'int',
+        default: 0,
+
+    })
+    status: number;
     @ManyToOne(() => Material, material => material.billRequests, { eager: true, onDelete: 'SET NULL', onUpdate: 'CASCADE' })
     material: Material;
 

@@ -1,8 +1,8 @@
-import {IsDecimal, IsNotEmpty, IsNumber, IsString, IsUUID} from "class-validator";
-import {ApiProperty} from "@nestjs/swagger";
+import { IsDecimal, IsNotEmpty, IsNumber, IsString, IsUUID } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
 
-export class CropCreateDto{
+export class CropCreateDto {
 
     @ApiProperty()
     @IsString()
@@ -47,6 +47,6 @@ export class CropCreateDto{
     // nhóm cây trồng
 
     // ảnh cây trồng
-    @ApiProperty({ type: 'array', items: { type: 'string', format: 'binary' }})
+    @ApiProperty({ type: 'array', items: { type: 'string', format: 'binary' } })
     images: Express.Multer.File[];
 }

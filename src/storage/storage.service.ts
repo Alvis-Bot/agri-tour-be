@@ -5,7 +5,6 @@ import { ImageType } from "../common/enum";
 import { StringUtil } from "../common/utils/string.util";
 import * as sharp from "sharp";
 import { join } from "path";
-import { ApiException } from "src/exception/api.exception";
 
 
 @Injectable()
@@ -22,6 +21,7 @@ export class StorageService implements OnModuleInit {
     }
   }
 
+
   private async uploadStorage(type: ImageType, file: Express.Multer.File): Promise<string> {
     const patch = this.configService.get<string>("FOLDER_UPLOAD");
     switch (file.mimetype) {
@@ -31,16 +31,16 @@ export class StorageService implements OnModuleInit {
         const imageName = await this.buildImageFileName(type, file);
         const imagePath = await this.buildImageFilePath(type, imageName);
         await sharp(file.buffer).toFile(imagePath);
-        //public\\uploads\\crops\\crops.Gg4axDvEYBr1.1692280106174.webp
-        // bỏ đi public và thay bằng /uploads
 
-        return imagePath.replace(patch, '/uploads');
+        // console.log('chạy voà đây', imagePath.replace(/\\/g, '/').replace('public/', '/uploads/'))
+        return imagePath.replace(/\\/g, '/').replace(patch, '/uploads/');
       default:
+
         // Xử lý cho các trường hợp mimetype không rơi vào các trường hợp trên
         const fileName = await this.buildOtherFileName(type, file.filename)
         const filePath = await this.buildImageFilePath(type, fileName);
         await sharp(filePath).toFile(filePath)
-        return filePath.replace(patch, '/uploads');
+        return filePath.replace(/\\/g, '/').replace(patch, '/uploads/');
     }
 
   }
@@ -76,6 +76,7 @@ export class StorageService implements OnModuleInit {
     if (!fs.existsSync(path)) {
       fs.mkdirSync(path);
     }
+
     return join(path, fileName);
   }
 
