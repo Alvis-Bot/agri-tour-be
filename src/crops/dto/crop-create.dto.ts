@@ -5,33 +5,33 @@ import { ApiProperty } from "@nestjs/swagger";
 export class CropCreateDto {
 
     @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
+    // @IsString()
+    // @IsNotEmpty()
     name: string;
 
 
     //loại bệnh thường gặp
     @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
+    // @IsString()
+    // @IsNotEmpty()
     disease: string;
 
     // đặc tính sinh trưởng
     @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
+    // @IsString()
+    // @IsNotEmpty()
     growth: string;
 
     // đặc tính sử dụng cây trồng
     @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
+    // @IsString()
+    // @IsNotEmpty()
     use: string;
 
     // thu hoạch
     @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
+    // @IsString()
+    // @IsNotEmpty()
     harvest: string;
 
     // giá bán giống cây trồng
