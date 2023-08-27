@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from '@nestjs/common';
 import { BillRequestService } from './bill-request.service';
 import { CreateBillRequestDto } from './dto/create-bill-request.dto';
 import { UpdateBillRequestDto } from './dto/update-bill-request.dto';
@@ -22,11 +22,15 @@ export class BillRequestController {
     return this.billRequestService.findAll(pagination);
   }
 
-  @Get('update-bill-request')
+  @Get('get')
   async findOne(@Query() { id }: QueryIdDto): Promise<BillRequest> {
     return this.billRequestService.findOne(id);
   }
 
+  @Put('update')
+  async update(@Query() { id }: QueryIdDto, @Body() dto: UpdateBillRequestDto): Promise<BillRequest> {
+    return this.billRequestService.update(id, dto);
+  }
 
   @Delete('delete')
   async remove(@Query() { id }: QueryIdDto): Promise<Object> {

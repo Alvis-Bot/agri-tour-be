@@ -20,6 +20,7 @@ import { CropsModule } from './crops/crops.module';
 import { WorkOfDayModule } from './work-of-day/work-of-day.module';
 import { MaterialModule } from './material/material.module';
 import { BillRequestModule } from './bill-request/bill-request.module';
+import { VisitorModule } from './visitor/visitor.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { BillRequestModule } from './bill-request/bill-request.module';
     WorkOfDayModule,
     MaterialModule,
     BillRequestModule,
+    VisitorModule,
   ],
   controllers:[AppController]
 })

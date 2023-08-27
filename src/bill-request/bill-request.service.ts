@@ -14,6 +14,7 @@ import { Meta } from 'src/common/pagination/meta.dto';
 
 @Injectable()
 export class BillRequestService {
+
   constructor(
     @InjectRepository(BillRequest)
     private readonly billRequestRepository: Repository<BillRequest>,
@@ -21,19 +22,44 @@ export class BillRequestService {
     private readonly materialService: MaterialService
   ) { }
   async create(createBillRequestDto: CreateBillRequestDto): Promise<BillRequest | any> {
-    const checked = await this.checkExist(createBillRequestDto.name);
-    if (checked) throw new ApiException(ErrorMessages.BILL_REQUEST_EXISTS);
-    const provider = await this.personService.getPersonById(createBillRequestDto.providerId);
+    try {
+      const checked = await this.checkExist(createBillRequestDto.name);
+      if (checked) throw new ApiException(ErrorMessages.BILL_REQUEST_EXISTS);
+      const provider = await this.personService.getPersonById(createBillRequestDto.providerId);
 
-    const material = await this.materialService.findOne(createBillRequestDto.materialId);
-    // Here you can map the data from the DTO to the Entity and save it
-    const billRequest = this.billRequestRepository.create({
-      ...createBillRequestDto,
-      provider,
-      material
-    });
+      const material = await this.materialService.findOne(createBillRequestDto.materialId);
+      // Here you can map the data from the DTO to the Entity and save it
+      const billRequest = this.billRequestRepository.create({
+        ...createBillRequestDto,
+        provider,
+        material
+      });
 
-    return await this.billRequestRepository.save(billRequest);
+      return await this.billRequestRepository.save(billRequest);
+    } catch (error) {
+      throw new ApiException(ErrorMessages.BAD_REQUEST, error.message);
+    }
+
+  }
+  async update(id: string, dto: UpdateBillRequestDto): Promise<BillRequest | any> {
+    try {
+      const billRequest = await this.findOne(id);
+      const checked = await this.checkExist(dto.name);
+      if (checked) throw new ApiException(ErrorMessages.BILL_REQUEST_EXISTS);
+      const provider = await this.personService.getPersonById(dto.providerId);
+
+      const material = await this.materialService.findOne(dto.materialId);
+      const merged = this.billRequestRepository.merge(billRequest, {
+        ...dto,
+        provider,
+        material
+      })
+      await this.billRequestRepository.update(billRequest.id, merged);
+      return merged;
+    } catch (error) {
+      throw new ApiException(ErrorMessages.BAD_REQUEST, error.message);
+    }
+    // const provider = await this.personService.getPersonById(dto.providerId);
   }
   async checkExist(name: string): Promise<boolean> {
     return await this.billRequestRepository.exist({
@@ -64,10 +90,15 @@ export class BillRequestService {
 
 
   async remove(id: string): Promise<Object> {
-    const billRequest = await this.findOne(id);
-    await this.billRequestRepository.remove(billRequest);
-    return {
-      message: `Bill request with id ${id} removed successfully `
+    try {
+      const billRequest = await this.findOne(id);
+      await this.billRequestRepository.remove(billRequest);
+      return {
+        message: `Bill request with id ${id} removed successfully `
+      }
+    } catch (error) {
+      throw new ApiException(ErrorMessages.BAD_REQUEST, error.message);
     }
+
   }
 }
