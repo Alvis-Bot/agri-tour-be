@@ -32,8 +32,14 @@ export class MaterialController {
   }
 
   @Patch('update')
-  async update(@Query() { id }: QueryIdDto, @Body() updateMaterialDto: UpdateMaterialDto): Promise<Material> {
-    return await this.materialService.update(id, updateMaterialDto);
+  @ApiConsumes('multipart/form-data')
+  @ApiFiles('images', 10, FileTypes.IMAGE)
+  async update(@Query() { id }: QueryIdDto, @Body() updateMaterialDto: UpdateMaterialDto, @UploadedFiles() images: Express.Multer.File[]): Promise<Material> {
+
+    return await this.materialService.update(id, {
+      ...updateMaterialDto,
+      images
+    });
   }
 
   @Delete('delete')

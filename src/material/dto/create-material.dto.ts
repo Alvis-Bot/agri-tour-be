@@ -11,7 +11,7 @@ export class CreateMaterialDto {
     description: string;
 
     @ApiProperty({ type: 'string', format: 'binary', isArray: true })
-    images: string[];
+    images: Express.Multer.File[];
 
     @ApiProperty()
     materialGroupId?: string;

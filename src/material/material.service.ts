@@ -72,11 +72,24 @@ export class MaterialService {
   async update(id: string, updateMaterialDto: UpdateMaterialDto): Promise<Material> {
     const material = await this.findOne(id);
     const checkByName = await this.existsByName(updateMaterialDto.name);
+
     if (checkByName) throw new ApiException(ErrorMessages.MATERIAL_EXISTED);
-    const materialGroup = await this.categoryDetailsService.getDetailCategoryById(updateMaterialDto.materialGroupId);
+    var materialGroup = await this.categoryDetailsService.getDetailCategoryById(updateMaterialDto.materialGroupId);
+
+    // else {
+    //   if (!updateMaterialDto.materialGroupId) {
+    //     materialGroup =
+    //   }
+    //   else {
+    //     materialGroup = material.materialGroup;
+    //   }
+    // }
+    // upload ảnh
+    const images = await this.storageService.uploadMultiFiles(ImageType.CARD_MATERIAL, updateMaterialDto.images)
     const merged = this.materialRepository.merge(material, {
       ...updateMaterialDto,
-      materialGroup
+      materialGroup,
+      images
     })
     const updated = await this.materialRepository.update(id, merged);
     if (!updated) throw new ApiException(ErrorMessages.BAD_REQUEST);
