@@ -37,4 +37,6 @@ export const ErrorMessages = {
   MATERIAL_NOT_FOUND: errorFactory(HttpStatus.NOT_FOUND, "Material not found"),
   BILL_REQUEST_EXISTS: errorFactory(HttpStatus.CONFLICT, "Phiếu yêu cầu đã tồn tại"),
   BILL_REQUEST_NOT_FOUND: errorFactory(HttpStatus.NOT_FOUND, "Phiếu yêu cầu không tồn tại !"),
+  VISITOR_EXISTS: errorFactory(HttpStatus.CONFLICT, "  VISITOR đã tồn tại"),
+  VISITOR_NOT_FOUND: errorFactory(HttpStatus.CONFLICT, " VISITOR NOT FOUND"),
 };
