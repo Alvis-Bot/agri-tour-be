@@ -1,7 +1,6 @@
 import {BeforeInsert, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {AuditEntity} from "./audit.entity";
 import * as bcrypt from 'bcrypt';
-import {Group} from "./group.entity";
 import {Exclude} from "class-transformer";
 import {Farm} from "./farm.entity";
 import {FarmingCalender} from "./farming_calender.entity";
@@ -31,15 +30,9 @@ export class User extends AuditEntity {
   @Column({ default: false })
   isLocked: boolean;
 
-  // @ManyToMany(() => Group, group => group.users)
-  // @JoinTable({
-  //   name: 'user_groups'
-  // })
-  // groups: Group[];
   @OneToMany(() => Farm, farm => farm.user)
   farms: Farm[];
 
-  // Many-to-many relationship with FarmingCalender
   @ManyToMany(() => FarmingCalender, farmingCalender => farmingCalender.users)
   farmingCalenders: FarmingCalender[];
 
