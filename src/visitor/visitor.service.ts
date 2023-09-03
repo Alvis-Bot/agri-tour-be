@@ -29,7 +29,7 @@ export class VisitorService {
     }
   }
 
-  async checkExist(name: string): Promise<Boolean> {
+  async checkExist(name: string): Promise<boolean> {
     return await this.visitorRepository.exist({
       where: { name }
     })
@@ -60,11 +60,11 @@ export class VisitorService {
     const checkExist = await this.checkExist(updateVisitorDto.name);
     if (checkExist) throw new ApiException(ErrorMessages.VISITOR_EXISTS);
     const merged = this.visitorRepository.merge(visitor, updateVisitorDto);
-    const updated = await this.visitorRepository.update(visitor.id, merged);
+     await this.visitorRepository.update(visitor.id, merged);
     return merged;
   }
 
-  async remove(id: string): Promise<Object> {
+  async remove(id: string): Promise<object> {
     try {
       const visitor = await this.findOne(id);
       await this.visitorRepository.remove(visitor);

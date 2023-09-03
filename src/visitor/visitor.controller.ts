@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/ban-types */
+import { Controller, Get, Post, Body, Patch,  Delete, Query } from '@nestjs/common';
 import { VisitorService } from './visitor.service';
 import { CreateVisitorDto } from './dto/create-visitor.dto';
 import { UpdateVisitorDto } from './dto/update-visitor.dto';
@@ -34,7 +35,7 @@ export class VisitorController {
   }
 
   @Delete('delete')
-  async remove(@Query() { id }: QueryIdDto): Promise<Object> {
+  async remove(@Query() { id }: QueryIdDto): Promise<object> {
     return this.visitorService.remove(id);
   }
 }
