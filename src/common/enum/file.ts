@@ -13,4 +13,6 @@ export enum ImageType {
   CARD_CROP = 'crops',
   CARD_MATERIAL = 'materials',
   CARD_SUPPLIES = 'supplies',
+  CARD_INGREDIENTS = 'ingredients',
+  CARD_AGRICULTURAL_PRODUCTS = 'agricultural-products',
 }

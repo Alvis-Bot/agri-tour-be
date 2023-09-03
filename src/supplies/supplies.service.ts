@@ -8,6 +8,8 @@ import {ImageType} from "../common/enum";
 import {Pagination} from "../common/pagination/pagination.dto";
 import {Meta} from "../common/pagination/meta.dto";
 import {PaginationModel} from "../common/pagination/pagination.model";
+import {ApiException} from "../exception/api.exception";
+import {ErrorMessages} from "../exception/error.code";
 
 @Injectable()
 export class SuppliesService {
@@ -30,6 +32,7 @@ export class SuppliesService {
     async getSuppliesPagination(pagination: Pagination) {
         const queryBuilder = this.suppliesRepository
             .createQueryBuilder("supplies")
+            .where('supplies.name like :name', { name: `%${pagination.search || ''}%` })
             .skip(pagination.skip)
             .take(pagination.take)
             .orderBy("supplies.createdAt", pagination.order)
@@ -46,10 +49,12 @@ export class SuppliesService {
     }
 
     async getSuppliesById(id: string) {
-       return await this.suppliesRepository.findOne({
+       const supplies =  await this.suppliesRepository.findOne({
               where: {
                     id
               }
        });
+         if (!supplies) throw new ApiException(ErrorMessages.SUPPLIES_NOT_FOUND);
+            return supplies;
     }
 }

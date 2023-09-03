@@ -22,6 +22,8 @@ import { MaterialModule } from './material/material.module';
 import { BillRequestModule } from './bill-request/bill-request.module';
 import { VisitorModule } from './visitor/visitor.module';
 import { SuppliesModule } from './supplies/supplies.module';
+import { IngredientsModule } from './ingredients/ingredients.module';
+import { AgriculturalProductsModule } from './agricultural-products/agricultural-products.module';
 
 @Module({
   imports: [
@@ -71,6 +73,8 @@ import { SuppliesModule } from './supplies/supplies.module';
     BillRequestModule,
     VisitorModule,
     SuppliesModule,
+    IngredientsModule,
+    AgriculturalProductsModule,
   ],
   controllers:[AppController]
 })
