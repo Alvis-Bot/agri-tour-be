@@ -82,7 +82,7 @@ export class StorageService implements OnModuleInit {
   }
 
 
-    async deleteMultiFiles(type: ImageType ,images: string[]) {
+    async deleteMultiFiles(images: string[]) {
         return Promise.all(images.map((image) => this.deleteFile(image)));
     }
 }

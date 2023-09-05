@@ -6,8 +6,11 @@ import {FileTypes} from "../common/enum";
 import {AgriculturalProductsCreateDto} from "./dto/agricultural-products-create.dto";
 import {Pagination} from "../common/pagination/pagination.dto";
 import {UUIDParam, UUIDQuery} from "../common/decorator/uuid.decorator";
+import {ApiTags} from "@nestjs/swagger";
+import {AgriculturalProductsUpdateDto} from "./dto/agricultural-products-update.dto";
 
 @Controller('agricultural-products')
+@ApiTags('APIs sản phẩm nông sản')
 export class AgriculturalProductsController {
     constructor(
         private readonly agriculturalProductsService: AgriculturalProductsService
@@ -30,7 +33,7 @@ export class AgriculturalProductsController {
     @ApiFiles('images', 10 ,FileTypes.IMAGE)
     async updateAgriculturalProducts(
         @UUIDParam('id') id: string,
-        @Body() dto: AgriculturalProductsCreateDto,
+        @Body() dto: AgriculturalProductsUpdateDto,
         @UploadedFiles() images: Express.Multer.File[]
     ) {
         console.log(images)

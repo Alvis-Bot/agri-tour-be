@@ -1,42 +1,47 @@
-import {ApiProperty, ApiPropertyOptional} from "@nestjs/swagger";
-import {IsEnum, IsNotEmpty, IsOptional} from "class-validator";
+import { ApiPropertyOptional} from "@nestjs/swagger";
+import { IsOptional} from "class-validator";
 import {IngredientsStatus} from "../ingredients";
 
 
-export class IngredientsCreateDto{
+export class IngredientsUpdateDto{
 
 
-    @ApiProperty()
-    @IsNotEmpty()
+    @ApiPropertyOptional()
+    @IsOptional()
     name: string;
 
-    @ApiProperty()
-    @IsNotEmpty()
+
+    @ApiPropertyOptional()
+    @IsOptional()
     money: number;
 
-    @ApiProperty()
-    @IsNotEmpty()
+
+    @ApiPropertyOptional()
+    @IsOptional()
     quantity: string;
 
-    @ApiProperty()
-    @IsNotEmpty()
+
+    @ApiPropertyOptional()
+    @IsOptional()
     weight: string;
 
-    @ApiProperty()
-    @IsNotEmpty()
+
+    @ApiPropertyOptional()
+    @IsOptional()
     information: string;
 
-    @ApiProperty({
+
+    @ApiPropertyOptional({
         example : new Date()
     })
-    @IsNotEmpty()
+    @IsOptional()
     time: Date;
 
-    @ApiProperty({
+    @ApiPropertyOptional({
         enum : IngredientsStatus,
         default : IngredientsStatus.INVENTORY,
     })
-    @IsNotEmpty()
+    @IsOptional()
     status: IngredientsStatus;
 
     @ApiPropertyOptional({ type: 'array', items: { type: 'string', format: 'binary' } })
