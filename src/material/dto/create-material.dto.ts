@@ -9,7 +9,10 @@ export class CreateMaterialDto {
 
     @ApiProperty()
     description: string;
-
+    @ApiProperty()
+    price:number;
+    @ApiProperty()
+    status:number;
     @ApiProperty({ type: 'string', format: 'binary', isArray: true })
     images: Express.Multer.File[];
 

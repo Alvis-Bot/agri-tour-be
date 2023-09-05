@@ -13,6 +13,10 @@ export class Material extends AuditEntity {
     quantity: number;
     @Column()
     description: string;
+    @Column({nullable:true,type:'float'})
+    price: number;
+    @Column({nullable:true,type:'int'})
+    status:number;
     @ManyToOne(() => CategoryDetails, categoryDetails => categoryDetails.id, { eager: true })
     materialGroup: CategoryDetails;
     @Column({ nullable: true, array: true, type: 'text' })
