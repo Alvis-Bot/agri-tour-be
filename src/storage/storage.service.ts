@@ -53,9 +53,10 @@ export class StorageService implements OnModuleInit {
     return Promise.all(files.map((file) => this.uploadStorage(type, file)));
   }
 
-  async deleteFile(type: ImageType, fileName: string): Promise<void> {
-    const path = await this.buildImageFilePath(type, fileName);
+  async deleteFile(fileName: string): Promise<void> {
+    const path = join('public', fileName);
     // xoá  file
+    console.log(path)
     fs.existsSync(path) && fs.unlinkSync(path);
   }
 
@@ -81,8 +82,7 @@ export class StorageService implements OnModuleInit {
   }
 
 
-
-
-
-
+    async deleteMultiFiles(type: ImageType ,images: string[]) {
+        return Promise.all(images.map((image) => this.deleteFile(image)));
+    }
 }

@@ -1,5 +1,5 @@
-import {ApiProperty} from "@nestjs/swagger";
-import {IsNotEmpty} from "class-validator";
+import {ApiProperty, ApiPropertyOptional} from "@nestjs/swagger";
+import {IsNotEmpty, IsOptional} from "class-validator";
 
 
 export class AgriculturalProductsCreateDto{
@@ -32,6 +32,7 @@ export class AgriculturalProductsCreateDto{
     @IsNotEmpty()
     time: Date;
 
-    @ApiProperty({ type: 'array', items: { type: 'string', format: 'binary' } })
-    images : string[];
+    @ApiPropertyOptional({ type: 'array', items: { type: 'string', format: 'binary' } })
+    @IsOptional()
+    images? : string[];
 }

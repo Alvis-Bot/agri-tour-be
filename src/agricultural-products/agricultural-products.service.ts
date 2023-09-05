@@ -26,7 +26,7 @@ export class AgriculturalProductsService {
 
     async createAgriculturalProducts(dto: AgriculturalProductsCreateDto, images: Express.Multer.File[]) {
         const farm = await this.farmService.getFarmById(dto.farm);
-        const imagesPath = await this.storageService.uploadMultiFiles(ImageType.CARD_AGRICULTURAL_PRODUCTS, images);
+        const imagesPath = images.length > 0 ? await this.storageService.uploadMultiFiles(ImageType.CARD_AGRICULTURAL_PRODUCTS, images) : [];
         const agriculturalProducts = this.agriculturalProductsRepository.create({
             ...dto,
             farm,
@@ -74,5 +74,23 @@ export class AgriculturalProductsService {
 
     async deleteAgriculturalProductsById(id: string) {
         return await this.agriculturalProductsRepository.delete(id);
+    }
+
+    async updateAgriculturalProducts(id: string, dto: AgriculturalProductsCreateDto, images: Express.Multer.File[]) {
+        const agriculturalProducts = await this.getAgriculturalProductsById(id);
+        const farm = await this.farmService.getFarmById(dto.farm);
+
+        if (images.length > 0 && agriculturalProducts.images.length > 0)
+            await this.storageService.deleteMultiFiles(ImageType.CARD_AGRICULTURAL_PRODUCTS, agriculturalProducts.images);
+
+
+        const imagesPath = images.length > 0 ? await this.storageService.uploadMultiFiles(ImageType.CARD_AGRICULTURAL_PRODUCTS, images) : agriculturalProducts.images;
+        const agriculturalProductsUpdate = this.agriculturalProductsRepository.merge(agriculturalProducts, {
+            ...dto,
+            farm,
+            images: imagesPath
+        })
+        console.log(agriculturalProductsUpdate);
+        return await this.agriculturalProductsRepository.save(agriculturalProductsUpdate);
     }
 }

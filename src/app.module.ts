@@ -21,7 +21,6 @@ import { WorkOfDayModule } from './work-of-day/work-of-day.module';
 import { MaterialModule } from './material/material.module';
 import { BillRequestModule } from './bill-request/bill-request.module';
 import { VisitorModule } from './visitor/visitor.module';
-import { SuppliesModule } from './supplies/supplies.module';
 import { IngredientsModule } from './ingredients/ingredients.module';
 import { AgriculturalProductsModule } from './agricultural-products/agricultural-products.module';
 
@@ -45,7 +44,7 @@ import { AgriculturalProductsModule } from './agricultural-products/agricultural
           database: configService.get<string>("POSTGRES_DB"),
           entities: [__dirname + "/**/*.entity{.ts,.js}"],
           synchronize: true,
-          logging: true,
+          logging: false,
           autoLoadEntities: true,
         };
       },
@@ -72,7 +71,6 @@ import { AgriculturalProductsModule } from './agricultural-products/agricultural
     MaterialModule,
     BillRequestModule,
     VisitorModule,
-    SuppliesModule,
     IngredientsModule,
     AgriculturalProductsModule,
   ],

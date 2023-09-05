@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Post, Query, UploadedFiles} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFiles} from '@nestjs/common';
 import {AgriculturalProductsService} from "./agricultural-products.service";
 import {Note} from "../common/decorator/description.decorator";
 import {ApiFiles} from "../common/decorator/file.decorator";
@@ -22,6 +22,19 @@ export class AgriculturalProductsController {
         @UploadedFiles() images: Express.Multer.File[]
     ) {
         return await this.agriculturalProductsService.createAgriculturalProducts(dto, images);
+    }
+
+
+    @Patch(':id')
+    @Note('API cập nhật thông tin sản phẩm nông sản')
+    @ApiFiles('images', 10 ,FileTypes.IMAGE)
+    async updateAgriculturalProducts(
+        @UUIDParam('id') id: string,
+        @Body() dto: AgriculturalProductsCreateDto,
+        @UploadedFiles() images: Express.Multer.File[]
+    ) {
+        console.log(images)
+        return await this.agriculturalProductsService.updateAgriculturalProducts(id, dto, images);
     }
 
 

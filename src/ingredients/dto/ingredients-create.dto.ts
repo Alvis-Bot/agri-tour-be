@@ -1,6 +1,5 @@
 import {ApiProperty} from "@nestjs/swagger";
 import {IsEnum, IsNotEmpty} from "class-validator";
-import {SuppliesStatus} from "../../supplies/supplies";
 import {IngredientsStatus} from "../ingredients";
 
 
@@ -37,7 +36,6 @@ export class IngredientsCreateDto{
         enum : IngredientsStatus,
         default : IngredientsStatus.INVENTORY,
     })
-    // @IsEnum(SuppliesStatus)
     @IsNotEmpty()
     status: IngredientsStatus;
 
