@@ -74,7 +74,7 @@ export class MaterialService {
     const checkByName = await this.existsByName(updateMaterialDto.name);
 
     if (checkByName) throw new ApiException(ErrorMessages.MATERIAL_EXISTED);
-    var materialGroup = await this.categoryDetailsService.getDetailCategoryById(updateMaterialDto.materialGroupId);
+    const materialGroup = await this.categoryDetailsService.getDetailCategoryById(updateMaterialDto.materialGroupId);
 
     // else {
     //   if (!updateMaterialDto.materialGroupId) {

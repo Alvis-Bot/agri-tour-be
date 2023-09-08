@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Post, Query, UploadedFiles} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Patch, Post, Query, UploadedFiles} from '@nestjs/common';
 import {ApiTags} from "@nestjs/swagger";
 import {IngredientsService} from "./ingredients.service";
 import {ApiFiles} from "../common/decorator/file.decorator";
@@ -7,6 +7,7 @@ import {IngredientsCreateDto} from "./dto/ingredients-create.dto";
 import {Pagination} from "../common/pagination/pagination.dto";
 import {Note} from "../common/decorator/description.decorator";
 import {UUIDParam, UUIDQuery} from "../common/decorator/uuid.decorator";
+import {IngredientsUpdateDto} from "./dto/ingredients-update.dto";
 
 @Controller('ingredients')
 @ApiTags('APIs nguyên liệu')
@@ -40,6 +41,18 @@ export class IngredientsController {
         @UUIDParam('id') id: string
     ) {
         return await this.ingredientsService.getIngredientsById(id);
+    }
+
+
+    @Patch(':id')
+    @Note('API cập nhật thông tin nguyên liệu')
+    @ApiFiles('images', 10 ,FileTypes.IMAGE)
+    async updateIngredients(
+        @UUIDParam('id') id: string,
+        @Body() dto: IngredientsUpdateDto,
+        @UploadedFiles() images: Express.Multer.File[]
+    ) {
+        return await this.ingredientsService.updateIngredients(id, dto, images);
     }
 
     @Delete()

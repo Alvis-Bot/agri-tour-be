@@ -11,6 +11,7 @@ import {Meta} from "../common/pagination/meta.dto";
 import {PaginationModel} from "../common/pagination/pagination.model";
 import {ApiException} from "../exception/api.exception";
 import {ErrorMessages} from "../exception/error.code";
+import {AgriculturalProductsUpdateDto} from "./dto/agricultural-products-update.dto";
 
 @Injectable()
 export class AgriculturalProductsService {
@@ -26,7 +27,7 @@ export class AgriculturalProductsService {
 
     async createAgriculturalProducts(dto: AgriculturalProductsCreateDto, images: Express.Multer.File[]) {
         const farm = await this.farmService.getFarmById(dto.farm);
-        const imagesPath = await this.storageService.uploadMultiFiles(ImageType.CARD_AGRICULTURAL_PRODUCTS, images);
+        const imagesPath = images.length > 0 ? await this.storageService.uploadMultiFiles(ImageType.CARD_AGRICULTURAL_PRODUCTS, images) : [];
         const agriculturalProducts = this.agriculturalProductsRepository.create({
             ...dto,
             farm,
@@ -74,5 +75,23 @@ export class AgriculturalProductsService {
 
     async deleteAgriculturalProductsById(id: string) {
         return await this.agriculturalProductsRepository.delete(id);
+    }
+
+    async updateAgriculturalProducts(id: string, dto: AgriculturalProductsUpdateDto, images: Express.Multer.File[]) {
+        const agriculturalProducts = await this.getAgriculturalProductsById(id);
+
+        const farm = dto.farm ? await this.farmService.getFarmById(dto.farm) : agriculturalProducts.farm;
+
+        if (images.length > 0 && agriculturalProducts.images.length > 0)
+            await this.storageService.deleteMultiFiles(agriculturalProducts.images);
+        const imagesPath = images.length > 0 ? await this.storageService.uploadMultiFiles(ImageType.CARD_AGRICULTURAL_PRODUCTS, images) : agriculturalProducts.images;
+
+        const updateAgriculturalProducts = this.agriculturalProductsRepository.merge(agriculturalProducts, {
+            ...dto,
+            images: imagesPath,
+            farm
+        })
+
+        return await this.agriculturalProductsRepository.save(updateAgriculturalProducts);
     }
 }

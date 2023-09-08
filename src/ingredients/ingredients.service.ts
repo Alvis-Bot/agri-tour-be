@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {IngredientsCreateDto} from "./dto/ingredients-create.dto";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
@@ -59,5 +59,22 @@ export class IngredientsService {
 
     async deleteIngredients(id: string) {
         return await this.ingredientRepository.delete(id);
+    }
+
+    async updateIngredients(id: string, dto: IngredientsCreateDto, images: Express.Multer.File[]) {
+        const ingredient = await this.getIngredientsById(id);
+
+        if (images.length > 0 && ingredient.images.length > 0) {
+            await this.storageService.deleteMultiFiles(ingredient.images);
+        }
+
+        const imagesPath = images.length > 0 ? await this.storageService.uploadMultiFiles(ImageType.CARD_INGREDIENTS, images) : ingredient.images;
+
+        const updateIngredient = this.ingredientRepository.merge(ingredient, {
+            ...dto,
+            images: imagesPath
+        })
+
+        return await this.ingredientRepository.save(updateIngredient);
     }
 }

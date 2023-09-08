@@ -1,6 +1,6 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ClassSerializerInterceptor, Logger, ValidationPipe } from "@nestjs/common";
+import {BadRequestException, ClassSerializerInterceptor, Logger, ValidationPipe} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { CorsConfig } from "./common/config/cors.config";
 import { SwaggerConfig } from "./common/config/swagger.config";
@@ -26,6 +26,10 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+        //nếu field có giá trị '' thì sẽ bị bỏ qua
+      },
     }),
   );
 
