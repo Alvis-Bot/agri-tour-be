@@ -15,7 +15,7 @@ export class Visitor extends AuditEntity {
     quantity: number;
 
     @Column()
-    receptionDay: Date;
+    receptionDay: string;
 
     @Column()
     description: string;
