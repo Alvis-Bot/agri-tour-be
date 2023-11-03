@@ -1,10 +1,10 @@
-import {BeforeInsert, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm";
-import {AuditEntity} from "./audit.entity";
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { AuditEntity } from "./audit.entity";
 import * as bcrypt from 'bcrypt';
-import {Exclude} from "class-transformer";
-import {Farm} from "./farm.entity";
-import {FarmingCalender} from "./farming_calender.entity";
-import {Role} from "../enum";
+import { Exclude } from "class-transformer";
+import { Farm } from "./farm.entity";
+import { FarmingCalender } from "./farming_calender.entity";
+import { Role } from "../enum";
 
 
 
@@ -24,7 +24,7 @@ export class User extends AuditEntity {
   @Exclude()
   password: string;
 
-  @Column({nullable: false , default: Role.USER, enum: Role})
+  @Column({ nullable: false, default: Role.USER, enum: Role })
   role: Role;
 
   @Column({ default: false })
@@ -37,10 +37,13 @@ export class User extends AuditEntity {
   farmingCalenders: FarmingCalender[];
 
 
-
   @BeforeInsert()
+  @BeforeUpdate()
   async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
+    // Check if the password field has been modified before hashing
+    if (this.password) {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
   }
 
 }

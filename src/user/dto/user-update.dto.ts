@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Farm } from "../../common/entities/farm.entity";
-import { Group } from "../../common/entities/group.entity";
+
+import { Role } from "src/common/enum";
 
 export class UserUpdateDto {
 
@@ -8,14 +8,13 @@ export class UserUpdateDto {
     fullName: string;
 
     @ApiProperty()
-    username: string;
-
-    @ApiProperty()
     password: string;
 
-    @ApiProperty()
+    @ApiProperty({
+        default: false
+    })
     isLocked: boolean;
-   
-    @ApiProperty()
-    refreshToken:string
+
+    role?: Role;
+
 }
