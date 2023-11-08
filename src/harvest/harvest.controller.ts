@@ -6,6 +6,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { Harvest } from 'src/common/entities/harvest.entity';
 import { PaginationModel } from 'src/common/pagination/pagination.model';
 import { Pagination } from 'src/common/pagination/pagination.dto';
+import { Response } from 'express';
 
 @Controller('harvest')
 @ApiTags("API Tạo thu hoạch")
@@ -33,7 +34,7 @@ export class HarvestController {
   }
 
   @Delete('delete')
-  async remove(@Query('id') id: string): Promise<Harvest> {
+  async remove(@Query('id') id: string): Promise<Response> {
     return await this.harvestService.remove(id);
   }
 }

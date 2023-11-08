@@ -1,16 +1,19 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { Land } from "./land.entity";
 import { Crop } from "./crop.entity";
 import { CareSchedule } from "./care-schedule.entity";
 import { User } from "./user.entity";
+import { AuditEntity } from "./audit.entity";
 
 @Entity()
-export class Harvest {
+@Unique(['crop'])
+export class Harvest extends AuditEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @ManyToOne(() => Land, lands => lands.harvests, { nullable: false })
     land: Land;
+
 
     @ManyToOne(() => Crop, crops => crops.harvests, { nullable: false })
     crop: Crop;

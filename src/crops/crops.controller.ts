@@ -27,17 +27,17 @@ export class CropsController {
         return await this.cropsService.createCrop(dto, image);
     }
 
-    @Get('get-list-care-by-id')
+    @Get('get-list-care')
     @Note("Lấy dữ liệu lịch chăm sóc của cây trồng")
     async getlistcareById(@Query() { id }: QueryIdDto): Promise<Crop> {
         return await this.cropsService.getRelationByCropId(id, "careSchedules");
     }
-    @Get('get-list-work-by-id')
+    @Get('get-list-work')
     @Note("Lấy dữ liệu công việc hằng ngày của cây trồng")
     async getListWorkByCrop(@Query() { id }: QueryIdDto): Promise<Crop> {
         return await this.cropsService.getRelationByCropId(id, "workOfDays");
     }
-    @Get('get-list-work-by-id')
+    @Get('get-list-harvest')
     @Note("Lấy dữ liệu thu hoạch của cây trồng")
     async get(@Query() { id }: QueryIdDto): Promise<Crop> {
         return await this.cropsService.getRelationByCropId(id, "harvests");
