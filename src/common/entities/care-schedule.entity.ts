@@ -12,7 +12,7 @@ export class CareSchedule {
     land: Land;
     @ManyToOne(() => Crop, crops => crops.careSchedules, { nullable: false })
     crop: Crop;
-
+    
     @Column({
         type: 'jsonb',
         nullable: false

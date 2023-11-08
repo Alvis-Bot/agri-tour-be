@@ -6,6 +6,7 @@ import { AuditEntity } from "./audit.entity";
 import { CategoryDetails } from "src/common/entities/category-detail.entity";
 import { WorkOfDay } from "./work-of-day.entity";
 import { CareSchedule } from "./care-schedule.entity";
+import { Harvest } from "./harvest.entity";
 //vùng canh tác
 @Entity('lands')
 export class Land extends AuditEntity {
@@ -47,4 +48,7 @@ export class Land extends AuditEntity {
   //lịch chăm sóc
   @OneToMany(() => CareSchedule, careSchedule => careSchedule.land, { nullable: true })
   careSchedules: CareSchedule[];
+
+  @OneToMany(() => Harvest, harvest => harvest.land, { nullable: true })
+  harvests: Harvest[];
 }

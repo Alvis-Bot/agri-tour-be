@@ -3,6 +3,7 @@ import { AuditEntity } from "./audit.entity";
 import { CategoryDetails } from "./category-detail.entity";
 import { WorkOfDay } from "./work-of-day.entity";
 import { CareSchedule } from "./care-schedule.entity";
+import { Harvest } from "./harvest.entity";
 
 
 @Entity('crops')
@@ -44,10 +45,12 @@ export class Crop extends AuditEntity {
     @Column({ nullable: true, array: true, type: 'text' })
     images: string[];
 
-    @OneToMany(() => WorkOfDay, workOfDay => workOfDay.crop)
+    @OneToMany(() => WorkOfDay, workOfDay => workOfDay.crop,{nullable:true})
     workOfDays: WorkOfDay[];
 
     @OneToMany(() => CareSchedule, careSchedule => careSchedule.crop, { nullable: true })
     careSchedules: CareSchedule[]
-
+    
+    @OneToMany(() => Harvest, harvest => harvest.crop, { nullable: true })
+    harvests: Harvest[]
 }

@@ -5,6 +5,7 @@ import { Exclude } from "class-transformer";
 import { Farm } from "./farm.entity";
 import { FarmingCalender } from "./farming_calender.entity";
 import { Role } from "../enum";
+import { Harvest } from "./harvest.entity";
 
 
 
@@ -32,6 +33,9 @@ export class User extends AuditEntity {
 
   @OneToMany(() => Farm, farm => farm.user)
   farms: Farm[];
+
+  @OneToMany(() => Harvest, harvests => harvests.user)
+  harvests: Harvest[];
 
   @ManyToMany(() => FarmingCalender, farmingCalender => farmingCalender.users)
   farmingCalenders: FarmingCalender[];

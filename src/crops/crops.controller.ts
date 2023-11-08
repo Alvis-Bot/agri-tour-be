@@ -6,7 +6,9 @@ import { CropCreateDto } from "./dto/crop-create.dto";
 import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
 import { ApiTags } from "@nestjs/swagger";
 import { Pagination } from "../common/pagination/pagination.dto";
-
+import { QueryIdDto } from 'src/common/dto/query-id.dto';
+import { Crop } from 'src/common/entities/crop.entity';
+import { Note } from 'src/common/decorator/description.decorator';
 @Controller('crops')
 @UseGuards(JwtAuthGuard)
 @ApiTags('Thêm cây trồng')
@@ -25,7 +27,21 @@ export class CropsController {
         return await this.cropsService.createCrop(dto, image);
     }
 
-
+    @Get('get-list-care-by-id')
+    @Note("Lấy dữ liệu lịch chăm sóc của cây trồng")
+    async getlistcareById(@Query() { id }: QueryIdDto): Promise<Crop> {
+        return await this.cropsService.getRelationByCropId(id, "careSchedules");
+    }
+    @Get('get-list-work-by-id')
+    @Note("Lấy dữ liệu công việc hằng ngày của cây trồng")
+    async getListWorkByCrop(@Query() { id }: QueryIdDto): Promise<Crop> {
+        return await this.cropsService.getRelationByCropId(id, "workOfDays");
+    }
+    @Get('get-list-work-by-id')
+    @Note("Lấy dữ liệu thu hoạch của cây trồng")
+    async get(@Query() { id }: QueryIdDto): Promise<Crop> {
+        return await this.cropsService.getRelationByCropId(id, "harvests");
+    }
     @Get('')
     async getCropsPagination(
         @Query() pagination: Pagination

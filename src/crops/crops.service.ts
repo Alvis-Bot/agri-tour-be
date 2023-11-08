@@ -12,6 +12,8 @@ import { CategoryDetailsService } from "../category-details/category-details.ser
 import { Meta } from "../common/pagination/meta.dto";
 import { PaginationModel } from "../common/pagination/pagination.model";
 import { Pagination } from "../common/pagination/pagination.dto";
+import { ApiNotFoundResponse } from '@nestjs/swagger';
+type Relations = "workOfDays" | "careSchedules" | "harvests"
 
 @Injectable()
 export class CropsService {
@@ -40,7 +42,14 @@ export class CropsService {
         });
         return await this.cropRepository.save(crop);
     }
-
+    async getRelationByCropId(cropId: string, relations: Relations): Promise<Crop> {
+        const data = await this.cropRepository.findOne({
+            where: { id: cropId },
+            relations: [relations]
+        })
+        if (!data) throw new ApiException(ErrorMessages.CROP_NOT_FOUND);
+        return data
+    }
     async existsByName(name: string): Promise<void> {
         const existingCrop = await this.cropRepository.exist({ where: { name } });
         if (existingCrop) throw new ApiException(ErrorMessages.CROP_EXISTED)

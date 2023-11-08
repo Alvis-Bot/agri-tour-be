@@ -23,24 +23,29 @@ export class CareScheduleService {
   }
   async create(dto: CreateCareScheduleDto): Promise<CareSchedule | any> {
     try {
-      return dto
-      // const land = await this.landService.getLandById(dto.landId);
-      // const crop = await this.cropService.getCropById(dto.cropId);
-      // const careSchedule = this.careScheduleRepository.create({
-      //   ...dto,
-      //   land,
-      //   crop
-      // });
-      // if ((await this.existsByName(dto.detect.name))) {
-      //   throw new ConflictException({
-      //     message: 'Bệnh này đã có trong lịch chăm sóc'
-      //   })
-      // }
-      // return await this.careScheduleRepository.save(careSchedule);
+    
+      const land = await this.landService.getLandById(dto.landId);
+      const crop = await this.cropService.getCropById(dto.cropId);
+      const careSchedule = this.careScheduleRepository.create({
+        ...dto,
+        land,
+        crop
+      });
+      if ((await this.existsByName(dto.detect.name))) {
+        throw new ConflictException({
+          message: 'Bệnh này đã có trong lịch chăm sóc'
+        })
+      }
+      return await this.careScheduleRepository.save(careSchedule);
     } catch (error) {
       throw new BadRequestException(error)
     }
   }
+
+  // async getListScheduleByCropId(cropId: string): Promise<CareSchedule[]>
+  // {
+  //   const crop=await this.
+  // }
 
   async findAll(pagination: Pagination): Promise<PaginationModel<CareSchedule>> {
     try {
