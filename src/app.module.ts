@@ -23,6 +23,7 @@ import { BillRequestModule } from './bill-request/bill-request.module';
 import { VisitorModule } from './visitor/visitor.module';
 import { IngredientsModule } from './ingredients/ingredients.module';
 import { AgriculturalProductsModule } from './agricultural-products/agricultural-products.module';
+import { CareScheduleModule } from './care-schedule/care-schedule.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { AgriculturalProductsModule } from './agricultural-products/agricultural
     VisitorModule,
     IngredientsModule,
     AgriculturalProductsModule,
+    CareScheduleModule,
   ],
   controllers:[AppController]
 })

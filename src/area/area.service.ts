@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import { ConflictException, Injectable ,Global} from "@nestjs/common";
 import { AreaCreateDto } from "../common/dto/area-create.dto";
 import { Area } from "../common/entities/area.entity";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -6,6 +6,7 @@ import { Repository } from "typeorm";
 import { ApiException } from "../exception/api.exception";
 import {ErrorMessages} from "../exception/error.code";
 import {FarmService} from "../farm/farm.service";
+@Global()
 @Injectable()
 export class AreaService  {
 

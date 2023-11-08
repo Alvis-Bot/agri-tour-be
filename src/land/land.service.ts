@@ -1,4 +1,4 @@
-import {Injectable} from "@nestjs/common";
+import {Injectable,Global} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {Land} from "../common/entities/land.entity";
@@ -11,7 +11,6 @@ import {ImageType} from "../common/enum";
 import {Transactional} from "typeorm-transactional";
 import {CategoryName} from "../common/enum/category";
 import {AreaService} from "../area/area.service";
-
 @Injectable()
 export class LandService {
   constructor(

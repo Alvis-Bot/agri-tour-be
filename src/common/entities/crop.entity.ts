@@ -2,6 +2,7 @@ import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "ty
 import { AuditEntity } from "./audit.entity";
 import { CategoryDetails } from "./category-detail.entity";
 import { WorkOfDay } from "./work-of-day.entity";
+import { CareSchedule } from "./care-schedule.entity";
 
 
 @Entity('crops')
@@ -46,5 +47,7 @@ export class Crop extends AuditEntity {
     @OneToMany(() => WorkOfDay, workOfDay => workOfDay.crop)
     workOfDays: WorkOfDay[];
 
+    @OneToMany(() => CareSchedule, careSchedule => careSchedule.crop, { nullable: true })
+    careSchedules: CareSchedule[]
 
 }
