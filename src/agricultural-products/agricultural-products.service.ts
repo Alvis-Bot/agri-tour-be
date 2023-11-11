@@ -4,7 +4,7 @@ import {StorageService} from "../storage/storage.service";
 import {AgriculturalProducts} from "../common/entities/agricultural-products.entity";
 import {Repository} from "typeorm";
 import {InjectRepository} from "@nestjs/typeorm";
-import {ImageType} from "../common/enum";
+import {ImagePath} from "../common/enum";
 import {FarmService} from "../farm/farm.service";
 import {Pagination} from "../common/pagination/pagination.dto";
 import {Meta} from "../common/pagination/meta.dto";
@@ -27,7 +27,7 @@ export class AgriculturalProductsService {
 
     async createAgriculturalProducts(dto: AgriculturalProductsCreateDto, images: Express.Multer.File[]) {
         const farm = await this.farmService.getFarmById(dto.farm);
-        const imagesPath = images.length > 0 ? await this.storageService.uploadMultiFiles(ImageType.CARD_AGRICULTURAL_PRODUCTS, images) : [];
+        const imagesPath = images.length > 0 ? await this.storageService.uploadMultiFiles(ImagePath.CARD_AGRICULTURAL_PRODUCTS, images) : [];
         const agriculturalProducts = this.agriculturalProductsRepository.create({
             ...dto,
             farm,
@@ -84,7 +84,7 @@ export class AgriculturalProductsService {
 
         if (images.length > 0 && agriculturalProducts.images.length > 0)
             await this.storageService.deleteMultiFiles(agriculturalProducts.images);
-        const imagesPath = images.length > 0 ? await this.storageService.uploadMultiFiles(ImageType.CARD_AGRICULTURAL_PRODUCTS, images) : agriculturalProducts.images;
+        const imagesPath = images.length > 0 ? await this.storageService.uploadMultiFiles(ImagePath.CARD_AGRICULTURAL_PRODUCTS, images) : agriculturalProducts.images;
 
         const updateAgriculturalProducts = this.agriculturalProductsRepository.merge(agriculturalProducts, {
             ...dto,

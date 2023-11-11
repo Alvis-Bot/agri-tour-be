@@ -85,4 +85,8 @@ export class AreaService  {
       .getMany()
   }
 
+  async getTotalArea() : Promise<number> {
+    return this.areaRepository.count();
+  }
+
 }

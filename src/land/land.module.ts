@@ -8,7 +8,8 @@ import { CategoryDetails } from "../common/entities/category-detail.entity";
 
 @Module({
   imports: [
-    AreaModule, TypeOrmModule.forFeature([Land, CategoryDetails])],
+    AreaModule,
+    TypeOrmModule.forFeature([Land, CategoryDetails])],
   providers: [LandService],
   controllers: [LandController],
   exports: [LandService]

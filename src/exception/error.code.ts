@@ -42,6 +42,7 @@ export const ErrorMessages = {
   AGRICULTURAL_PRODUCTS_NOT_FOUND: errorFactory(HttpStatus.NOT_FOUND, "Agricultural products not found"),
   INGREDIENT_NOT_FOUND: errorFactory(HttpStatus.NOT_FOUND, "Ingredient not found"),
   SUPPLIES_NOT_FOUND: errorFactory(HttpStatus.NOT_FOUND, "Supplies not found"),
+  IMAGE_NOT_FOUND: errorFactory(HttpStatus.NOT_FOUND, "Image not found"),
 
 
 };

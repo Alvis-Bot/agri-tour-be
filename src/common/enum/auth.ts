@@ -1,6 +1,6 @@
 export enum Role {
-  ADMIN = 'ADMIN',
-  USER = 'USER',
-  FARMER = 'FARMER',
-  ASSOCIATIONS='ASSOCIATIONS',
+  ADMIN = 'ADMIN', // quản trị viên
+  USER = 'USER', // người dùng
+  FARMER = 'FARMER', // nông dân
+  ASSOCIATIONS='ASSOCIATIONS', // hợp tác xã
 }

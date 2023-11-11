@@ -25,6 +25,7 @@ import { IngredientsModule } from './ingredients/ingredients.module';
 import { AgriculturalProductsModule } from './agricultural-products/agricultural-products.module';
 import { CareScheduleModule } from './care-schedule/care-schedule.module';
 import { HarvestModule } from './harvest/harvest.module';
+import { StatisticsModule } from './statistics/statistics.module';
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { HarvestModule } from './harvest/harvest.module';
     AgriculturalProductsModule,
     CareScheduleModule,
     HarvestModule,
+    StatisticsModule,
   ],
   controllers:[AppController]
 })

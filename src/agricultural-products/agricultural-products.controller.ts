@@ -1,7 +1,7 @@
 import {Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFiles} from '@nestjs/common';
 import {AgriculturalProductsService} from "./agricultural-products.service";
 import {Note} from "../common/decorator/description.decorator";
-import {ApiFiles} from "../common/decorator/file.decorator";
+import {ApiMemoryFiles} from "../common/decorator/file.decorator";
 import {FileTypes} from "../common/enum";
 import {AgriculturalProductsCreateDto} from "./dto/agricultural-products-create.dto";
 import {Pagination} from "../common/pagination/pagination.dto";
@@ -19,7 +19,7 @@ export class AgriculturalProductsController {
 
     @Post()
     @Note('API thêm sản phẩm nông sản')
-    @ApiFiles('images', 10 ,FileTypes.IMAGE)
+    @ApiMemoryFiles('images', 10 ,FileTypes.IMAGE)
     async createAgriculturalProducts(
         @Body() dto: AgriculturalProductsCreateDto,
         @UploadedFiles() images: Express.Multer.File[]
@@ -30,7 +30,7 @@ export class AgriculturalProductsController {
 
     @Patch(':id')
     @Note('API cập nhật thông tin sản phẩm nông sản')
-    @ApiFiles('images', 10 ,FileTypes.IMAGE)
+    @ApiMemoryFiles('images', 10 ,FileTypes.IMAGE)
     async updateAgriculturalProducts(
         @UUIDParam('id') id: string,
         @Body() dto: AgriculturalProductsUpdateDto,

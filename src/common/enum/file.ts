@@ -7,7 +7,7 @@ export enum FileTypes {
 }
 
 
-export enum ImageType {
+export enum ImagePath {
   CARD_FARM = 'farms',
   CARD_LAND = 'lands',
   CARD_CROP = 'crops',

@@ -1,7 +1,7 @@
 import {Body, Controller, Delete, Get, Patch, Post, Query, UploadedFiles} from '@nestjs/common';
 import {ApiTags} from "@nestjs/swagger";
 import {IngredientsService} from "./ingredients.service";
-import {ApiFiles} from "../common/decorator/file.decorator";
+import {ApiMemoryFiles} from "../common/decorator/file.decorator";
 import {FileTypes} from "../common/enum";
 import {IngredientsCreateDto} from "./dto/ingredients-create.dto";
 import {Pagination} from "../common/pagination/pagination.dto";
@@ -19,7 +19,7 @@ export class IngredientsController {
 
     @Post()
     @Note('API thêm nguyên liệu')
-    @ApiFiles('images', 10 ,FileTypes.IMAGE)
+    @ApiMemoryFiles('images', 10 ,FileTypes.IMAGE)
     async createIngredient(
         @Body() dto: IngredientsCreateDto,
         @UploadedFiles() images: Express.Multer.File[]
@@ -46,7 +46,7 @@ export class IngredientsController {
 
     @Patch(':id')
     @Note('API cập nhật thông tin nguyên liệu')
-    @ApiFiles('images', 10 ,FileTypes.IMAGE)
+    @ApiMemoryFiles('images', 10 ,FileTypes.IMAGE)
     async updateIngredients(
         @UUIDParam('id') id: string,
         @Body() dto: IngredientsUpdateDto,
