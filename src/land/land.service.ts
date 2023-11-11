@@ -128,6 +128,17 @@ export class LandService {
         return this.landRepository.count();
     }
 
+
+    /**
+     * Upload ảnh lên server
+     *
+     * @static
+     * @param {string} landId // // 👈 Id của land
+     * @param {UploadLandDto} dto // 👈 là mảng tên ảnh cũ
+     * @param {Express.Multer.File[]} images // 👈 là mảng ảnh mới
+     * @return {Promise<Land>} // 👈 trả về land đã được lưu
+     * @memberof LandService
+     */
     async uploadImage(landId: string, dto: UploadLandDto, images: Express.Multer.File[]): Promise<Land> {
         const land = await this.getLandById(landId);
         // kiểm tra tên anh có trùng không
