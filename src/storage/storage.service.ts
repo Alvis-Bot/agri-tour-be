@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as fs from "fs";
-import { ImageType } from "../common/enum";
+import { ImagePath } from "../common/enum";
 import { StringUtil } from "../common/utils/string.util";
 import * as sharp from "sharp";
 import { join } from "path";
@@ -22,7 +22,7 @@ export class StorageService implements OnModuleInit {
   }
 
 
-  private async uploadStorage(type: ImageType, file: Express.Multer.File): Promise<string> {
+  private async uploadStorage(type: ImagePath, file: Express.Multer.File): Promise<string> {
     const patch = this.configService.get<string>("FOLDER_UPLOAD");
     switch (file.mimetype) {
       case 'image/jpeg':
@@ -45,11 +45,11 @@ export class StorageService implements OnModuleInit {
 
   }
 
-  async uploadFile(type: ImageType, file: Express.Multer.File): Promise<string> {
+  async uploadFile(type: ImagePath, file: Express.Multer.File): Promise<string> {
     return this.uploadStorage(type, file);
   }
 
-  async uploadMultiFiles(type: ImageType, files: Express.Multer.File[]): Promise<string[]> {
+  async uploadMultiFiles(type: ImagePath, files: Express.Multer.File[]): Promise<string[]> {
     return Promise.all(files.map((file) => this.uploadStorage(type, file)));
   }
 
@@ -61,17 +61,17 @@ export class StorageService implements OnModuleInit {
   }
 
 
-  private async buildImageFileName(type: ImageType, file: Express.Multer.File): Promise<string> {
+  private async buildImageFileName(type: ImagePath, file: Express.Multer.File): Promise<string> {
     const extension = file.originalname.split('.').pop(); // Extract extension
     return `${type}.${StringUtil.generateRandomString(12)}.${Date.now()}.${extension}`;
   }
 
-  private async buildOtherFileName(type: ImageType, fileName: string) {
+  private async buildOtherFileName(type: ImagePath, fileName: string) {
     const extension = fileName.split('.').pop();
     return `${type}.${StringUtil.generateRandomString(12)}.${Date.now()}.${extension}`;
 
   }
-  private async buildImageFilePath(type: ImageType, fileName: string): Promise<string> {
+  private async buildImageFilePath(type: ImagePath, fileName: string): Promise<string> {
     const patch = this.configService.get<string>("FOLDER_UPLOAD");
     const path = join('.', patch, type);
     if (!fs.existsSync(path)) {

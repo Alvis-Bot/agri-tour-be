@@ -4,7 +4,7 @@ import { CreateMaterialDto } from './dto/create-material.dto';
 import { UpdateMaterialDto } from './dto/update-material.dto';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Material } from 'src/common/entities/material.entity';
-import { ApiFiles } from 'src/common/decorator/file.decorator';
+import { ApiMemoryFiles } from 'src/common/decorator/file.decorator';
 import { FileTypes } from 'src/common/enum';
 import { PaginationModel } from 'src/common/pagination/pagination.model';
 import { Pagination } from 'src/common/pagination/pagination.dto';
@@ -16,7 +16,7 @@ export class MaterialController {
 
   @Post()
   @ApiConsumes('multipart/form-data')
-  @ApiFiles('images', 10, FileTypes.IMAGE)
+  @ApiMemoryFiles('images', 10, FileTypes.IMAGE)
   async create(@Body() createMaterialDto: CreateMaterialDto, @UploadedFiles() images: Express.Multer.File[]): Promise<Material> {
     return await this.materialService.create(createMaterialDto, images);
   }
@@ -33,7 +33,7 @@ export class MaterialController {
 
   @Patch('update')
   @ApiConsumes('multipart/form-data')
-  @ApiFiles('images', 10, FileTypes.IMAGE)
+  @ApiMemoryFiles('images', 10, FileTypes.IMAGE)
   async update(@Query() { id }: QueryIdDto, @Body() updateMaterialDto: UpdateMaterialDto, @UploadedFiles() images: Express.Multer.File[]): Promise<Material> {
 
     return await this.materialService.update(id, {

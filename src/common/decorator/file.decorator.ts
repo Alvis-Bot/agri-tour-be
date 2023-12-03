@@ -1,7 +1,7 @@
 import { applyDecorators, UnsupportedMediaTypeException, UseInterceptors } from "@nestjs/common";
 import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { ApiConsumes } from "@nestjs/swagger";
-import { MulterField } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
+import {MulterField, MulterOptions} from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 import { Request } from "express";
 import { memoryStorage } from "multer";
 import { FileTypes } from "../enum";
@@ -25,21 +25,27 @@ export const ApiFile = (
   );
 };
 
-export const ApiFiles = (
+export const ApiMemoryFiles = (
   fieldName: string = "files",
   maxCount: number = 10,
   minType: FileTypes = FileTypes.IMAGE
 ) => {
   return applyDecorators(
     UseInterceptors(FilesInterceptor(fieldName, maxCount, {
-        fileFilter: fileMimetypeFilter(CodeUtil.getMineType(minType)),
-        storage: memoryStorage(),
-         preservePath: true
-      }
-    )),
+      fileFilter: fileMimetypeFilter(CodeUtil.getMineType(minType)),
+      storage: memoryStorage(),
+      preservePath: true
+    })),
     ApiConsumes("multipart/form-data")
   );
 };
+
+export const ApiFiles = (fieldName : string , maxCount : number  , localOptions : MulterOptions = {} ) => {
+    return applyDecorators(UseInterceptors(FilesInterceptor(fieldName, maxCount, localOptions)), ApiConsumes("multipart/form-data"));
+}
+
+
+
 
 
 export const ApiFileFields = (

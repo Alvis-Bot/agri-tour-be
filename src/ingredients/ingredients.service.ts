@@ -4,7 +4,7 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {Ingredient} from "../common/entities/ingredient.entity";
 import {StorageService} from "../storage/storage.service";
-import {ImageType} from "../common/enum";
+import {ImagePath} from "../common/enum";
 import {Transactional} from "typeorm-transactional";
 import {Pagination} from "../common/pagination/pagination.dto";
 import {Meta} from "../common/pagination/meta.dto";
@@ -24,7 +24,7 @@ export class IngredientsService {
 
     @Transactional()
     async createIngredient(dto: IngredientsCreateDto, images: Express.Multer.File[]) {
-        const imagesPath = await this.storageService.uploadMultiFiles(ImageType.CARD_INGREDIENTS,  images);
+        const imagesPath = await this.storageService.uploadMultiFiles(ImagePath.CARD_INGREDIENTS,  images);
         const ingredient = this.ingredientRepository.create({
             ...dto,
             images: imagesPath
@@ -68,7 +68,7 @@ export class IngredientsService {
             await this.storageService.deleteMultiFiles(ingredient.images);
         }
 
-        const imagesPath = images.length > 0 ? await this.storageService.uploadMultiFiles(ImageType.CARD_INGREDIENTS, images) : ingredient.images;
+        const imagesPath = images.length > 0 ? await this.storageService.uploadMultiFiles(ImagePath.CARD_INGREDIENTS, images) : ingredient.images;
 
         const updateIngredient = this.ingredientRepository.merge(ingredient, {
             ...dto,

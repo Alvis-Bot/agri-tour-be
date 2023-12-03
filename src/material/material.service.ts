@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CategoryDetailsService } from 'src/category-details/category-details.service';
 import { StorageService } from 'src/storage/storage.service';
-import { ImageType } from 'src/common/enum';
+import { ImagePath } from 'src/common/enum';
 import { ApiTags } from '@nestjs/swagger';
 import { PaginationModel } from 'src/common/pagination/pagination.model';
 import { Pagination } from 'src/common/pagination/pagination.dto';
@@ -29,7 +29,7 @@ export class MaterialService {
     const materialGroup = await this.categoryDetailsService.getDetailCategoryById(dto.materialGroupId)
 
     // upload ảnh
-    const imageCrop = await this.storageService.uploadMultiFiles(ImageType.CARD_MATERIAL, images)
+    const imageCrop = await this.storageService.uploadMultiFiles(ImagePath.CARD_MATERIAL, images)
 
     const crop = this.materialRepository.create({
       ...dto,
@@ -85,7 +85,7 @@ export class MaterialService {
     //   }
     // }
     // upload ảnh
-    const images = await this.storageService.uploadMultiFiles(ImageType.CARD_MATERIAL, updateMaterialDto.images)
+    const images = await this.storageService.uploadMultiFiles(ImagePath.CARD_MATERIAL, updateMaterialDto.images)
     const merged = this.materialRepository.merge(material, {
       ...updateMaterialDto,
       materialGroup,

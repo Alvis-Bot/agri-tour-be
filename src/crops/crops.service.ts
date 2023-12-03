@@ -6,7 +6,7 @@ import { CropCreateDto } from "./dto/crop-create.dto";
 import { ApiException } from "../exception/api.exception";
 import { ErrorMessages } from "../exception/error.code";
 import { StorageService } from "../storage/storage.service";
-import { ImageType } from "../common/enum";
+import { ImagePath } from "../common/enum";
 import { CategoryDetails } from "../common/entities/category-detail.entity";
 import { CategoryDetailsService } from "../category-details/category-details.service";
 import { Meta } from "../common/pagination/meta.dto";
@@ -33,7 +33,7 @@ export class CropsService {
 
 
         // upload ảnh
-        const imageCrop = await this.storageService.uploadMultiFiles(ImageType.CARD_CROP, images)
+        const imageCrop = await this.storageService.uploadMultiFiles(ImagePath.CARD_CROP, images)
 
         const crop = this.cropRepository.create({
             ...dto,

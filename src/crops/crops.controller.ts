@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query, UploadedFile, UploadedFiles, UseGuards } from '@nestjs/common';
 import { CropsService } from "./crops.service";
-import { ApiFiles } from "../common/decorator/file.decorator";
+import { ApiMemoryFiles } from "../common/decorator/file.decorator";
 import { FileTypes } from "../common/enum";
 import { CropCreateDto } from "./dto/crop-create.dto";
 import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
@@ -19,7 +19,7 @@ export class CropsController {
     ) { }
 
     @Post()
-    @ApiFiles('images', 10, FileTypes.IMAGE)
+    @ApiMemoryFiles('images', 10, FileTypes.IMAGE)
     async createCrop(
         @Body() dto: CropCreateDto,
         @UploadedFiles() image: Express.Multer.File[]
