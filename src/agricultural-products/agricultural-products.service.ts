@@ -80,7 +80,7 @@ export class AgriculturalProductsService {
     async updateAgriculturalProducts(id: string, dto: AgriculturalProductsUpdateDto, images: Express.Multer.File[]) {
         const agriculturalProducts = await this.getAgriculturalProductsById(id);
 
-        const farm = dto.farm ? await this.farmService.getFarmById(dto.farm) : agriculturalProducts.farm;
+        const farm = dto.farmId ? await this.farmService.getFarmById(dto.farmId) : agriculturalProducts.farm;
 
         if (images.length > 0 && agriculturalProducts.images.length > 0)
             await this.storageService.deleteMultiFiles(agriculturalProducts.images);

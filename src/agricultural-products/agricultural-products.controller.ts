@@ -1,25 +1,25 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFiles} from '@nestjs/common';
-import {AgriculturalProductsService} from "./agricultural-products.service";
-import {Note} from "../common/decorator/description.decorator";
-import {ApiMemoryFiles} from "../common/decorator/file.decorator";
-import {FileTypes} from "../common/enum";
-import {AgriculturalProductsCreateDto} from "./dto/agricultural-products-create.dto";
-import {Pagination} from "../common/pagination/pagination.dto";
-import {UUIDParam, UUIDQuery} from "../common/decorator/uuid.decorator";
-import {ApiTags} from "@nestjs/swagger";
-import {AgriculturalProductsUpdateDto} from "./dto/agricultural-products-update.dto";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFiles } from '@nestjs/common';
+import { AgriculturalProductsService } from "./agricultural-products.service";
+import { Note } from "../common/decorator/description.decorator";
+import { ApiMemoryFiles } from "../common/decorator/file.decorator";
+import { FileTypes } from "../common/enum";
+import { AgriculturalProductsCreateDto } from "./dto/agricultural-products-create.dto";
+import { Pagination } from "../common/pagination/pagination.dto";
+import { UUIDParam, UUIDQuery } from "../common/decorator/uuid.decorator";
+import { ApiTags } from "@nestjs/swagger";
+import { AgriculturalProductsUpdateDto } from "./dto/agricultural-products-update.dto";
 
 @Controller('agricultural-products')
 @ApiTags('APIs sản phẩm nông sản')
 export class AgriculturalProductsController {
     constructor(
         private readonly agriculturalProductsService: AgriculturalProductsService
-    ) {}
+    ) { }
 
 
-    @Post()
+    @Post('create')
     @Note('API thêm sản phẩm nông sản')
-    @ApiMemoryFiles('images', 10 ,FileTypes.IMAGE)
+    @ApiMemoryFiles('images', 10, FileTypes.IMAGE)
     async createAgriculturalProducts(
         @Body() dto: AgriculturalProductsCreateDto,
         @UploadedFiles() images: Express.Multer.File[]
@@ -28,9 +28,9 @@ export class AgriculturalProductsController {
     }
 
 
-    @Patch(':id')
+    @Patch('update/:id')
     @Note('API cập nhật thông tin sản phẩm nông sản')
-    @ApiMemoryFiles('images', 10 ,FileTypes.IMAGE)
+    @ApiMemoryFiles('images', 10, FileTypes.IMAGE)
     async updateAgriculturalProducts(
         @UUIDParam('id') id: string,
         @Body() dto: AgriculturalProductsUpdateDto,
@@ -57,7 +57,7 @@ export class AgriculturalProductsController {
         return await this.agriculturalProductsService.getAgriculturalProductsById(id);
     }
 
-    @Delete(':id')
+    @Delete('delete/:id')
     @Note('API xóa sản phẩm nông sản')
     async deleteAgriculturalProductsById(
         @UUIDParam('id') id: string

@@ -26,7 +26,7 @@ export class AgriculturalProductsUpdateDto {
 
     @ApiPropertyOptional({ description: 'Farm ID' })
     @IsOptional()
-    farm?: string;
+    farmId?: string;
 
     @ApiPropertyOptional()
     @IsOptional()
