@@ -8,35 +8,70 @@ import { Pagination } from "../common/pagination/pagination.dto";
 import { PaginationModel } from "../common/pagination/pagination.model";
 import { Meta } from "../common/pagination/meta.dto";
 import { ErrorMessages } from "../exception/error.code";
-import { Role } from "src/common/enum";
+import { ImageType, Role } from "src/common/enum";
 import { UserUpdateDto } from "./dto/user-update.dto";
-
+import { CreateUserDTO } from "./dto/create-profile-user.dto";
+import { StorageService } from "src/storage/storage.service";
+import { UpdateUserDTO } from "./dto/update-profile-user.dto";
+import * as bcrypt from 'bcrypt'
 @Injectable()
 export class UserService {
 
-  constructor(@InjectRepository(User) private usersRepository: Repository<User>) { }
+  constructor(@InjectRepository(User) private usersRepository: Repository<User>, private storageService: StorageService) { }
 
   async createUser(dto: UserCreateDto): Promise<User> {
     if (await this.existsUsername(dto.username)) {
       throw new ApiException(ErrorMessages.USER_ALREADY_EXIST);
     }
-    const userCreated = this.usersRepository.create({
-      ...dto,
-    });
-    return this.usersRepository.save(userCreated);
+    const userCreated = this.usersRepository.create(dto);
+    return await this.usersRepository.save(userCreated);
   }
-  async updateUser(id: string, dto: UserUpdateDto): Promise<User | any> {
+  async createProfileUser(dto: CreateUserDTO): Promise<User> {
+    let avatar: string;
+    if (await this.existsUsername(dto.username)) {
+      throw new ApiException(ErrorMessages.USER_ALREADY_EXIST);
+    }
+    if (dto.avatar) {
+      avatar = await this.storageService.uploadFile(ImageType.CARD_USER, dto.avatar);
+    }
+    const creating = this.usersRepository.create({
+      ...dto,
+      avatar: avatar ?? null
+    })
+    return this.usersRepository.save(creating);
+  }
+  async updateUser(user: User, dto: UpdateUserDTO): Promise<User | any> {
+    let avatar: string;
     try {
 
-      const user = await this.getUserById(id);
+      if (dto.avatar && user.avatar !== null) {
+        await this.storageService.deleteFile(user.avatar);
+        avatar = await this.storageService.uploadFile(ImageType.CARD_USER, dto.avatar);
+        user.avatar = avatar;
+      }
       const merged = this.usersRepository.merge(user, {
-        ...dto
+        ...dto,
+        avatar: avatar ?? user.avatar
       })
-      await this.usersRepository.update(id, merged);
-      return await this.getUserById(id)
+      const saved = await this.usersRepository.save(merged);
+      return saved
     } catch (error) {
+      await this.storageService.deleteFile(avatar);
+
       throw new ApiException(ErrorMessages.BAD_REQUEST, `Update User failed with error: ${error}`);
     }
+  }
+  async updateByAdmin(id: string, dto: UserUpdateDto): Promise<User> {
+    const user = await this.getUserById(id);
+    if (dto.password) {
+      dto.password = await bcrypt.hash(dto.password, 10)
+    }
+    const merged = this.usersRepository.merge(user, {
+      ...dto,
+      password: dto.password
+    })
+    await this.usersRepository.update(id, merged);
+    return await this.getUserById(user.id);
   }
   async grantAccessAdmin(id: string): Promise<User> {
     try {

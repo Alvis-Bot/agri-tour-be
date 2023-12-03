@@ -15,9 +15,16 @@ export class User extends AuditEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ nullable: true })
   fullName: string;
 
+  @Column({ nullable: true })
+  jobTitle: string;
+
+  @Column({ nullable: true })
+  description: string;
+  @Column({ nullable: true })
+  avatar: string;
   @Column({ unique: true })
   username: string;
 
@@ -42,7 +49,7 @@ export class User extends AuditEntity {
 
 
   @BeforeInsert()
-  @BeforeUpdate()
+  // @BeforeUpdate()
   async hashPassword() {
     // Check if the password field has been modified before hashing
     if (this.password) {
@@ -50,4 +57,5 @@ export class User extends AuditEntity {
     }
   }
 
+  
 }

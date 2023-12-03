@@ -1,15 +1,20 @@
-import { Body, Controller, Get , Post, Put, Query, UseGuards } from "@nestjs/common";
-import { Role, Router } from "../common/enum";
+import { Body, Controller, Get, Post, Put, Query, UseGuards, UploadedFile } from "@nestjs/common";
+import { FileTypes, Role, Router } from "../common/enum";
 import { ApiQuery, ApiTags } from "@nestjs/swagger";
 import { AuthUser } from "../common/decorator/user.decorator";
 import { User } from "../common/entities/user.entity";
 import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
 import { Note } from "../common/decorator/description.decorator";
 import { Pagination } from "src/common/pagination/pagination.dto";
-import {UserService} from "./user.service";
+import { UserService } from "./user.service";
 import { Roles } from "src/common/decorator/role.decorator";
 import { QueryIdDto } from "src/common/dto/query-id.dto";
 import { UserUpdateDto } from "./dto/user-update.dto";
+import { UserCreateDto } from "./dto/user-create.dto";
+import { CreateUserDTO } from "./dto/create-profile-user.dto";
+import { ApiFile } from "src/common/decorator/file.decorator";
+import { UpdateUserDTO } from "./dto/update-profile-user.dto";
+import { RoleDTO } from "src/common/enum/role.enum";
 @Controller(Router.USER)
 @ApiTags("User APIs  (user)")
 @UseGuards(JwtAuthGuard)
@@ -37,28 +42,35 @@ export class UserController {
   ////////////////////////////////////////////////////////////////
   @Roles(Role.ADMIN, Role.USER, Role.ASSOCIATIONS, Role.FARMER)
   @UseGuards(JwtAuthGuard)
+
   @Put('updateUser')
-  @ApiQuery({
-    enum: Role,
-    name: 'role'
-  })
-  async updateUser(@AuthUser() user: User, @Query('role') role: Role, @Body() dto: UserUpdateDto): Promise<User | any> {
-    return await this.userService.updateUser(user.id, {
+  @ApiFile('avatar', FileTypes.IMAGE)
+  async updateUser(@AuthUser() user: User, @Body() dto: UpdateUserDTO, @UploadedFile() avatar?: Express.Multer.File): Promise<User | any> {
+    return await this.userService.updateUser(user, {
       ...dto,
-      role
+      avatar
     });
   }
+
+  @Roles(Role.ADMIN)
+  @Post('createUser')
+  @ApiFile('avatar', FileTypes.IMAGE)
+  async createUser(@Body() dto: CreateUserDTO, @UploadedFile() avatar: Express.Multer.File): Promise<User> {
+
+    return await this.userService.createProfileUser({
+      ...dto,
+      avatar
+    })
+  }
+
   ////////////////////update by admin////////////////////////////////////////////
   @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard)
   @Put('updateUserByAdmin')
-  @ApiQuery({
-    enum: Role,
-    name: 'role'
-  })
-  async updateUserByAdmin(@Query() { id }: QueryIdDto, @Query('role') role: Role, @Body() dto: UserUpdateDto): Promise<User | any> {
 
-    return await this.userService.updateUser(id, {
+  async updateUserByAdmin(@Query() { id }: QueryIdDto, @Query() { role }: RoleDTO, @Body() dto: UserUpdateDto): Promise<User | any> {
+
+    return await this.userService.updateByAdmin(id, {
       ...dto,
       role
     });
