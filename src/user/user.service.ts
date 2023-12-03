@@ -8,7 +8,7 @@ import { Pagination } from "../common/pagination/pagination.dto";
 import { PaginationModel } from "../common/pagination/pagination.model";
 import { Meta } from "../common/pagination/meta.dto";
 import { ErrorMessages } from "../exception/error.code";
-import { ImageType, Role } from "src/common/enum";
+import {  ImagePath, Role } from "src/common/enum";
 import { UserUpdateDto } from "./dto/user-update.dto";
 import { CreateUserDTO } from "./dto/create-profile-user.dto";
 import { StorageService } from "src/storage/storage.service";
@@ -32,7 +32,7 @@ export class UserService {
       throw new ApiException(ErrorMessages.USER_ALREADY_EXIST);
     }
     if (dto.avatar) {
-      avatar = await this.storageService.uploadFile(ImageType.CARD_USER, dto.avatar);
+      avatar = await this.storageService.uploadFile(ImagePath.CARD_USER, dto.avatar);
     }
     const creating = this.usersRepository.create({
       ...dto,
@@ -46,7 +46,7 @@ export class UserService {
 
       if (dto.avatar && user.avatar !== null) {
         await this.storageService.deleteFile(user.avatar);
-        avatar = await this.storageService.uploadFile(ImageType.CARD_USER, dto.avatar);
+        avatar = await this.storageService.uploadFile(ImagePath.CARD_USER, dto.avatar);
         user.avatar = avatar;
       }
       const merged = this.usersRepository.merge(user, {
