@@ -32,11 +32,21 @@ export class User extends AuditEntity {
   @Exclude()
   password: string;
 
+  @Column({ unique: true, nullable: true })
+  email: string;
+  
+  
   @Column({ nullable: false, default: Role.USER, enum: Role })
   role: Role;
 
   @Column({ default: false })
   isLocked: boolean;
+
+
+  @Column({ nullable: true })
+  homeTown: string;
+  @Column({ nullable: true })
+  address: string;
 
   @OneToMany(() => Farm, farm => farm.user)
   farms: Farm[];
@@ -57,5 +67,5 @@ export class User extends AuditEntity {
     }
   }
 
-  
+
 }

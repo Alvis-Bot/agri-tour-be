@@ -8,12 +8,14 @@ import { Pagination } from "../common/pagination/pagination.dto";
 import { PaginationModel } from "../common/pagination/pagination.model";
 import { Meta } from "../common/pagination/meta.dto";
 import { ErrorMessages } from "../exception/error.code";
-import {  ImagePath, Role } from "src/common/enum";
+import { ImagePath, Role } from "src/common/enum";
 import { UserUpdateDto } from "./dto/user-update.dto";
 import { CreateUserDTO } from "./dto/create-profile-user.dto";
 import { StorageService } from "src/storage/storage.service";
 import { UpdateUserDTO } from "./dto/update-profile-user.dto";
 import * as bcrypt from 'bcrypt'
+import { EUserRelated, TRelationUser } from "./dto/Relation.dto";
+import { ESearchUserDTO } from "./dto/Filter.dto";
 @Injectable()
 export class UserService {
 
@@ -109,13 +111,25 @@ export class UserService {
     return await this.usersRepository.exist({ where: { username } })
   }
 
-  async getUsers(pagination: Pagination) {
+  async getUsers(pagination: Pagination, relations?: EUserRelated, search?: ESearchUserDTO) {
+
     const queryBuilder = this.usersRepository
       .createQueryBuilder("user")
       .orderBy("user.createdAt", pagination.order)
       .take(pagination.take)
       .skip(pagination.skip)
-
+    if (relations && relations === EUserRelated.ALL) {
+      const allRelations: TRelationUser[] = ["farms", "harvests", "farmingCalenders"];
+      for (const relation of allRelations) {
+        queryBuilder.leftJoinAndSelect(`user.${relation}`, relation);
+      }
+    }
+    else if (relations) {
+      queryBuilder.leftJoinAndSelect(`user.${relations}`, relations);
+    }
+    if (search && pagination.search) {
+      queryBuilder.where(`user.${search} ILike :search`, { search: `%${pagination.search}%` });
+    }
     const itemCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
 

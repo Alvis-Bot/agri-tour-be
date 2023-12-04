@@ -33,6 +33,14 @@ export class CreateUserDTO extends UserCreateDto {
     description: string;
 
     @ApiProperty({
+        required: false
+    })
+    address: string;
+    @ApiProperty({
+        required: false
+    })
+    homeTown: string;
+    @ApiProperty({
         type: "string",
         format: 'binary',
         required: false

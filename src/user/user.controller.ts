@@ -15,6 +15,8 @@ import { CreateUserDTO } from "./dto/create-profile-user.dto";
 import { ApiFile } from "src/common/decorator/file.decorator";
 import { UpdateUserDTO } from "./dto/update-profile-user.dto";
 import { RoleDTO } from "src/common/enum/role.enum";
+import { UserRelation } from "./dto/Relation.dto";
+import { ESearchUserDTO, UserSearchDTO } from "./dto/Filter.dto";
 @Controller(Router.USER)
 @ApiTags("User APIs  (user)")
 @UseGuards(JwtAuthGuard)
@@ -30,8 +32,8 @@ export class UserController {
 
   @Get('gets')
   @Note('Lấy thông tin tất cả người dùng')
-  async getAllUsers(@Query() pagination: Pagination) {
-    return await this.userService.getUsers(pagination);
+  async getAllUsers(@Query() pagination: Pagination, @Query() { relation }: UserRelation, @Query() { column }: UserSearchDTO) {
+    return await this.userService.getUsers(pagination, relation, column);
   }
   @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard)
