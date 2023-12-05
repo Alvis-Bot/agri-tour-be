@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { User } from '../common/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -12,111 +8,98 @@ import { Pagination } from '../common/pagination/pagination.dto';
 import { PaginationModel } from '../common/pagination/pagination.model';
 import { Meta } from '../common/pagination/meta.dto';
 import { ErrorMessages } from '../exception/error.code';
-import { ImagePath, Role } from 'src/common/enum';
-import { UserUpdateDto } from './dto/user-update.dto';
-import { CreateUserDTO } from './dto/create-profile-user.dto';
-import { StorageService } from 'src/storage/storage.service';
-import { UpdateUserDTO } from './dto/update-profile-user.dto';
-import * as bcrypt from 'bcrypt';
+import { Role } from 'src/common/enum';
+import {
+  UserUpdateDto,
+  UserUpdateProfileByManagerDto,
+} from './dto/user-update.dto';
+import { MulterUtils } from '../common/utils/multer.utils';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
-    private storageService: StorageService,
   ) {}
 
-  async deleteByAdmin(id: string): Promise<Object> {
-    try {
-      const user = await this.getUserById(id);
-      await this.usersRepository.remove(user);
-      return {
-        message: 'User deleted successfully with id: ' + id,
-      };
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+  async removeUser(id: string): Promise<{
+    message: string;
+    id: string;
+  }> {
+    // tìm user
+    const user = await this.getUserById(id);
+    // xóa avatar
+    user.avatar && MulterUtils.deleteFile(user.avatar);
+    // xóa user
+    await this.usersRepository.delete(id);
+    return {
+      message: 'User deleted successfully',
+      id,
+    };
   }
 
-  async createUser(dto: UserCreateDto): Promise<User> {
+  async createProfileUser(
+    dto: UserCreateDto,
+    avatar?: Express.Multer.File,
+  ): Promise<User> {
+    // kiểm tra username đã tồn tại chưa
     if (await this.existsUsername(dto.username)) {
       throw new ApiException(ErrorMessages.USER_ALREADY_EXIST);
     }
-    const userCreated = this.usersRepository.create(dto);
+
+    // kiểm tra email đã tồn tại chưa
+    if (await this.existsEmail(dto.email)) {
+      throw new ApiException(ErrorMessages.EMAIL_ALREADY_EXIST);
+    }
+
+    // taọ user
+    const userCreated = this.usersRepository.create({
+      ...dto,
+      avatar: avatar ? MulterUtils.convertPathToUrl(avatar.path) : null,
+    });
+    // lưu user
     return await this.usersRepository.save(userCreated);
   }
 
-  async createProfileUser(dto: CreateUserDTO): Promise<User> {
-    let avatar: string;
-    if (await this.existsUsername(dto.username)) {
-      throw new ApiException(ErrorMessages.USER_ALREADY_EXIST);
-    }
-    if (dto.avatar) {
-      avatar = await this.storageService.uploadFile(
-        ImagePath.CARD_USER,
-        dto.avatar,
-      );
-    }
-    const creating = this.usersRepository.create({
+  async existsEmail(email: string): Promise<boolean> {
+    return await this.usersRepository.exist({ where: { email } });
+  }
+
+  async updateProfile(
+    user: User,
+    dto: UserUpdateDto,
+    avatar?: Express.Multer.File,
+  ): Promise<User> {
+    // nếu có avatar thì xóa avatar cũ
+    avatar && MulterUtils.deleteFile(user.avatar);
+
+    // lưu dữ liệu mới
+    return await this.usersRepository.save({
+      ...user,
       ...dto,
-      avatar: avatar ?? null,
+      avatar: avatar ? MulterUtils.convertPathToUrl(avatar.path) : user.avatar,
     });
-    return this.usersRepository.save(creating);
   }
 
-  async updateUser(user: User, dto: UpdateUserDTO): Promise<User | any> {
-    let avatar: string;
-    try {
-      if (dto.avatar && user.avatar !== null) {
-        await this.storageService.deleteFile(user.avatar);
-        avatar = await this.storageService.uploadFile(
-          ImagePath.CARD_USER,
-          dto.avatar,
-        );
-        user.avatar = avatar;
-      }
-      const merged = this.usersRepository.merge(user, {
-        ...dto,
-        avatar: avatar ?? user.avatar,
-      });
-      const saved = await this.usersRepository.save(merged);
-      return saved;
-    } catch (error) {
-      await this.storageService.deleteFile(avatar);
-
-      throw new ApiException(
-        ErrorMessages.BAD_REQUEST,
-        `Update User failed with error: ${error}`,
-      );
-    }
+  async updateUserInfoByManager(
+    myUser: User,
+    dto: UserUpdateProfileByManagerDto,
+  ): Promise<User> {
+    // lưu dữ liệu mới
+    return await this.usersRepository.save({
+      ...myUser,
+      ...dto,
+      password: dto.password ? await hash(dto.password, 10) : myUser.password,
+      avatar: myUser.avatar,
+    });
   }
 
-  async updateByAdmin(id: string, dto: UserUpdateDto): Promise<User> {
+  async assignAdminRole(id: string): Promise<User> {
     const user = await this.getUserById(id);
-    if (dto.password) {
-      dto.password = await bcrypt.hash(dto.password, 10);
-    }
-    const merged = this.usersRepository.merge(user, {
-      ...dto,
-      password: dto.password,
+    return await this.usersRepository.save({
+      ...user,
+      role: Role.ADMIN,
     });
-    await this.usersRepository.update(id, merged);
-    return await this.getUserById(user.id);
-  }
-
-  async grantAccessAdmin(id: string): Promise<User> {
-    try {
-      const user = await this.getUserById(id);
-      return await this.usersRepository.save({
-        ...user,
-        role: Role.ADMIN,
-      });
-    } catch (error) {
-      throw new ApiException(
-        ErrorMessages.BAD_REQUEST,
-        'Error grant access admin',
-      );
-    }
   }
 
   async getUserById(id: string): Promise<User> {
@@ -126,10 +109,12 @@ export class UserService {
       .getOne();
     if (!user) {
       throw new ApiException(ErrorMessages.USER_NOT_FOUND);
-    } else if (user.isLocked) {
-      throw new ForbiddenException('Account is locked');
     }
     return user;
+  }
+
+  async findById(id: string): Promise<User> {
+    return await this.usersRepository.findOne({ where: { id } });
   }
 
   async getUserByUserName(username: string): Promise<User> {
@@ -143,24 +128,26 @@ export class UserService {
     return await this.usersRepository.exist({ where: { username } });
   }
 
-  async getUsers(pagination: Pagination) {
+  async getPaginationUsers(pagination: Pagination) {
+    const searchableFields = [
+      'jobTitle',
+      'description',
+      'email',
+      'role',
+      'homeTown',
+      'address',
+      'username',
+      'phoneNumber',
+    ];
     const queryBuilder = this.usersRepository
       .createQueryBuilder('user')
       .orderBy('user.createdAt', pagination.order)
       .take(pagination.take)
       .skip(pagination.skip)
       .where(
-        `
-        user.fullName ILIKE :search OR
-        user.jobTitle ILIKE :search OR
-        user.description ILIKE :search OR
-        user.email ILIKE :search OR
-        user.role ILIKE :search OR
-        user.homeTown ILIKE :search OR
-        user.address ILIKE :search OR
-        user.username ILIKE :search OR
-        user.phoneNumber ILIKE :search
-        `,
+        searchableFields
+          .map((field) => `user.${field} ILIKE :search`)
+          .join(' OR '),
         {
           search: `%${pagination.search || ''}%`,
         },

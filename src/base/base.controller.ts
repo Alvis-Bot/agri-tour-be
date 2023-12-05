@@ -8,14 +8,14 @@ import { PaginationModel } from 'src/common/pagination/pagination.model';
 import { Pagination } from 'src/common/pagination/pagination.dto';
 import { FileTypes } from 'src/common/enum/file';
 import { BaseFileDTO } from './dto/base-file.dto';
-import { ApiFile } from 'src/common/decorator/file.decorator';
+import { ApiMemoryFile } from 'src/common/decorator/file.decorator';
 
 @Controller()
 export abstract class BaseController<T extends BaseEntity> {
     constructor(private readonly baseService: BaseService<T>) { }
 
     @Post('upload')
-    @ApiFile('file', FileTypes.EXCEL)
+    @ApiMemoryFile('file', FileTypes.EXCEL)
     async uploadDataExcel(@Body() dto: BaseFileDTO, @UploadedFile() file: Express.Multer.File): Promise<any> {
         return await this.baseService.uploadDataExcel({
             ...dto,

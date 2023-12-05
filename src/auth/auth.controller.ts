@@ -68,7 +68,7 @@ export class AuthController {
   @Post('register')
   @Note("Đăng ký")
   createUser(@Body() dto: UserCreateDto) {
-    return this.userService.createUser(dto);
+    return this.userService.createProfileUser(dto);
   }
 
   @Post("refresh-tokens")

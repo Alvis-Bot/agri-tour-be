@@ -1,7 +1,7 @@
 
 
 export enum Router {
-  USER = "user",
+  USER = "users",
   AUTH = "auth",
   GROUP = "group",
   LAND = "land",

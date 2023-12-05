@@ -1,21 +1,32 @@
-import {Body, Controller, Get, Post, Put, Query, UseGuards, UploadedFile, Delete} from "@nestjs/common";
-import { FileTypes, Role, Router } from "../common/enum";
-import { ApiQuery, ApiTags } from "@nestjs/swagger";
-import { AuthUser } from "../common/decorator/user.decorator";
-import { User } from "../common/entities/user.entity";
-import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
-import { Note } from "../common/decorator/description.decorator";
-import { Pagination } from "src/common/pagination/pagination.dto";
-import { UserService } from "./user.service";
-import { Roles } from "src/common/decorator/role.decorator";
-import { QueryIdDto } from "src/common/dto/query-id.dto";
-import { UserUpdateDto } from "./dto/user-update.dto";
-import { UserCreateDto } from "./dto/user-create.dto";
-import { CreateUserDTO } from "./dto/create-profile-user.dto";
-import { ApiFile } from "src/common/decorator/file.decorator";
-import { UpdateUserDTO } from "./dto/update-profile-user.dto";
-import { RoleDTO } from "src/common/enum/role.enum";
-import { UserRelation } from "./dto/Relation.dto";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Query,
+  UploadedFile,
+  UseGuards,
+} from '@nestjs/common';
+import { FileTypes, ImagePath, Role, Router } from '../common/enum';
+import { ApiTags } from '@nestjs/swagger';
+import { AuthUser } from '../common/decorator/user.decorator';
+import { User } from '../common/entities/user.entity';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { Note } from '../common/decorator/description.decorator';
+import { Pagination } from 'src/common/pagination/pagination.dto';
+import { UserService } from './user.service';
+import { Roles } from 'src/common/decorator/role.decorator';
+import { QueryIdDto } from 'src/common/dto/query-id.dto';
+import {UserUpdateDto, UserUpdateProfileByManagerDto} from './dto/user-update.dto';
+import { CreateUserDTO } from './dto/create-profile-user.dto';
+import { ApiFile, ApiMemoryFile } from 'src/common/decorator/file.decorator';
+import { RoleDTO } from 'src/common/enum/role.enum';
+import { UUIDQuery } from '../common/decorator/uuid.decorator';
+import { MulterUtils, UploadTypesEnum } from '../common/utils/multer.utils';
+import {UserCreateDto} from "./dto/user-create.dto";
+
 @Controller(Router.USER)
 @ApiTags('User APIs  (user)')
 @UseGuards(JwtAuthGuard)
@@ -28,69 +39,66 @@ export class UserController {
     return user;
   }
 
-  @Get('gets')
+  @Get('')
   @Note('Lấy thông tin tất cả người dùng')
-  async getAllUsers(
-    @Query() pagination: Pagination,
-  ) {
-    return await this.userService.getUsers(pagination);
+  async getAllUsers(@Query() pagination: Pagination) {
+    return await this.userService.getPaginationUsers(pagination);
   }
 
   @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard)
-  @Post('grantAccessAdmin')
-  async grantAccessAdmin(@Query() { id }: QueryIdDto): Promise<any> {
-    return await this.userService.grantAccessAdmin(id);
+  @Note('Cấp quyền ADMIN cho tài khoản (admin)')
+  @Post('admin')
+  async assignAdminRole(@UUIDQuery('id') id: string): Promise<User> {
+    return await this.userService.assignAdminRole(id);
   }
 
-  ////////////////////////////////////////////////////////////////
+
+  @Note('Cập nhật thông tin người dùng (admin , user, associations, farmer)')
   @Roles(Role.ADMIN, Role.USER, Role.ASSOCIATIONS, Role.FARMER)
+  @Put()
   @UseGuards(JwtAuthGuard)
-  @Put('updateUser')
-  @ApiFile('avatar', FileTypes.IMAGE)
-  async updateUser(
+  @ApiFile(
+    'avatar',
+    MulterUtils.getConfig(UploadTypesEnum.IMAGES, ImagePath.CARD_USER),
+  )
+  async updateProfile(
     @AuthUser() user: User,
-    @Body() dto: UpdateUserDTO,
-    @UploadedFile() avatar?: Express.Multer.File,
-  ): Promise<User | any> {
-    return await this.userService.updateUser(user, {
-      ...dto,
-      avatar,
-    });
-  }
-
-  @Roles(Role.ADMIN)
-  @Post('createUser')
-  @ApiFile('avatar', FileTypes.IMAGE)
-  async createUser(
-    @Body() dto: CreateUserDTO,
-    @UploadedFile() avatar: Express.Multer.File,
-  ): Promise<User> {
-    return await this.userService.createProfileUser({
-      ...dto,
-      avatar,
-    });
-  }
-
-  ////////////////////update by admin////////////////////////////////////////////
-  @Roles(Role.ADMIN)
-  @UseGuards(JwtAuthGuard)
-  @Put('updateUserByAdmin')
-  async updateUserByAdmin(
-    @Query() { id }: QueryIdDto,
-    @Query() { role }: RoleDTO,
     @Body() dto: UserUpdateDto,
-  ): Promise<User | any> {
-    return await this.userService.updateByAdmin(id, {
-      ...dto,
-      role
-    });
+    @UploadedFile() avatar?: Express.Multer.File,
+  ): Promise<User> {
+    return await this.userService.updateProfile(user, dto, avatar);
   }
+
+  @Note('Tạo tài khoản người dùng (admin)')
+  @Roles(Role.ADMIN)
+  @Post()
+  @ApiFile('avatar', MulterUtils.getConfig(UploadTypesEnum.IMAGES, ImagePath.CARD_USER))
+  async createUser(
+    @Body() dto: UserCreateDto,
+    @UploadedFile() avatar?: Express.Multer.File,
+  ): Promise<User> {
+    return await this.userService.createProfileUser(dto, avatar);
+  }
+
 
   @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard)
-  @Delete('delete')
-  async deleteUserByAdmin(@Query() { id }: QueryIdDto): Promise<Object> {
-    return await this.userService.deleteByAdmin(id);
+  @Note('Cập nhật thông tin người dùng (admin)')
+  @Put('admin')
+  async updateUserInfoByManager(
+    @UUIDQuery('userId') userId: string,
+    @Body() dto: UserUpdateProfileByManagerDto,
+  ): Promise<User> {
+    const myUser = await this.userService.getUserById(userId);
+    return await this.userService.updateUserInfoByManager(myUser, dto);
+  }
+
+  @Roles(Role.ADMIN)
+  @Note('Xóa tài khoản người dùng (admin)')
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  async removeUser(@UUIDQuery('id') id: string) {
+    return await this.userService.removeUser(id);
   }
 }

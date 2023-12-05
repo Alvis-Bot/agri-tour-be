@@ -10,7 +10,7 @@ import { CodeUtil } from "../utils/code.util";
 
 
 
-export const ApiFile = (
+export const ApiMemoryFile = (
   fieldName: string = "file",
   minType: FileTypes = FileTypes.IMAGE
 ) => {
@@ -42,6 +42,10 @@ export const ApiMemoryFiles = (
 
 export const ApiFiles = (fieldName : string , maxCount : number  , localOptions : MulterOptions = {} ) => {
     return applyDecorators(UseInterceptors(FilesInterceptor(fieldName, maxCount, localOptions)), ApiConsumes("multipart/form-data"));
+}
+
+export const ApiFile = (fieldName : string , localOptions : MulterOptions = {} ) => {
+    return applyDecorators(UseInterceptors(FileInterceptor(fieldName, localOptions)), ApiConsumes("multipart/form-data"));
 }
 
 
