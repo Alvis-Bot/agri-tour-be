@@ -80,7 +80,7 @@ export class LandService {
     const categoryDetail = await this.categoryDetailRepository
       .createQueryBuilder('categoryDetail')
       .where('categoryDetail.id = :id', { id })
-      // .andWhere('category.name = :type', { type })
+      .andWhere('category.name = :type', { type })
       .leftJoin('categoryDetail.category', 'category')
       .getOne();
     if (!categoryDetail) {
