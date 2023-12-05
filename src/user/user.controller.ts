@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, Query, UseGuards, UploadedFile, Delete } from "@nestjs/common";
+import {Body, Controller, Get, Post, Put, Query, UseGuards, UploadedFile, Delete} from "@nestjs/common";
 import { FileTypes, Role, Router } from "../common/enum";
 import { ApiQuery, ApiTags } from "@nestjs/swagger";
 import { AuthUser } from "../common/decorator/user.decorator";
@@ -17,11 +17,10 @@ import { UpdateUserDTO } from "./dto/update-profile-user.dto";
 import { RoleDTO } from "src/common/enum/role.enum";
 import { UserRelation } from "./dto/Relation.dto";
 @Controller(Router.USER)
-@ApiTags("User APIs  (user)")
+@ApiTags('User APIs  (user)')
 @UseGuards(JwtAuthGuard)
 export class UserController {
-
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Get('my')
   @Note('Lấy thông tin người dùng')
@@ -31,46 +30,57 @@ export class UserController {
 
   @Get('gets')
   @Note('Lấy thông tin tất cả người dùng')
-  async getAllUsers(@Query() pagination: Pagination, @Query() { relation }: UserRelation) {
-    return await this.userService.getUsers(pagination, relation);
+  async getAllUsers(
+    @Query() pagination: Pagination,
+  ) {
+    return await this.userService.getUsers(pagination);
   }
+
   @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard)
   @Post('grantAccessAdmin')
   async grantAccessAdmin(@Query() { id }: QueryIdDto): Promise<any> {
     return await this.userService.grantAccessAdmin(id);
   }
+
   ////////////////////////////////////////////////////////////////
   @Roles(Role.ADMIN, Role.USER, Role.ASSOCIATIONS, Role.FARMER)
   @UseGuards(JwtAuthGuard)
-
   @Put('updateUser')
   @ApiFile('avatar', FileTypes.IMAGE)
-  async updateUser(@AuthUser() user: User, @Body() dto: UpdateUserDTO, @UploadedFile() avatar?: Express.Multer.File): Promise<User | any> {
+  async updateUser(
+    @AuthUser() user: User,
+    @Body() dto: UpdateUserDTO,
+    @UploadedFile() avatar?: Express.Multer.File,
+  ): Promise<User | any> {
     return await this.userService.updateUser(user, {
       ...dto,
-      avatar
+      avatar,
     });
   }
 
   @Roles(Role.ADMIN)
   @Post('createUser')
   @ApiFile('avatar', FileTypes.IMAGE)
-  async createUser(@Body() dto: CreateUserDTO, @UploadedFile() avatar: Express.Multer.File): Promise<User> {
-
+  async createUser(
+    @Body() dto: CreateUserDTO,
+    @UploadedFile() avatar: Express.Multer.File,
+  ): Promise<User> {
     return await this.userService.createProfileUser({
       ...dto,
-      avatar
-    })
+      avatar,
+    });
   }
 
   ////////////////////update by admin////////////////////////////////////////////
   @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard)
   @Put('updateUserByAdmin')
-
-  async updateUserByAdmin(@Query() { id }: QueryIdDto, @Query() { role }: RoleDTO, @Body() dto: UserUpdateDto): Promise<User | any> {
-
+  async updateUserByAdmin(
+    @Query() { id }: QueryIdDto,
+    @Query() { role }: RoleDTO,
+    @Body() dto: UserUpdateDto,
+  ): Promise<User | any> {
     return await this.userService.updateByAdmin(id, {
       ...dto,
       role
