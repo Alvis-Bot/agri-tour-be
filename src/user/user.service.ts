@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { User } from "../common/entities/user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -19,6 +19,17 @@ import { EUserRelated, TRelationUser, TSearchUserDTO } from "./dto/Relation.dto"
 export class UserService {
 
   constructor(@InjectRepository(User) private usersRepository: Repository<User>, private storageService: StorageService) { }
+  async deleteByAdmin(id: string): Promise<Object> {
+    try {
+      const user = await this.getUserById(id);
+      await this.usersRepository.remove(user);
+      return {
+        message: "User deleted successfully with id: " + id,
+      }
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
+  }
 
   async createUser(dto: UserCreateDto): Promise<User> {
     if (await this.existsUsername(dto.username)) {

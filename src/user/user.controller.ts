@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, Query, UseGuards, UploadedFile } from "@nestjs/common";
+import { Body, Controller, Get, Post, Put, Query, UseGuards, UploadedFile, Delete } from "@nestjs/common";
 import { FileTypes, Role, Router } from "../common/enum";
 import { ApiQuery, ApiTags } from "@nestjs/swagger";
 import { AuthUser } from "../common/decorator/user.decorator";
@@ -77,4 +77,10 @@ export class UserController {
     });
   }
 
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard)
+  @Delete('delete')
+  async deleteUserByAdmin(@Query() { id }: QueryIdDto): Promise<Object> {
+    return await this.userService.deleteByAdmin(id);
+  }
 }

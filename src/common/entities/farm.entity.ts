@@ -43,11 +43,11 @@ export class Farm extends AuditEntity {
   @Column({ type: 'jsonb', nullable: true })
   location: ILocation;
 
-  @ManyToOne(() => User, user => user.farms)
+  @ManyToOne(() => User, user => user.farms, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @OneToMany(() => Area, area => area.farm)
+  @OneToMany(() => Area, area => area.farm, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   areas: Area[];
 
   @Column({ nullable: true })

@@ -1,10 +1,10 @@
-import {AuditEntity} from "./audit.entity";
-import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
-import {Farm} from "./farm.entity";
+import { AuditEntity } from "./audit.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Farm } from "./farm.entity";
 
 
 @Entity('agricultural-products')
-export class AgriculturalProducts extends AuditEntity{
+export class AgriculturalProducts extends AuditEntity {
 
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -16,21 +16,21 @@ export class AgriculturalProducts extends AuditEntity{
     money: number;
 
     @Column()
-        //số lượng
+    //số lượng
     quantity: string;
 
     @Column()
-        // khối lượng
+    // khối lượng
     weight: string;
 
-    @ManyToOne(() => Farm, farm => farm.id)
+    @ManyToOne(() => Farm, farm => farm.id, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     farm: Farm;
 
     @Column()
-        // thời gian nhập kho
+    // thời gian nhập kho
     time: Date;
 
     @Column({ nullable: true, array: true, type: 'text' })
-        // nhiều hình ảnh
-    images : string[];
+    // nhiều hình ảnh
+    images: string[];
 }

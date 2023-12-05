@@ -27,6 +27,7 @@ import { CareScheduleModule } from './care-schedule/care-schedule.module';
 import { HarvestModule } from './harvest/harvest.module';
 import { StatisticsModule } from './statistics/statistics.module';
 import { ContactModule } from './contact/contact.module';
+import { MemberShipTypeModule } from './member-ship-type/member-ship-type.module';
 
 @Module({
   imports: [
@@ -81,6 +82,7 @@ import { ContactModule } from './contact/contact.module';
     HarvestModule,
     StatisticsModule,
     ContactModule,
+    MemberShipTypeModule,
   ],
   controllers: [AppController]
 })

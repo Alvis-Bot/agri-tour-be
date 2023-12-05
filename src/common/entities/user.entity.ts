@@ -50,7 +50,7 @@ export class User extends AuditEntity {
   @Column({ nullable: true })
   address: string;
 
-  @OneToMany(() => Farm, farm => farm.user)
+  @OneToMany(() => Farm, farm => farm.user, { onDelete: 'SET NULL' })
   farms: Farm[];
 
   @OneToMany(() => Harvest, harvests => harvests.user)
