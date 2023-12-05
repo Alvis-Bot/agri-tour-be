@@ -34,8 +34,10 @@ export class User extends AuditEntity {
 
   @Column({ unique: true, nullable: true })
   email: string;
-  
-  
+  @Column({ unique: true, nullable: true })
+  phoneNumber: string;
+
+
   @Column({ nullable: false, default: Role.USER, enum: Role })
   role: Role;
 

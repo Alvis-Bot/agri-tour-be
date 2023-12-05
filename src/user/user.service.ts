@@ -14,8 +14,7 @@ import { CreateUserDTO } from "./dto/create-profile-user.dto";
 import { StorageService } from "src/storage/storage.service";
 import { UpdateUserDTO } from "./dto/update-profile-user.dto";
 import * as bcrypt from 'bcrypt'
-import { EUserRelated, TRelationUser } from "./dto/Relation.dto";
-import { ESearchUserDTO } from "./dto/Filter.dto";
+import { EUserRelated, TRelationUser, TSearchUserDTO } from "./dto/Relation.dto";
 @Injectable()
 export class UserService {
 
@@ -111,7 +110,7 @@ export class UserService {
     return await this.usersRepository.exist({ where: { username } })
   }
 
-  async getUsers(pagination: Pagination, relations?: EUserRelated, search?: ESearchUserDTO) {
+  async getUsers(pagination: Pagination, relations?: EUserRelated) {
 
     const queryBuilder = this.usersRepository
       .createQueryBuilder("user")
@@ -120,6 +119,7 @@ export class UserService {
       .skip(pagination.skip)
     if (relations && relations === EUserRelated.ALL) {
       const allRelations: TRelationUser[] = ["farms", "harvests", "farmingCalenders"];
+
       for (const relation of allRelations) {
         queryBuilder.leftJoinAndSelect(`user.${relation}`, relation);
       }
@@ -127,8 +127,11 @@ export class UserService {
     else if (relations) {
       queryBuilder.leftJoinAndSelect(`user.${relations}`, relations);
     }
-    if (search && pagination.search) {
-      queryBuilder.where(`user.${search} ILike :search`, { search: `%${pagination.search}%` });
+    if (pagination.search) {
+      const arraySearch: TSearchUserDTO[] = ['fullName', 'jobTitle', 'description', 'email', 'role', 'homeTown', 'address', 'username']
+      for (const item of arraySearch) {
+        queryBuilder.where(`user.${item} ILike :search`, { search: `%${pagination.search}%` });
+      }
     }
     const itemCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();

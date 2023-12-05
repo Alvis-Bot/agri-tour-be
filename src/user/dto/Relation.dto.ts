@@ -8,7 +8,17 @@ export enum EUserRelated {
     farmingCalenders = "farmingCalenders"
 }
 export type TRelationUser = "farms" | "harvests" | "farmingCalenders";
-
+export type TSearchUserDTO =
+    'fullName' |
+    'jobTitle' |
+    'description' |
+    'avatar' |
+    'email' |
+    'role' |
+    'homeTown' |
+    'address' |
+    'username'
+    ;
 export class UserRelation {
 
     @ApiPropertyOptional({
