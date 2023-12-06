@@ -84,7 +84,7 @@ export class UserController {
 
   @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard)
-  @Note('Cập nhật thông tin người dùng (admin)')
+  @Note('Cập nhật thông tin người dùng (admin) - muốn cập nhật field nào thì gửi field đó')
   @Put('admin')
   async updateUserInfoByManager(
     @UUIDQuery('userId') userId: string,

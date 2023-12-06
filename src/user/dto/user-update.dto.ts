@@ -72,4 +72,10 @@ export class UserUpdateProfileByManagerDto extends UserUpdateDto {
     @IsString()
     @ApiPropertyOptional()
     role: Role;
+
+
+    @IsOptional()
+    @IsString()
+    @ApiPropertyOptional()
+    isLocked: boolean;
 }

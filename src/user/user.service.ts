@@ -129,7 +129,7 @@ export class UserService {
   }
 
   async getPaginationUsers(pagination: Pagination) {
-    const searchableFields  : Array<keyof User> = [
+    const searchableFields: Array<keyof User> = [
       'jobTitle',
       'description',
       'email',
