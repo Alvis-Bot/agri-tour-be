@@ -9,7 +9,7 @@ import {
   UploadedFile,
   UseGuards,
 } from '@nestjs/common';
-import { FileTypes, ImagePath, Role, Router } from '../common/enum';
+import { ImagePath, Role, Router } from '../common/enum';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthUser } from '../common/decorator/user.decorator';
 import { User } from '../common/entities/user.entity';
@@ -18,14 +18,14 @@ import { Note } from '../common/decorator/description.decorator';
 import { Pagination } from 'src/common/pagination/pagination.dto';
 import { UserService } from './user.service';
 import { Roles } from 'src/common/decorator/role.decorator';
-import { QueryIdDto } from 'src/common/dto/query-id.dto';
-import {UserUpdateDto, UserUpdateProfileByManagerDto} from './dto/user-update.dto';
-import { CreateUserDTO } from './dto/create-profile-user.dto';
-import { ApiFile, ApiMemoryFile } from 'src/common/decorator/file.decorator';
-import { RoleDTO } from 'src/common/enum/role.enum';
+import {
+  UserUpdateDto,
+  UserUpdateProfileByManagerDto,
+} from './dto/user-update.dto';
+import { ApiFile } from 'src/common/decorator/file.decorator';
 import { UUIDQuery } from '../common/decorator/uuid.decorator';
 import { MulterUtils, UploadTypesEnum } from '../common/utils/multer.utils';
-import {UserCreateDto} from "./dto/user-create.dto";
+import { UserCreateDto } from './dto/user-create.dto';
 
 @Controller(Router.USER)
 @ApiTags('User APIs  (user)')
@@ -53,7 +53,6 @@ export class UserController {
     return await this.userService.assignAdminRole(id);
   }
 
-
   @Note('Cập nhật thông tin người dùng (admin , user, associations, farmer)')
   @Roles(Role.ADMIN, Role.USER, Role.ASSOCIATIONS, Role.FARMER)
   @Put()
@@ -73,7 +72,10 @@ export class UserController {
   @Note('Tạo tài khoản người dùng (admin)')
   @Roles(Role.ADMIN)
   @Post()
-  @ApiFile('avatar', MulterUtils.getConfig(UploadTypesEnum.IMAGES, ImagePath.CARD_USER))
+  @ApiFile(
+    'avatar',
+    MulterUtils.getConfig(UploadTypesEnum.IMAGES, ImagePath.CARD_USER),
+  )
   async createUser(
     @Body() dto: UserCreateDto,
     @UploadedFile() avatar?: Express.Multer.File,
@@ -81,10 +83,11 @@ export class UserController {
     return await this.userService.createProfileUser(dto, avatar);
   }
 
-
   @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard)
-  @Note('Cập nhật thông tin người dùng (admin) - muốn cập nhật field nào thì gửi field đó')
+  @Note(
+    'Cập nhật thông tin người dùng (admin) - muốn cập nhật field nào thì gửi field đó',
+  )
   @Put('admin')
   async updateUserInfoByManager(
     @UUIDQuery('userId') userId: string,

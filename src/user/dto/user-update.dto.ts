@@ -1,11 +1,6 @@
-import {
-  ApiPropertyOptional,
-  IntersectionType,
-  OmitType, PickType,
-} from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
-import { UserCreateDto } from './user-create.dto';
-import {Role} from "../../common/enum";
+import { Role } from '../../common/enum';
 
 export class UserUpdateDto {
   @IsOptional()
@@ -48,34 +43,33 @@ export class UserUpdateDto {
 
 // kế thừ UserUpdateDto và thêm các trường cần thiết
 export class UserUpdateProfileByManagerDto extends UserUpdateDto {
-    @IsOptional()
-    @IsString()
-    @ApiPropertyOptional()
-    password: string;
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional()
+  password: string;
 
-    @IsOptional()
-    @IsString()
-    @ApiPropertyOptional()
-    username: string;
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional()
+  username: string;
 
-    @IsOptional()
-    @IsString()
-    @ApiPropertyOptional()
-    email: string;
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional()
+  email: string;
 
-    @IsOptional()
-    @IsString()
-    @ApiPropertyOptional()
-    phoneNumber: string;
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional()
+  phoneNumber: string;
 
-    @IsOptional()
-    @IsString()
-    @ApiPropertyOptional()
-    role: Role;
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional()
+  role: Role;
 
-
-    @IsOptional()
-    @IsString()
-    @ApiPropertyOptional()
-    isLocked: boolean;
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional()
+  isLocked: boolean;
 }
