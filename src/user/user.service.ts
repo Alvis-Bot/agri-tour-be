@@ -52,6 +52,10 @@ export class UserService {
       throw new ApiException(ErrorMessages.EMAIL_ALREADY_EXIST);
     }
 
+    if (await this.existsPhoneNumber(dto.phoneNumber)) {
+      throw new ApiException(ErrorMessages.PHONE_NUMBER_ALREADY_EXIST);
+    }
+
     // taọ user
     const userCreated = this.usersRepository.create({
       ...dto,
@@ -59,6 +63,10 @@ export class UserService {
     });
     // lưu user
     return await this.usersRepository.save(userCreated);
+  }
+
+  async existsPhoneNumber(phoneNumber: string): Promise<boolean> {
+    return await this.usersRepository.exist({ where: { phoneNumber } });
   }
 
   async existsEmail(email: string): Promise<boolean> {

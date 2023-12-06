@@ -45,6 +45,7 @@ export const ErrorMessages = {
   IMAGE_NOT_FOUND: errorFactory(HttpStatus.NOT_FOUND, "Image not found"),
   EMAIL_ALREADY_EXIST: errorFactory(HttpStatus.CONFLICT, "Email already exist"),
   FARM_ALREADY_EXIST: errorFactory(HttpStatus.CONFLICT, "Farm already exist"),
+  PHONE_NUMBER_ALREADY_EXIST: errorFactory(HttpStatus.CONFLICT, "Phone number already exist"),
 
 
 };

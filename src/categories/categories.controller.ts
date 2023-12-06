@@ -14,7 +14,6 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) { }
 
   @Post('create-root')
-
   async createRootCategory(): Promise<Category> {
     return this.categoryService.createRootCategory();
   }
