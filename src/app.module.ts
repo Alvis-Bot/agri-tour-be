@@ -32,9 +32,9 @@ import { MemberShipTypeModule } from './member-ship-type/member-ship-type.module
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: [`.env`, `.env.${process.env.NODE_ENV}`], // load env
       isGlobal: true,
       validationSchema,
-      envFilePath: [`.env`, `.env.${process.env.NODE_ENV}`], // load env
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
