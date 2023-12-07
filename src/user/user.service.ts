@@ -28,14 +28,19 @@ export class UserService {
     id: string;
   }> {
     // tìm user
-    const user = await this.getUserById(id);
-    // xóa avatar
-    user.avatar && MulterUtils.deleteFile(user.avatar);
-    // xóa user
-    await this.usersRepository.delete(id);
+    const queryBuilder = this.usersRepository
+        .createQueryBuilder()
+        .delete()
+        .from(User)
+        .where('id = :id', { id })
+        .returning('id');
+    const execute = await queryBuilder.execute();
+    if (!execute.raw.length) {
+      throw new ApiException(ErrorMessages.USER_NOT_FOUND);
+    }
     return {
       message: 'User deleted successfully',
-      id,
+      id: execute.raw[0].id,
     };
   }
 
@@ -86,20 +91,19 @@ export class UserService {
     avatar && MulterUtils.deleteFile(user.avatar);
 
     // update user
-     const queryBuilder = this.usersRepository
-        .createQueryBuilder()
-        .update(User)
-        .set({
-           ...user,
-            ...dto,
-            avatar: avatar ? MulterUtils.convertPathToUrl(avatar.path) : user.avatar,
-        })
-        .where('id = :id', { id: user.id })
-         .returning('*')
+    const queryBuilder = this.usersRepository
+      .createQueryBuilder()
+      .update(User)
+      .set({
+        ...dto,
+        avatar: avatar
+          ? MulterUtils.convertPathToUrl(avatar.path)
+          : user.avatar,
+      })
+      .where('id = :id', { id: user.id })
+      .returning('*');
     const execute = await queryBuilder.execute();
     return execute.raw[0];
-
-    // return execute.raw[0];
   }
 
   async updateUserInfoByManager(
