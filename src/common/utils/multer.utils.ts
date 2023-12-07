@@ -70,14 +70,22 @@ export class MulterUtils {
     }
   }
 
-  static convertArrayPathToUrl(paths: string[] ) {
+  static deleteFiles(images: string[]) {
+    images.forEach((image) => {
+      if (existsSync(`${'public'}/${image}`)) {
+        fs.unlinkSync(`${'public'}/${image}`);
+      }
+    });
+  }
+
+  static convertArrayPathToUrl(paths: string[]) {
     // return  path.replace(/\\/g, '/').replace('public', '');
     return paths.map(
       (path) => `${path.replace(/\\/g, '/').replace('public', '')}`,
     );
   }
 
-  static convertPathToUrl(path: string ) {
-    return  path.replace(/\\/g, '/').replace('public', '');
+  static convertPathToUrl(path: string) {
+    return path.replace(/\\/g, '/').replace('public', '');
   }
 }

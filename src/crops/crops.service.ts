@@ -25,7 +25,12 @@ export class CropsService {
     images: Express.Multer.File[],
   ): Promise<Crop> {
     // kiểm tra xem tên cây trồng đã tồn tại chưa
-    await this.existsByName(dto.name);
+
+    if (await this.existsByName(dto.name)) {
+      // lỗi thì xóa ảnh đã upload
+      MulterUtils.deleteFiles(images.map((image) => image.path));
+      throw new ApiException(ErrorMessages.CROP_EXISTED);
+    }
 
     const groupCrop = await this.categoryDetailsService.getDetailCategoryById(
       dto.groupCrop,
@@ -50,9 +55,8 @@ export class CropsService {
     return data;
   }
 
-  async existsByName(name: string): Promise<void> {
-    const existingCrop = await this.cropRepository.exist({ where: { name } });
-    if (existingCrop) throw new ApiException(ErrorMessages.CROP_EXISTED);
+  async existsByName(name: string): Promise<boolean> {
+    return await this.cropRepository.exist({ where: { name } });
   }
 
   async getCropById(id: string): Promise<Crop> {
