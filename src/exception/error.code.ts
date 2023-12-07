@@ -46,6 +46,7 @@ export const ErrorMessages = {
   EMAIL_ALREADY_EXIST: errorFactory(HttpStatus.CONFLICT, "Email already exist"),
   FARM_ALREADY_EXIST: errorFactory(HttpStatus.CONFLICT, "Farm already exist"),
   PHONE_NUMBER_ALREADY_EXIST: errorFactory(HttpStatus.CONFLICT, "Phone number already exist"),
+  INVALID_UUID: errorFactory(HttpStatus.BAD_REQUEST, "Invalid UUID"),
 
 
 };
