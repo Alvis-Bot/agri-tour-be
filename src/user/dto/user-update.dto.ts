@@ -1,6 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 import { Role } from '../../common/enum';
+import { OmitType } from '@nestjs/swagger';
 
 export class UserUpdateDto {
   @IsOptional()
@@ -42,7 +43,7 @@ export class UserUpdateDto {
 }
 
 // kế thừ UserUpdateDto và thêm các trường cần thiết
-export class UserUpdateProfileByManagerDto extends UserUpdateDto {
+export class UserUpdateProfileByManagerDto extends OmitType(UserUpdateDto, [ 'avatar' ] as const) {
   @IsOptional()
   @IsString()
   @ApiPropertyOptional()

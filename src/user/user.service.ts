@@ -64,13 +64,25 @@ export class UserService {
       throw new ApiException(ErrorMessages.PHONE_NUMBER_ALREADY_EXIST);
     }
 
+    const columns = (Array[typeof User] = ['fullName', 'jobTitle']);
     // taọ user
-    const userCreated = this.usersRepository.create({
-      ...dto,
-      avatar: avatar ? MulterUtils.convertPathToUrl(avatar.path) : null,
-    });
-    // lưu user
-    return await this.usersRepository.save(userCreated);
+    const queryBuilder = this.usersRepository
+      .createQueryBuilder()
+      .insert()
+      .into(User)
+      .values({
+        ...dto,
+        avatar: avatar ? MulterUtils.convertPathToUrl(avatar.path) : null,
+      })
+      .returning(['']);
+    const execute = await queryBuilder.execute();
+    return execute.raw[0];
+    // const userCreated = this.usersRepository.create({
+    //   ...dto,
+    //   avatar: avatar ? MulterUtils.convertPathToUrl(avatar.path) : null,
+    // });
+    // // lưu user
+    // return await this.usersRepository.save(userCreated);
   }
 
   async existsPhoneNumber(phoneNumber: string): Promise<boolean> {
@@ -110,12 +122,16 @@ export class UserService {
     dto: UserUpdateProfileByManagerDto,
   ): Promise<User> {
     // lưu dữ liệu mới
-    return await this.usersRepository.save({
-      ...myUser,
-      ...dto,
-      password: dto.password ? await hash(dto.password, 10) : myUser.password,
-      avatar: myUser.avatar,
-    });
+    const queryBuilder = this.usersRepository
+      .createQueryBuilder()
+      .update(User)
+      .set({
+        ...dto,
+      })
+      .where('id = :id', { id: myUser.id })
+      .returning('*');
+    const execute = await queryBuilder.execute();
+    return execute.raw[0];
   }
 
   async assignAdminRole(id: string): Promise<User> {
