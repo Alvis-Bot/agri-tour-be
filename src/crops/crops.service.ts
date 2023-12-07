@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { CropCreateDto } from './dto/crop-create.dto';
 import { ApiException } from '../exception/api.exception';
 import { ErrorMessages } from '../exception/error.code';
-import { StorageService } from '../storage/storage.service';
 import { CategoryDetailsService } from '../category-details/category-details.service';
 import { Meta } from '../common/pagination/meta.dto';
 import { PaginationModel } from '../common/pagination/pagination.model';
@@ -18,7 +17,6 @@ type Relations = 'workOfDays' | 'careSchedules' | 'harvests';
 export class CropsService {
   constructor(
     @InjectRepository(Crop) private cropRepository: Repository<Crop>,
-    private readonly storageService: StorageService,
     private readonly categoryDetailsService: CategoryDetailsService,
   ) {}
 
