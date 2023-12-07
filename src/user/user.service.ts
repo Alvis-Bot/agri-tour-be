@@ -15,6 +15,7 @@ import {
 } from './dto/user-update.dto';
 import { MulterUtils } from '../common/utils/multer.utils';
 import { hash } from 'bcrypt';
+import { isNotEmpty } from 'class-validator';
 
 @Injectable()
 export class UserService {
@@ -52,7 +53,10 @@ export class UserService {
       throw new ApiException(ErrorMessages.EMAIL_ALREADY_EXIST);
     }
 
-    if (await this.existsPhoneNumber(dto.phoneNumber)) {
+    if (
+      isNotEmpty(dto.phoneNumber) &&
+      (await this.existsPhoneNumber(dto.phoneNumber))
+    ) {
       throw new ApiException(ErrorMessages.PHONE_NUMBER_ALREADY_EXIST);
     }
 

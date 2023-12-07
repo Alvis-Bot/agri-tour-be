@@ -34,6 +34,7 @@ export class User extends AuditEntity {
 
   @Column({ unique: true, nullable: true })
   email: string;
+
   @Column({ unique: true, nullable: true })
   phoneNumber: string;
 
