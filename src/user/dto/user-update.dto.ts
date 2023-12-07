@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import {IsEmail, IsOptional, IsString} from 'class-validator';
 import { Role } from '../../common/enum';
 import { OmitType } from '@nestjs/swagger';
 
@@ -56,6 +56,7 @@ export class UserUpdateProfileByManagerDto extends OmitType(UserUpdateDto, [ 'av
 
   @IsOptional()
   @IsString()
+  @IsEmail()
   @ApiPropertyOptional()
   email: string;
 
@@ -66,11 +67,13 @@ export class UserUpdateProfileByManagerDto extends OmitType(UserUpdateDto, [ 'av
 
   @IsOptional()
   @IsString()
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    enum: Role,
+    default: Role.USER,
+  })
   role: Role;
 
   @IsOptional()
-  @IsString()
   @ApiPropertyOptional()
   isLocked: boolean;
 }
