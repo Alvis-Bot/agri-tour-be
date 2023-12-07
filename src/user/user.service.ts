@@ -63,8 +63,6 @@ export class UserService {
     ) {
       throw new ApiException(ErrorMessages.PHONE_NUMBER_ALREADY_EXIST);
     }
-
-    const columns = (Array[typeof User] = ['fullName', 'jobTitle']);
     // taọ user
     const queryBuilder = this.usersRepository
       .createQueryBuilder()
@@ -75,7 +73,7 @@ export class UserService {
         password: await hash(dto.password, 10),
         avatar: avatar ? MulterUtils.convertPathToUrl(avatar.path) : null,
       })
-      .returning(['']);
+      .returning('*');
     const execute = await queryBuilder.execute();
     return execute.raw[0];
     // const userCreated = this.usersRepository.create({
