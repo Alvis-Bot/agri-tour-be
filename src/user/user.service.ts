@@ -72,6 +72,7 @@ export class UserService {
       .into(User)
       .values({
         ...dto,
+        password: await hash(dto.password, 10),
         avatar: avatar ? MulterUtils.convertPathToUrl(avatar.path) : null,
       })
       .returning(['']);
