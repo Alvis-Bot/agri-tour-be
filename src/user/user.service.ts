@@ -85,12 +85,21 @@ export class UserService {
     // nếu có avatar thì xóa avatar cũ
     avatar && MulterUtils.deleteFile(user.avatar);
 
-    // lưu dữ liệu mới
-    return await this.usersRepository.save({
-      ...user,
-      ...dto,
-      avatar: avatar ? MulterUtils.convertPathToUrl(avatar.path) : user.avatar,
-    });
+    // update user
+     const queryBuilder = this.usersRepository
+        .createQueryBuilder()
+        .update(User)
+        .set({
+           ...user,
+            ...dto,
+            avatar: avatar ? MulterUtils.convertPathToUrl(avatar.path) : user.avatar,
+        })
+        .where('id = :id', { id: user.id })
+         .returning('*')
+    const execute = await queryBuilder.execute();
+    return execute.raw[0];
+
+    // return execute.raw[0];
   }
 
   async updateUserInfoByManager(
