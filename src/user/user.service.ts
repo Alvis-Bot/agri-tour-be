@@ -16,6 +16,7 @@ import {
 import { MulterUtils } from '../common/utils/multer.utils';
 import { hash } from 'bcrypt';
 import { isNotEmpty } from 'class-validator';
+import { DeleteResponse } from '../common/type';
 
 @Injectable()
 export class UserService {
@@ -23,21 +24,19 @@ export class UserService {
     @InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
 
-  async removeUser(id: string): Promise<{
-    message: string;
-    id: string;
-  }> {
-    // tìm user
-    const queryBuilder = this.usersRepository
-        .createQueryBuilder()
-        .delete()
-        .from(User)
-        .where('id = :id', { id })
-        .returning('id');
-    const execute = await queryBuilder.execute();
-    if (!execute.raw.length) {
-      throw new ApiException(ErrorMessages.USER_NOT_FOUND);
+  async removeUser(id: string): Promise<DeleteResponse> {
+    // tìm user có role ADMIN thì không xóa
+    const user = await this.getUserById(id);
+    if (user.role === Role.ADMIN) {
+      throw new ApiException(ErrorMessages.CANNOT_DELETE_ADMIN);
     }
+    const queryBuilder = this.usersRepository
+      .createQueryBuilder()
+      .delete()
+      .from(User)
+      .where('id = :id', { id })
+      .returning('id');
+    const execute = await queryBuilder.execute();
     return {
       message: 'User deleted successfully',
       id: execute.raw[0].id,
