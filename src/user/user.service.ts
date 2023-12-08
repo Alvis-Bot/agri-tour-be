@@ -120,9 +120,9 @@ export class UserService implements OnModuleInit {
     myUser: User,
     dto: UserUpdateProfileByManagerDto,
   ): Promise<User> {
-    // if (myUser.role === Role.ADMIN) {
-    //   throw new ApiException(ErrorMessages.CANNOT_DELETE_ADMIN);
-    // }
+    if (myUser.role === Role.ADMIN) {
+      throw new ApiException(ErrorMessages.CANNOT_UPDATE_ADMIN);
+    }
     // lưu dữ liệu mới
     const queryBuilder = this.usersRepository
       .createQueryBuilder()

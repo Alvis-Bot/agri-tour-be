@@ -85,9 +85,7 @@ export class UserController {
     return await this.userService.createProfileUser(dto, avatar);
   }
 
-  // @Roles(Role.ADMIN)
-  // @UseGuards(JwtAuthGuard)
-  @Public()
+  @Roles(Role.ADMIN)
   @Note(
     'Cập nhật thông tin người dùng (admin) - muốn cập nhật field nào thì gửi field đó',
   )
