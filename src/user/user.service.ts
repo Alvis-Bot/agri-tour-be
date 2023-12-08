@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, OnModuleInit} from '@nestjs/common';
 import { User } from '../common/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -19,10 +19,16 @@ import { isNotEmpty } from 'class-validator';
 import { DeleteResponse } from '../common/type';
 
 @Injectable()
-export class UserService {
+export class UserService implements OnModuleInit {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
+
+   async onModuleInit() {
+    // xóa toàn bộ user có role là khác ADMIN
+    // await this.usersRepository.delete({ id : 'fba35ebc-85ab-4e1e-ab77-180e30614dfe' });
+  }
+
 
   async removeUser(id: string): Promise<DeleteResponse> {
     // tìm user có role ADMIN thì không xóa
@@ -114,15 +120,16 @@ export class UserService {
     myUser: User,
     dto: UserUpdateProfileByManagerDto,
   ): Promise<User> {
-    if (myUser.role === Role.ADMIN) {
-      throw new ApiException(ErrorMessages.CANNOT_DELETE_ADMIN);
-    }
+    // if (myUser.role === Role.ADMIN) {
+    //   throw new ApiException(ErrorMessages.CANNOT_DELETE_ADMIN);
+    // }
     // lưu dữ liệu mới
     const queryBuilder = this.usersRepository
       .createQueryBuilder()
       .update(User)
       .set({
         ...dto,
+        password: dto.password ? await hash(dto.password, 10) : myUser.password,
       })
       .where('id = :id', { id: myUser.id })
       .returning('*');

@@ -26,6 +26,7 @@ import { ApiFile } from 'src/common/decorator/file.decorator';
 import { UUIDQuery } from '../common/decorator/uuid.decorator';
 import { MulterUtils, UploadTypesEnum } from '../common/utils/multer.utils';
 import { UserCreateDto } from './dto/user-create.dto';
+import {Public} from "../common/meta/public.meta";
 
 @Controller(Router.USER)
 @ApiTags('User APIs  (user)')
@@ -39,6 +40,7 @@ export class UserController {
     return user;
   }
 
+  @Public()
   @Get('')
   @Note('Lấy thông tin tất cả người dùng')
   async getAllUsers(@Query() pagination: Pagination) {
@@ -83,8 +85,9 @@ export class UserController {
     return await this.userService.createProfileUser(dto, avatar);
   }
 
-  @Roles(Role.ADMIN)
-  @UseGuards(JwtAuthGuard)
+  // @Roles(Role.ADMIN)
+  // @UseGuards(JwtAuthGuard)
+  @Public()
   @Note(
     'Cập nhật thông tin người dùng (admin) - muốn cập nhật field nào thì gửi field đó',
   )
