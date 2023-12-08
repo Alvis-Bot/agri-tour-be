@@ -76,12 +76,6 @@ export class UserService {
       .returning('*');
     const execute = await queryBuilder.execute();
     return execute.raw[0];
-    // const userCreated = this.usersRepository.create({
-    //   ...dto,
-    //   avatar: avatar ? MulterUtils.convertPathToUrl(avatar.path) : null,
-    // });
-    // // lưu user
-    // return await this.usersRepository.save(userCreated);
   }
 
   async existsPhoneNumber(phoneNumber: string): Promise<boolean> {
@@ -120,6 +114,9 @@ export class UserService {
     myUser: User,
     dto: UserUpdateProfileByManagerDto,
   ): Promise<User> {
+    if (myUser.role === Role.ADMIN) {
+      throw new ApiException(ErrorMessages.CANNOT_DELETE_ADMIN);
+    }
     // lưu dữ liệu mới
     const queryBuilder = this.usersRepository
       .createQueryBuilder()
