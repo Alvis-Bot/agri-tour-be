@@ -1,22 +1,20 @@
 import {
   Column,
   Entity,
-  Geometry,
-  Index,
   JoinColumn,
   ManyToOne,
-  MultiPoint, OneToMany,
-  Point,
+  OneToMany,
   PrimaryGeneratedColumn
 } from "typeorm";
 import { User } from "./user.entity";
 import { Area } from "./area.entity";
-import { Location } from "../interface";
+import { Location as ILocation } from "../abc";
+import { AuditEntity } from "./audit.entity";
 
 
 
 @Entity('farms')
-export class Farm {
+export class Farm extends AuditEntity {
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -24,14 +22,34 @@ export class Farm {
   @Column()
   name: string;
 
-  @Column({ type: 'jsonb', nullable: true })
-  location: Location;
+  @Column({ nullable: true })
+  business_model: string;
 
-  @ManyToOne(() => User , user => user.farms)
+  @Column({ nullable: true })
+  business_type: string;
+
+  @Column({ nullable: true })
+  province: string;
+
+  @Column({ nullable: true })
+  district: string;
+
+  @Column({ nullable: true })
+  wards: string;
+
+  @Column({ nullable: true })
+  address: string;
+
+  @Column({ type: 'jsonb', nullable: true })
+  location: ILocation;
+
+  @ManyToOne(() => User, user => user.farms, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @OneToMany(() => Area, area => area.farm )
+  @OneToMany(() => Area, area => area.farm, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   areas: Area[];
 
+  @Column({ nullable: true })
+  image: string;
 }

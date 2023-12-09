@@ -3,7 +3,7 @@ import { ApiProperty } from "@nestjs/swagger";
 
 
 export class QueryIdDto {
-  @IsUUID()
+  //@IsUUID()
   @IsNotEmpty()
   @ApiProperty()
   id: string;

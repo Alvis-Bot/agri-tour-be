@@ -1,19 +1,13 @@
-import {
-  BeforeInsert,
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn
-} from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { AuditEntity } from "./audit.entity";
 import * as bcrypt from 'bcrypt';
-import { Permission } from "./permission.entity";
-import { Group } from "./group.entity";
 import { Exclude } from "class-transformer";
 import { Farm } from "./farm.entity";
+import { FarmingCalender } from "./farming_calender.entity";
+import { Role } from "../enum";
+import { Harvest } from "./harvest.entity";
+
+
 
 @Entity('users')
 export class User extends AuditEntity {
@@ -21,9 +15,16 @@ export class User extends AuditEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ nullable: true })
   fullName: string;
 
+  @Column({ nullable: true })
+  jobTitle: string;
+
+  @Column({ nullable: true })
+  description: string;
+  @Column({ nullable: true })
+  avatar: string;
   @Column({ unique: true })
   username: string;
 
@@ -31,29 +32,43 @@ export class User extends AuditEntity {
   @Exclude()
   password: string;
 
+  @Column({ unique: true, nullable: true })
+  email: string;
+
+  @Column({ unique: true, nullable: true })
+  phoneNumber: string;
+
+
+  @Column({ nullable: false, default: Role.USER, enum: Role })
+  role: Role;
+
   @Column({ default: false })
   isLocked: boolean;
 
 
-  @ManyToOne(() => Group, group => group.users)
-  @JoinColumn({ name: 'group_id' })
-  group: Group;
+  @Column({ nullable: true })
+  homeTown: string;
+  @Column({ nullable: true })
+  address: string;
 
-  @OneToMany(() => Farm, farm => farm.user)
+  @OneToMany(() => Farm, farm => farm.user, { onDelete: 'SET NULL' })
   farms: Farm[];
+
+  @OneToMany(() => Harvest, harvests => harvests.user)
+  harvests: Harvest[];
+
+  @ManyToMany(() => FarmingCalender, farmingCalender => farmingCalender.users)
+  farmingCalenders: FarmingCalender[];
 
 
   @BeforeInsert()
+  // @BeforeUpdate()
   async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
-  }
-  async comparePassword(password: string): Promise<boolean> {
-    return await bcrypt.compare(password, this.password);
-  }
-  async hashUpdatedPassword(password: string): Promise<string> {
-    return await bcrypt.hash(password, 10);
+    // Check if the password field has been modified before hashing
+    if (this.password) {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
   }
 
-  @Column({ nullable: true })
-  refreshToken: string;
+
 }

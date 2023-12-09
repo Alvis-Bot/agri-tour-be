@@ -1,48 +1,63 @@
-import { Body, Controller, Get, Inject, Post, Query, UseGuards } from "@nestjs/common";
-import { Router } from "../common/enum/router";
-import { Service } from "../common/enum/service";
-import { IFarmService } from "./service/farm";
-import { Description } from "../common/decorator/description.decorator";
-import { FarmCreateDto } from "../common/dto/farm-create.dto";
-import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
-import { AuthUser } from "../common/decorator/user.decorator";
-import { User } from "../common/entities/user.entity";
-import { ApiTags } from "@nestjs/swagger";
-import { Public } from "../auth/public.meta";
-import { QueryAllDto } from "./dto/query-all.dto";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  UploadedFile,
+  UseGuards,
+} from '@nestjs/common';
+import { ImagePath, Router } from '../common/enum';
+import { Note } from '../common/decorator/description.decorator';
+import { FarmCreateDto } from '../common/dto/farm-create.dto';
+
+import { AuthUser } from '../common/decorator/user.decorator';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { QueryAllDto } from './dto/query-all.dto';
+import { Farm } from 'src/common/entities/farm.entity';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { FarmService } from './farm.service';
+import { ApiFile } from '../common/decorator/file.decorator';
+import { MulterUtils, UploadTypesEnum } from '../common/utils/multer.utils';
+import { User } from '../common/entities/user.entity';
+import {UUIDQuery} from "../common/decorator/uuid.decorator";
 
 @Controller(Router.FARM)
 @UseGuards(JwtAuthGuard)
 @ApiTags('Farm APIs')
 export class FarmController {
-  constructor (@Inject(Service.FARM_SERVICE) private readonly farmService: IFarmService) {
+  constructor(private readonly farmService: FarmService) {}
+
+  @Post('create-farm')
+  @Note('Tạo mới một trang trại')
+  @ApiConsumes('multipart/form-data')
+  @ApiFile(
+    'image',
+    MulterUtils.getConfig(UploadTypesEnum.IMAGES, ImagePath.CARD_FARM),
+  )
+  async createFarm(
+    @UploadedFile() image: Express.Multer.File,
+    @Body() dto: FarmCreateDto,
+    @AuthUser() user: User,
+  ): Promise<Farm> {
+    return await this.farmService.createFarm(dto, image, user);
   }
 
-  @Post()
-  @Description("Tạo mới một trang trại")
-  async createFarm (@AuthUser() user: User ,@Body() dto: FarmCreateDto) {
-    return this.farmService.createFarm(dto ,user);
-  }
-  @Public()
   @Get()
-  @Description("Lấy thông tin trang trại theo id")
-  async getFarmById (@Body('id') id: string) {
+  @Note('Lấy thông tin trang trại theo id')
+  async getFarmById(@UUIDQuery('id') id: string) {
     return this.farmService.getFarmById(id);
   }
 
-  @Public()
   @Get('area-land')
-  @Description("Lấy toàn bộ thông tin nông trại")
+  @Note('Lấy toàn bộ thông tin nông trại')
   async getFarmFetchLandAndArea(@Query() dto: QueryAllDto) {
-    return this.farmService.getFarmFetchLandAndArea(dto)
+    return this.farmService.getFarmFetchLandAndArea(dto);
   }
 
-  @Public()
   @Get('all')
-  @Description("Lấy danh sách trang trại")
-  async getFarms () {
+  @Note('Lấy danh sách trang trại')
+  async getFarms() {
     return this.farmService.getFarms();
   }
-
-
 }

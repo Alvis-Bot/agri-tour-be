@@ -1,10 +1,8 @@
 
 
 export enum Router {
-  USER = "user",
+  USER = "users",
   AUTH = "auth",
-  MANAGER = "manager",
-  PERMISSION = "permission",
   GROUP = "group",
   LAND = "land",
   FARM = "farm",

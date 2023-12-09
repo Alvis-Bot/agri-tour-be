@@ -11,8 +11,8 @@ import {
   PrimaryGeneratedColumn
 } from "typeorm";
 import { AuditEntity } from "./audit.entity";
-import { Permission } from "./permission.entity";
 import { User } from "./user.entity";
+import { Role } from "./role.entity";
 
 
 @Entity('groups')
@@ -31,12 +31,16 @@ export class Group extends AuditEntity {
   isDeleted: boolean;
 
 
-  @OneToMany(() => Permission , permission => permission.groups)
-  permissions: Permission[];
+  // @ManyToMany(() => User, user => user.groups, {
+  //   cascade: true
+  // })
+  // users: User[];
 
-  @OneToMany(() => User , user => user.group ,{
-    cascade : true
+  @ManyToMany(() => Role, role => role.groups, {
+    cascade: true
   })
-  users: User[];
-
+  @JoinTable({
+    name:'group_roles'
+  })
+  roles: Role[];
 }

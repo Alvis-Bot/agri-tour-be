@@ -1,39 +1,51 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Point } from "typeorm";
-import { Location } from "../interface";
-import { IsNotEmpty, IsString, IsUUID } from "class-validator";
-import { Type } from "class-transformer";
+import { ApiProperty } from '@nestjs/swagger';
+import { Location as ILocation } from '../abc';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-
-export class LandCreateDto{
-
-
-  @ApiProperty()
+export class LandCreateDto {
+  @ApiProperty({
+    example: 'Land example',
+  })
   @IsString()
   @IsNotEmpty()
   name: string;
 
-
+  @IsNotEmpty()
   @ApiProperty()
-  @IsUUID()
+  productTypeId: string;
+
+  @ApiProperty({
+    example: 14.3322,
+  })
+  acreage: number;
+
+  @ApiProperty({
+    example: 'ádalsdddjajaja-1aksdkajsd-djakskdaksdl',
+  })
   @IsNotEmpty()
   soilTypeId: string;
 
+  // @IsNotEmpty()
+  // @ApiProperty({
+  //   example: '[{"latitude": 14.3322, "longitude": 14.3322 , "point": 1}]',
+  //   isArray: false,
+  // })
+  // @Transform(({ value }) => JSON.parse(value))
+  // locations: ILocation[];
   @ApiProperty({
-    example: [
-      {
-        point: 1,
-        latitude: 1,
-        longitude: 1
+    type: 'array',
+    items: {
+      type: 'object',
+      properties: {
+        point: { type: 'number', example: 12 },
+        latitude: { type: 'number', example: 24.5 },
+        longitude: { type: 'number', example: 14.5 },
       },
-      {
-        point: 2,
-        latitude: 2,
-        longitude: 2
-      }
-    ]
+    },
   })
   @IsNotEmpty()
-  locations: Location[];
+  locations: ILocation[];
 
+  @ApiProperty({ type: 'array', items: { type: 'string', format: 'binary' } })
+  images: Express.Multer.File[];
 }

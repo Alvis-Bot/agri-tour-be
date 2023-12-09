@@ -1,87 +1,78 @@
-import { Body, Controller, Get, Inject, Patch, Post, Query, UploadedFiles, UseGuards } from "@nestjs/common";
-import { Router } from "../common/enum/router";
-import { ILandService } from "./service/land";
-import { Service } from "../common/enum/service";
-import { LandCreateDto } from "../common/dto/land-create.dto";
-import { Land } from "../common/entities/land.entity";
-import { ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
-import { Description } from "../common/decorator/description.decorator";
-import { IAreaService } from "../area/service/area";
-import { QueryAreaIdDto } from "../common/dto/query-area-id.dto";
-import { QueryIdDto } from "../common/dto/query-id.dto";
-import { ApiFiles } from "../area/api-file.decorator";
-import { diskStorage } from "multer";
-import { extname } from "path";
-import { ApiException } from "../exception/api.exception";
-import { ErrorCode } from "../exception/error.code";
-import { UploadDto } from "../area/dto/upload.dto";
-import { QueryLandIdDto } from "./dto/query-land-id.dto";
-import { UploadLandDto } from "./dto/upload-land.dto";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Query,
+  UploadedFiles,
+} from '@nestjs/common';
+import { Router } from '../common/enum/router';
+import { LandCreateDto } from '../common/dto/land-create.dto';
+import { Land } from '../common/entities/land.entity';
+import { ApiTags } from '@nestjs/swagger';
+import { Note } from '../common/decorator/description.decorator';
+import { QueryAreaIdDto } from '../common/dto/query-area-id.dto';
+import { QueryIdDto } from '../common/dto/query-id.dto';
+import { LandService } from './land.service';
+import { ApiFiles } from '../common/decorator/file.decorator';
+import { ImagePath } from '../common/enum';
+import { UUIDQuery } from '../common/decorator/uuid.decorator';
+import { MulterUtils, UploadTypesEnum } from '../common/utils/multer.utils';
+import { UploadLandDto } from './dto/upload-land.dto';
 
 @Controller(Router.LAND)
 @ApiTags('Land APIs')
-// @UseGuards(JwtAuthGuard)
 export class LandController {
-  constructor(@Inject(Service.LAND_SERVICE) private readonly landService: ILandService,
-              @Inject(Service.AREA_SERVICE) private readonly areaService: IAreaService) {
-  }
+  constructor(private readonly landService: LandService) {}
 
-  @Post()
-  @Description('Tạo vùng trồng')
-  async createLand(
-    @Query() { areaId }: QueryAreaIdDto,
-    @Body() dto: LandCreateDto): Promise<Land> {
-    const area = await this.areaService.getAreaById(areaId)
-    return this.landService.createLand(dto , area);
+  @Post('create')
+  @ApiFiles(
+    'images',
+    10,
+    MulterUtils.getConfig(UploadTypesEnum.IMAGES, ImagePath.CARD_LAND),
+  )
+  async create(
+    @UUIDQuery('areaId') areaId: string,
+    @Body() dto: LandCreateDto,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    return await this.landService.createLand(areaId, dto, files);
   }
 
   @Get('all')
-  @Description('Lấy tất cả vùng trồng')
+  @Note('Lấy tất cả vùng trồng')
   async getLands(): Promise<Land[]> {
-    return this.landService.getLands();
+    return await this.landService.getLands();
+  }
+
+  @Put('img')
+  @ApiFiles(
+    'images',
+    10,
+    MulterUtils.getConfig(UploadTypesEnum.IMAGES, ImagePath.CARD_LAND),
+  )
+  async uploadImage(
+    @UUIDQuery('landId') landId: string,
+    @Body() dto: UploadLandDto,
+    @UploadedFiles() images: Express.Multer.File[],
+  ): Promise<any> {
+    console.log(dto);
+    console.log(images);
+    return await this.landService.uploadImage(landId, dto, images);
+
+    // return await this.storageService.uploadMultiFiles(ImageType.CARD_LAND, files);
   }
 
   @Get('area')
-  @Description('Lấy danh sách vùng trồng theo khu vực')
+  @Note('Lấy danh sách vùng trồng theo khu vực')
   async getLandsByAreaId(@Query() { areaId }: QueryAreaIdDto): Promise<Land[]> {
     return this.landService.getLandsByAreaId(areaId);
   }
 
   @Get('')
-  @Description('Lấy vùng trồng theo id')
+  @Note('Lấy thông tin vùng trồng theo landId')
   async getLandById(@Query() { id }: QueryIdDto): Promise<Land> {
     return this.landService.getLandById(id);
   }
-
-  @Patch('image')
-  @Description("Upload file")
-  @ApiFiles('images', true, 20, {
-    storage: diskStorage({
-      destination: './uploads',
-      filename: (req, file, cb) => {
-        const randomName = Array(32)
-          .fill(null)
-          .map(() => Math.round(Math.random() * 16).toString(16))
-          .join('');
-        return cb(null, `${randomName}${extname(file.originalname)}`);
-      },
-    }),
-    fileFilter: (req: any, file: any, cb: any) => {
-      console.log(file);
-      if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
-        // Allow storage of file
-        cb(null, true);
-      } else {
-        // Reject file
-        cb(new ApiException(ErrorCode.FILE_TYPE_NOT_MATCHING), false);
-      }
-    },
-  })
-  async uploadFile( @Query() { landId }: QueryLandIdDto,
-                    @Body() dto: UploadLandDto,
-                    @UploadedFiles() files: Express.Multer.File[],){
-    return this.landService.uploadFile(landId, dto, files);
-  }
-
 }

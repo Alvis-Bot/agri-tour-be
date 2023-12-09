@@ -1,20 +1,16 @@
-import { Module } from '@nestjs/common';
+import { Module,Global } from '@nestjs/common';
 import { AreaController } from './area.controller';
-import { AreaService } from "./service/area.service";
-import { Service } from "../common/enum/service";
+import { AreaService } from "./area.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Area } from "../common/entities/area.entity";
 import { FarmModule } from "../farm/farm.module";
 
-
+@Global()
 @Module({
   imports: [
     FarmModule,TypeOrmModule.forFeature([Area])],
   controllers: [AreaController],
-  providers: [{
-    provide: Service.AREA_SERVICE,
-    useClass: AreaService
-  }],
-  exports: [Service.AREA_SERVICE]
+  providers: [AreaService],
+  exports: [AreaService]
 })
 export class AreaModule {}
