@@ -49,7 +49,7 @@ import { MemberShipTypeModule } from './member-ship-type/member-ship-type.module
           database: configService.get<string>("POSTGRES_DB"),
           entities: [__dirname + "/**/*.entity{.ts,.js}"],
           synchronize: true,
-          logging: false,
+          logging: true,
           autoLoadEntities: true,
         };
       },

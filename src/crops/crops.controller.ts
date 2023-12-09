@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Post,
+  Put,
   Query,
   UploadedFiles,
   UseGuards,
@@ -19,6 +20,8 @@ import { Note } from 'src/common/decorator/description.decorator';
 import { MulterUtils, UploadTypesEnum } from '../common/utils/multer.utils';
 import { ImagePath } from '../common/enum';
 import { UUIDQuery } from '../common/decorator/uuid.decorator';
+import {CropDeleteImageDto, CropUpdateDto, CropUpdateImageDto} from './dto/crop-update.dto';
+import { DeleteResponse } from '../common/type';
 
 @Controller('crops')
 @UseGuards(JwtAuthGuard)
@@ -40,10 +43,45 @@ export class CropsController {
     return await this.cropsService.createCrop(dto, image);
   }
 
+  @Put()
+  @Note('Cập nhật cây trồng')
+  async updateCrop(
+    @Query('cropId') cropId: string,
+    @Body() dto: CropUpdateDto,
+  ) {
+    return await this.cropsService.updateCrop(cropId, dto);
+  }
+
+  @Put('images/add')
+  @Note('Cập nhật thêm ảnh cho cây trồng')
+  @ApiFiles(
+    'images',
+    10,
+    MulterUtils.getConfig(UploadTypesEnum.IMAGES, ImagePath.CARD_CROP),
+  )
+  async updateCropImage(
+    @Query('cropId') cropId: string,
+    @Body() dto: CropUpdateImageDto,
+    @UploadedFiles() image: Express.Multer.File[],
+  ) {
+    return await this.cropsService.updateCropImage(cropId, image);
+  }
+
+  @Put('images/delete')
+    @Note('Xóa ảnh của cây trồng')
+    async deleteCropImage(
+      @Query('cropId') cropId: string,
+      @Body() dto: CropDeleteImageDto,
+    ) {
+      return await this.cropsService.deleteCropImage(cropId, dto);
+    }
+
   @Delete()
   @Note('Xóa cây trồng')
-  async deleteCrop(@UUIDQuery('id') id: string) {
-    return await this.cropsService.deleteCrop(id);
+  async deleteCrop(
+    @UUIDQuery('cropId') cropId: string,
+  ): Promise<DeleteResponse> {
+    return await this.cropsService.deleteCrop(cropId);
   }
 
   @Get('get-list-care')

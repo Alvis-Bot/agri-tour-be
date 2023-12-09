@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { Crop } from '../common/entities/crop.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { CropCreateDto } from './dto/crop-create.dto';
 import { ApiException } from '../exception/api.exception';
 import { ErrorMessages } from '../exception/error.code';
@@ -11,6 +11,8 @@ import { PaginationModel } from '../common/pagination/pagination.model';
 import { Pagination } from '../common/pagination/pagination.dto';
 import { MulterUtils } from '../common/utils/multer.utils';
 import { DeleteResponse } from '../common/type';
+import { CropDeleteImageDto, CropUpdateDto } from './dto/crop-update.dto';
+import { isNotEmpty } from 'class-validator';
 
 type Relations = 'workOfDays' | 'careSchedules' | 'harvests';
 
@@ -19,6 +21,8 @@ export class CropsService {
   constructor(
     @InjectRepository(Crop) private cropRepository: Repository<Crop>,
     private readonly categoryDetailsService: CategoryDetailsService,
+    @InjectDataSource()
+    private dataSource: DataSource,
   ) {}
 
   async createCrop(
@@ -79,7 +83,8 @@ export class CropsService {
         name: `%${pagination.search || ''}%`,
       })
       .take(pagination.take)
-      .skip(pagination.skip);
+      .skip(pagination.skip)
+      .orderBy('crop.createdAt', pagination.order);
 
     const itemCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
@@ -107,5 +112,54 @@ export class CropsService {
       message: 'Delete successfully',
       id: result.raw[0].id,
     };
+  }
+
+  async updateCrop(
+    cropId: string,
+    dto: CropUpdateDto,
+    // image: Express.Multer.File[],
+  ) {
+    const groupCrop =
+      isNotEmpty(dto.groupCrop) &&
+      (await this.categoryDetailsService.getDetailCategoryById(dto.groupCrop));
+
+    const updateQueryBuilder = this.cropRepository
+      .createQueryBuilder()
+      .update(Crop)
+      .set({
+        ...dto,
+        ...(groupCrop && { groupCrop }),
+      })
+      .where('id = :id', { id: cropId })
+      .returning('*');
+    const result = await updateQueryBuilder.execute();
+    console.log(result);
+    if (result.affected === 0) {
+      throw new ApiException(ErrorMessages.CROP_NOT_FOUND);
+    }
+
+    return result.raw[0] as Crop;
+  }
+
+  async updateCropImage(cropId: string, image: Express.Multer.File[]) {
+    const crop = await this.getCropById(cropId);
+    const images = MulterUtils.convertArrayPathToUrl(
+      image.map((image) => image.path),
+    );
+    crop.images = [...crop.images, ...images];
+    return await this.cropRepository.save(crop);
+  }
+
+  async deleteCropImage(cropId: string, dto: CropDeleteImageDto) {
+    const crop = await this.getCropById(cropId);
+    // xóa ảnh local
+    MulterUtils.deleteFiles(dto.removeImages);
+
+    // xóa ảnh trong db
+    crop.images = crop.images.filter(
+      (image) => !dto.removeImages.includes(image),
+    );
+
+    return await this.cropRepository.save(crop);
   }
 }

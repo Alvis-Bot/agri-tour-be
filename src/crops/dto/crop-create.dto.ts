@@ -1,52 +1,49 @@
-import { IsDecimal, IsNotEmpty, IsNumber, IsString, IsUUID } from "class-validator";
-import { ApiProperty } from "@nestjs/swagger";
-
+import {IsNotEmpty, IsString, IsUUID} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CropCreateDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 
-    @ApiProperty()
-    // @IsString()
-    // @IsNotEmpty()
-    name: string;
+  //loại bệnh thường gặp
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  disease: string;
 
+  // đặc tính sinh trưởng
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  growth: string;
 
-    //loại bệnh thường gặp
-    @ApiProperty()
-    // @IsString()
-    // @IsNotEmpty()
-    disease: string;
+  // đặc tính sử dụng cây trồng
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  use: string;
 
-    // đặc tính sinh trưởng
-    @ApiProperty()
-    // @IsString()
-    // @IsNotEmpty()
-    growth: string;
+  // thu hoạch
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  harvest: string;
 
-    // đặc tính sử dụng cây trồng
-    @ApiProperty()
-    // @IsString()
-    // @IsNotEmpty()
-    use: string;
+  // giá bán giống cây trồng
+  @ApiProperty()
+  @IsNotEmpty()
+  price: number;
 
-    // thu hoạch
-    @ApiProperty()
-    // @IsString()
-    // @IsNotEmpty()
-    harvest: string;
+  @ApiProperty()
+  @IsUUID()
+    @IsNotEmpty()
+  groupCrop: string;
 
-    // giá bán giống cây trồng
-    @ApiProperty()
-    // @IsNotEmpty()
-    price: number;
+  // nhóm cây trồng
 
-    @ApiProperty()
-    @IsUUID()
-    // @IsNotEmpty()
-    groupCrop: string;
-
-    // nhóm cây trồng
-
-    // ảnh cây trồng
-    @ApiProperty({ type: 'array', items: { type: 'string', format: 'binary' } })
-    images: Express.Multer.File[];
+  // ảnh cây trồng
+  @ApiProperty({ type: 'array', items: { type: 'string', format: 'binary' } })
+  images: Express.Multer.File[];
 }

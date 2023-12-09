@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import { AuditEntity } from "./audit.entity";
 import { CategoryDetails } from "./category-detail.entity";
 import { WorkOfDay } from "./work-of-day.entity";
@@ -38,7 +38,11 @@ export class Crop extends AuditEntity {
 
 
     // nhóm cây trồng
-    @ManyToOne(() => CategoryDetails, categoryDetails => categoryDetails.id)
+    @ManyToOne(() => CategoryDetails, categoryDetails => categoryDetails.id ,{
+        nullable: false,
+        eager: true,
+    })
+    @JoinColumn({ name: 'groupCropId' })
     groupCrop: CategoryDetails;
 
     // ảnh cây trồng
