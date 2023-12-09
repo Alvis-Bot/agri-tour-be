@@ -131,14 +131,17 @@ export class CropsService {
         ...(groupCrop && { groupCrop }),
       })
       .where('id = :id', { id: cropId })
-      .returning('*');
     const result = await updateQueryBuilder.execute();
     console.log(result);
     if (result.affected === 0) {
       throw new ApiException(ErrorMessages.CROP_NOT_FOUND);
     }
-
-    return result.raw[0] as Crop;
+    
+    const selectQueryBuilder = this.cropRepository
+        .createQueryBuilder('crop')
+        .leftJoinAndSelect('crop.groupCrop', 'groupCrop')
+        .where('crop.id = :id', { id: cropId });
+    return await selectQueryBuilder.getOne();
   }
 
   async updateCropImage(cropId: string, image: Express.Multer.File[]) {
