@@ -1,4 +1,4 @@
-import {Injectable, OnModuleInit} from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { User } from '../common/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -24,11 +24,10 @@ export class UserService implements OnModuleInit {
     @InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
 
-   async onModuleInit() {
+  async onModuleInit() {
     // xóa toàn bộ user có role là khác ADMIN
     // await this.usersRepository.delete({ id : 'fba35ebc-85ab-4e1e-ab77-180e30614dfe' });
   }
-
 
   async removeUser(id: string): Promise<DeleteResponse> {
     // tìm user có role ADMIN thì không xóa
@@ -103,14 +102,14 @@ export class UserService implements OnModuleInit {
     // update user
     const queryBuilder = this.usersRepository
       .createQueryBuilder('user')
-        .update(User)
+      .update()
       .set({
         ...dto,
         avatar: avatar
           ? MulterUtils.convertPathToUrl(avatar.path)
           : user.avatar,
       })
-        .where('user.id = :id', { id: user.id })
+      .where('id = :id', { id: String(user.id) })
       .returning('*');
     const execute = await queryBuilder.execute();
     return execute.raw[0];
@@ -126,7 +125,7 @@ export class UserService implements OnModuleInit {
     // lưu dữ liệu mới
     const queryBuilder = this.usersRepository
       .createQueryBuilder()
-      .update(User)
+      .update()
       .set({
         ...dto,
         password: dto.password ? await hash(dto.password, 10) : myUser.password,
