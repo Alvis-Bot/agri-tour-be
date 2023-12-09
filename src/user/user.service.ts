@@ -97,19 +97,20 @@ export class UserService implements OnModuleInit {
     avatar?: Express.Multer.File,
   ): Promise<User> {
     // nếu có avatar thì xóa avatar cũ
-    avatar && MulterUtils.deleteFile(user.avatar);
+    user.avatar && MulterUtils.deleteFile(user.avatar);
 
+    console.log('dto', avatar);
     // update user
     const queryBuilder = this.usersRepository
-      .createQueryBuilder('user')
+      .createQueryBuilder()
       .update()
       .set({
         ...dto,
-        avatar: avatar
+        avatar: isNotEmpty(avatar)
           ? MulterUtils.convertPathToUrl(avatar.path)
           : user.avatar,
       })
-      .where('id = :id', { id: String(user.id) })
+      .where('id = :id', { id: user.id })
       .returning('*');
     const execute = await queryBuilder.execute();
     return execute.raw[0];
