@@ -102,15 +102,15 @@ export class UserService implements OnModuleInit {
 
     // update user
     const queryBuilder = this.usersRepository
-      .createQueryBuilder()
-      .update(User)
+      .createQueryBuilder('user')
+        .update(User)
       .set({
         ...dto,
         avatar: avatar
           ? MulterUtils.convertPathToUrl(avatar.path)
           : user.avatar,
       })
-      .where('id = :id', { id: user.id })
+        .where('user.id = :id', { id: user.id })
       .returning('*');
     const execute = await queryBuilder.execute();
     return execute.raw[0];
