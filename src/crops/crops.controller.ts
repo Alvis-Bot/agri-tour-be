@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Query,
@@ -13,12 +14,11 @@ import { CropCreateDto } from './dto/crop-create.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { ApiTags } from '@nestjs/swagger';
 import { Pagination } from '../common/pagination/pagination.dto';
-import { QueryIdDto } from 'src/common/dto/query-id.dto';
 import { Crop } from 'src/common/entities/crop.entity';
 import { Note } from 'src/common/decorator/description.decorator';
 import { MulterUtils, UploadTypesEnum } from '../common/utils/multer.utils';
 import { ImagePath } from '../common/enum';
-import {UUIDQuery} from "../common/decorator/uuid.decorator";
+import { UUIDQuery } from '../common/decorator/uuid.decorator';
 
 @Controller('crops')
 @UseGuards(JwtAuthGuard)
@@ -38,6 +38,12 @@ export class CropsController {
     @UploadedFiles() image: Express.Multer.File[],
   ) {
     return await this.cropsService.createCrop(dto, image);
+  }
+
+  @Delete()
+  @Note('Xóa cây trồng')
+  async deleteCrop(@UUIDQuery('id') id: string) {
+    return await this.cropsService.deleteCrop(id);
   }
 
   @Get('get-list-care')

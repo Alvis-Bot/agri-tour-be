@@ -10,6 +10,7 @@ import { Meta } from '../common/pagination/meta.dto';
 import { PaginationModel } from '../common/pagination/pagination.model';
 import { Pagination } from '../common/pagination/pagination.dto';
 import { MulterUtils } from '../common/utils/multer.utils';
+import { DeleteResponse } from '../common/type';
 
 type Relations = 'workOfDays' | 'careSchedules' | 'harvests';
 
@@ -85,5 +86,26 @@ export class CropsService {
 
     const meta = new Meta({ itemCount, pagination });
     return new PaginationModel(entities, meta);
+  }
+
+  async deleteCrop(id: string): Promise<DeleteResponse> {
+    const queryBuilder = this.cropRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Crop)
+      .where('id = :id', { id })
+      .returning(['images', 'id']);
+    const result = await queryBuilder.execute();
+    if (result.affected === 0) {
+      throw new ApiException(ErrorMessages.CROP_NOT_FOUND);
+    }
+    result.raw[0].images.forEach((image: string) => {
+      MulterUtils.deleteFile(image);
+    });
+
+    return {
+      message: 'Delete successfully',
+      id: result.raw[0].id,
+    };
   }
 }
