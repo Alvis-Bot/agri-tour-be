@@ -96,8 +96,9 @@ export class UserService implements OnModuleInit {
     dto: UserUpdateDto,
     avatar?: Express.Multer.File,
   ): Promise<User> {
+    console.log('dto', isNotEmpty(user.avatar));
     // nếu có avatar thì xóa avatar cũ
-    user.avatar && MulterUtils.deleteFile(user.avatar);
+    isNotEmpty(user.avatar) && MulterUtils.deleteFile(user.avatar);
 
     console.log('dto', avatar);
     // update user
