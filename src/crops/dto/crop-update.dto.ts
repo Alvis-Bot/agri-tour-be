@@ -60,7 +60,7 @@ export class CropDeleteImageDto {
     @ApiProperty({
         description: 'Tên ảnh cây trồng cần xóa',
     })
-    @IsArray()
-    @IsNotEmpty()
+    // @IsArray()
+    // @IsNotEmpty()
     removeImages: string[];
 }
