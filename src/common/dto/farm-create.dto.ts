@@ -1,9 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Location as ILocation } from "../abc";
 import { User } from "../entities/user.entity";
+import { Transform } from "class-transformer";
 
 
 export class FarmCreateDto {
+
+    user: User;
 
     @ApiProperty({
         example: 'Trang trại vinamilk'
@@ -33,8 +36,22 @@ export class FarmCreateDto {
             longitude: 144.444
         },
     })
-    location: ILocation
+    @Transform(({ value }) => typeof value === 'string' ? JSON.parse(value) : value)
+    location: ILocation;
+
+    @ApiProperty({ required: false, example: 'example value' })
+    region: string;
+
+    @ApiProperty({ required: false, example: 'example value' })
+    phoneNumber: string;
+
+    @ApiProperty({ required: false, example: 'example value' })
+    user_representative: string;
+
+    @ApiProperty({ required: false, example: 'example value' })
+    email: string;
+
     @ApiProperty({ type: 'string', format: 'binary' })
     image: string;
-    user:User;
+
 }

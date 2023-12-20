@@ -40,6 +40,18 @@ export class Farm extends AuditEntity {
   @Column({ nullable: true })
   address: string;
 
+  @Column({ nullable: true })
+  region: string;
+
+  @Column({ nullable: true })
+  phoneNumber: string;
+
+  @Column({ nullable: true })
+  user_representative: string;
+
+  @Column({ nullable: true })
+  email: string;
+
   @Column({ type: 'jsonb', nullable: true })
   location: ILocation;
 
